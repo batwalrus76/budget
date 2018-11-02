@@ -1,3 +1,10 @@
+package control
+
+import model.Account
+import model.AccountItem
+import model.ApplicationState
+import model.BudgetItem
+import model.enums.Recurrence
 import java.io.File
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -7,7 +14,7 @@ class ApplicationStateCLIProcessor(var applicationState: ApplicationState, var a
     fun cliEntryPoint(stateFile: File): Boolean {
         var applicationStateBudgetAnalysis: ApplicationStateBudgetAnalysis = ApplicationStateBudgetAnalysis(applicationState)
         var continueRunning: Boolean = true
-        print("Would you like to modify your [0] Current Budget Items, [1] Future Budget States, [2] Savings Accounts, [3] Credit Accounts, [4] Checking Account, [5] Perform Current Week Analysis, [6] Perform Budget Analysis  or [7] Exit? ")
+        print("Would you like to modify your [0] Current Budget Items, [1] Future Budget States, [2] Savings Accounts, [3] Credit Accounts, [4] Checking model.Account, [5] Perform Current Week Analysis, [6] Perform Budget Analysis  or [7] Exit? ")
         print("\u001b[H\u001b[2J")
         var option: Int = readLine()!!.toInt()
         when (option) {

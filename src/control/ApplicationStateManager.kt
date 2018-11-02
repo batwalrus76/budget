@@ -1,5 +1,10 @@
-import ApplicationStateBudgetAnalysis.Companion.processFutureBudgetItemsIntoCurrentItems
-import ApplicationStateCLIProcessor.Companion.determineNextDueLocalDateTime
+package control
+
+import model.ApplicationState
+import model.BudgetItem
+import model.BudgetState
+import control.ApplicationStateBudgetAnalysis.Companion.processFutureBudgetItemsIntoCurrentItems
+import control.ApplicationStateCLIProcessor.Companion.determineNextDueLocalDateTime
 import java.time.LocalDateTime
 
 class ApplicationStateManager(var applicationState: ApplicationState) {
@@ -66,7 +71,7 @@ class ApplicationStateManager(var applicationState: ApplicationState) {
         }
     }
 
-    fun reconcileFutureBudgetItemsIntoNewBudgetStates(budgetItem:BudgetItem) {
+    fun reconcileFutureBudgetItemsIntoNewBudgetStates(budgetItem: BudgetItem) {
         applicationState.currentPayPeriodBudgetState?.let {
             reconcileBudgetItemIntoBudgetState(applicationState, budgetItem, it)
         }
@@ -75,7 +80,7 @@ class ApplicationStateManager(var applicationState: ApplicationState) {
         }
     }
 
-    fun reconcileBudgetItemIntoBudgetState(applicationState: ApplicationState, budgetItem:BudgetItem,
+    fun reconcileBudgetItemIntoBudgetState(applicationState: ApplicationState, budgetItem: BudgetItem,
                                            budgetState: BudgetState){
         if(budgetItem.due.isAfter(budgetState?.startDate)){
             if(budgetItem.due.isBefore(budgetState?.endDate)) {
@@ -89,7 +94,7 @@ class ApplicationStateManager(var applicationState: ApplicationState) {
     }
 
     fun updateFutureBudgetStatesWithNewBudgetItem(budgetItem: BudgetItem): BudgetItem {
-        var localBudgetItem:BudgetItem = budgetItem.copy()
+        var localBudgetItem: BudgetItem = budgetItem.copy()
         applicationState.futureBudgetStates.forEach { futureBudgetState -> localBudgetItem =
                             updateBudgetStateAndFutureRecurringBudgetItem(futureBudgetState, localBudgetItem)}
         return localBudgetItem

@@ -1,3 +1,5 @@
+package model.enums
+
 enum class Recurrence(val intervalDaysOrMonths: Long) {
     DAILY(1L),
     WEEKLY(7L),

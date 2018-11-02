@@ -1,3 +1,5 @@
+package model
+
 import java.time.LocalDateTime
 
 data class BudgetAnalysisState(var checkingAccountBalance: Double? = 0.0,
@@ -17,7 +19,7 @@ data class BudgetAnalysisState(var checkingAccountBalance: Double? = 0.0,
     }
 
     override fun toString():String {
-        return String.format("Budget Item Name: %s\t Amount: %.2f\tDate: %s\tChecking Account Balance: %.2f",
+        return String.format("Budget Item Name: %s\t Amount: %.2f\tDate: %s\tChecking model.Account Balance: %.2f",
                 budgetItem?.name, budgetItem?.actualAmount, date, checkingAccountBalance)
     }
 }

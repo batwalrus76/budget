@@ -1,5 +1,11 @@
-import ApplicationStateCLIProcessor.Companion.determineNextDueLocalDateTime
-import ApplicationStateCLIProcessor.Companion.determinePreviousDueLocalDateTime
+package control
+
+import model.ApplicationState
+import model.BudgetAnalysisState
+import model.BudgetItem
+import model.BudgetState
+import control.ApplicationStateCLIProcessor.Companion.determineNextDueLocalDateTime
+import control.ApplicationStateCLIProcessor.Companion.determinePreviousDueLocalDateTime
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -8,7 +14,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
 
 
     fun performBudgetAnalysis(isComplete: Boolean) {
-        println(String.format("Starting Checking Account Balance: %.2f", applicationState.checkingAccount?.balance))
+        println(String.format("Starting Checking model.Account Balance: %.2f", applicationState.checkingAccount?.balance))
         println("Unreconciled Items:")
         var currentBudgetAnalysisStates =
                                 performAnalysisOnBudgetItems(applicationState.pastUnreconciledBudgetItems)
@@ -110,7 +116,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         if(finalCheckingAccountBalance == null){
             finalCheckingAccountBalance = 0.0
         }
-        println(String.format("Final Checking Account Balance: %.2f", finalCheckingAccountBalance))
+        println(String.format("Final Checking model.Account Balance: %.2f", finalCheckingAccountBalance))
     }
 
     private fun processCurrentBudgetDay(dayOfWeek: DayOfWeek,

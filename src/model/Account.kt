@@ -1,4 +1,6 @@
-import AccountItem.Companion.parseAccountItemFromJsonObject
+package model
+
+import model.AccountItem.Companion.parseAccountItemFromJsonObject
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import java.io.Serializable
@@ -37,7 +39,7 @@ data class Account(val name: String, var balance: Double, var items: MutableList
     }
 
     override fun toString(): String {
-        return "Account(name='$name', balance=$balance, items=$items, reconciledItems=$reconciledItems, notes='$notes')"
+        return "model.Account(name='$name', balance=$balance, items=$items, reconciledItems=$reconciledItems, notes='$notes')"
     }
 
     companion object {

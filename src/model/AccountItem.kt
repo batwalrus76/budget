@@ -1,3 +1,5 @@
+package model
+
 import com.beust.klaxon.JsonObject
 import java.time.LocalDateTime
 

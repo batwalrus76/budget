@@ -1,3 +1,5 @@
+package view
+
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
@@ -33,26 +35,26 @@ class BudgetStatePanel {
             .wrapWithBox(true) // panels can be wrapped in a box
             .wrapWithShadow(false) // shadow can be added
             .withTitle(ITINERARY) // if a panel is wrapped in a box a title can be displayed
-            .withSize(Sizes.create(this.width-10, this.height-(this.startDateLabel.height+10)))
-            .withPosition(Positions.create(this.xOffset,this.yOffset+this.startDateLabel.height))
+            .withSize(Sizes.create(this.width-2, this.height-(this.startDateLabel.height+4)))
+            .withPosition(Positions.create(this.xOffset,this.yOffset+this.startDateLabel.height+1))
             .build()
 
     fun build(){
-        this.panel = Components.panel()
-                .wrapWithBox(true) // panels can be wrapped in a box
-                .withTitle(TITLE) // if a panel is wrapped in a box a title can be displayed
-                .wrapWithShadow(false) // shadow can be added
-                .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
-                .withPosition(Positions.create(this.xOffset,this.yOffset))
-                .build() // position is always relative to the parent
-        this.startDateLabel = Components.label()
-                .withText("Start Date: $startDate")
-                .withPosition(Position.create(10,1))
-                .build()
-        this.endDateLabel = Components.label()
-                .withText("End Date: $endDate")
-                .withPosition(Position.create(50,1))
-                .build()
+//        this.panel = Components.panel()
+//                .wrapWithBox(true) // panels can be wrapped in a box
+//                .withTitle(TITLE) // if a panel is wrapped in a box a title can be displayed
+//                .wrapWithShadow(false) // shadow can be added
+//                .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
+//                .withPosition(Positions.create(this.xOffset,this.yOffset))
+//                .build() // position is always relative to the parent
+//        this.startDateLabel = Components.label()
+//                .withText("Start Date: $startDate")
+//                .withPosition(Position.create(10,1))
+//                .build()
+//        this.endDateLabel = Components.label()
+//                .withText("End Date: $endDate")
+//                .withPosition(Position.create(50,1))
+//                .build()
         this.panel!!.addComponent(startDateLabel)
         this.panel!!.addComponent(endDateLabel)
         this.panel!!.addComponent(payPeriodItineraryPanel)

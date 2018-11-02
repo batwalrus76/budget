@@ -1,20 +1,22 @@
-import BudgetState.Companion.parseBudgetItemsMapFromJsonObject
-import BudgetState.Companion.serializeMapBudgetItemstoJson
+package model
+
+import model.BudgetState.Companion.parseBudgetItemsMapFromJsonObject
+import model.BudgetState.Companion.serializeMapBudgetItemstoJson
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import java.io.File
 import java.io.StringReader
 
-data class ApplicationState( var checkingAccount: Account? = Account("Checking Account", 0.0,
-                                ArrayList<AccountItem>(), ArrayList<AccountItem>(), ""),
-                             var savingsAccounts: MutableList<Account>? = ArrayList<Account>(),
-                             var creditAccounts: MutableList<Account>? = ArrayList<Account>(),
-                             var pastUnreconciledBudgetItems: MutableMap<String, BudgetItem>? = HashMap(),
-                             var currentPayPeriodBudgetState: BudgetState? = BudgetState(),
-                             var futureBudgetStates: MutableList<BudgetState> = ArrayList(),
-                             var futureBudgetItems: MutableMap<String, BudgetItem>? = HashMap(),
-                             var oneUpNumber: Int = 0)
+data class ApplicationState(var checkingAccount: Account? = Account("Checking model.Account", 0.0,
+        ArrayList<AccountItem>(), ArrayList<AccountItem>(), ""),
+                            var savingsAccounts: MutableList<Account>? = ArrayList<Account>(),
+                            var creditAccounts: MutableList<Account>? = ArrayList<Account>(),
+                            var pastUnreconciledBudgetItems: MutableMap<String, BudgetItem>? = HashMap(),
+                            var currentPayPeriodBudgetState: BudgetState? = BudgetState(),
+                            var futureBudgetStates: MutableList<BudgetState> = ArrayList(),
+                            var futureBudgetItems: MutableMap<String, BudgetItem>? = HashMap(),
+                            var oneUpNumber: Int = 0)
                                 : java.io.Serializable {
 
 

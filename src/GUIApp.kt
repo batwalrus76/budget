@@ -1,4 +1,8 @@
 import org.hexworks.zircon.api.*
+import view.AccountsPanel
+import view.BudgetStatePanel
+import view.CommandsPanel
+import view.ItemsPanel
 import java.time.LocalDateTime
 
 
@@ -20,29 +24,18 @@ object GUIApp {
         budgetStatePanel.build()
 
         var accountsPanel = AccountsPanel()
-        accountsPanel.date = LocalDateTime.now()
         accountsPanel.build()
 
-        val itemsPanel = Components.panel()
-                .wrapWithBox(true) // panels can be wrapped in a box
-                .withTitle("Items") // if a panel is wrapped in a box a title can be displayed
-                .wrapWithShadow(false) // shadow can be added
-                .withSize(Sizes.create(160, 24)) // the size must be smaller than the parent's size
-                .withPosition(Positions.create(0,50))
-                .build() // position is always relative to the parent
+        var itemsPanel = ItemsPanel()
+        itemsPanel.build()
 
-        val commandsPanel = Components.panel()
-                .wrapWithBox(true) // panels can be wrapped in a box
-                .withTitle("Commands") // if a panel is wrapped in a box a title can be displayed
-                .wrapWithShadow(false) // shadow can be added
-                .withSize(Sizes.create(160, 24)) // the size must be smaller than the parent's size
-                .withPosition(Positions.create(0,74))
-                .build() // position is always relative to the parent
+        var commandsPanel = CommandsPanel()
+        commandsPanel.build()
 
         screen.addComponent(budgetStatePanel.panel!!)
         screen.addComponent(accountsPanel.panel!!)
-        screen.addComponent(itemsPanel)
-        screen.addComponent(commandsPanel)
+        screen.addComponent(itemsPanel.panel!!)
+        screen.addComponent(commandsPanel.panel!!)
 
         // we can apply color themes to a screen
         screen.applyColorTheme(ColorThemes.monokaiBlue())

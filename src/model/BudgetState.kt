@@ -1,6 +1,7 @@
-import BudgetItem.Companion.dateStringParser
-import BudgetItem.Companion.parseBudgetItemFromJsonObject
-import com.beust.klaxon.JsonArray
+package model
+
+import model.BudgetItem.Companion.dateStringParser
+import model.BudgetItem.Companion.parseBudgetItemFromJsonObject
 import com.beust.klaxon.JsonObject
 import java.io.Serializable
 import java.time.LocalDateTime

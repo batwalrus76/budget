@@ -1,3 +1,8 @@
+package model
+
+import model.json.KlaxonDate
+import model.json.KlaxonRecurrence
+import model.enums.Recurrence
 import com.beust.klaxon.*
 import java.io.Serializable
 import java.time.LocalDateTime
