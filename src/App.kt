@@ -1,31 +1,29 @@
 import control.ApplicationStateCLIProcessor
 import control.ApplicationStateManager
+import control.ApplicationStateManager.Companion.DEFAULT_STATE_FILE
+import control.ApplicationStateManager.Companion.DEFAULT_STATE_FILE_LOCATION
+import control.ApplicationStateManager.Companion.buildApplicationStateFromDefaultFileLocation
 import model.ApplicationState
+import model.BudgetState
 import java.io.File
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
 
-    val stateFileLocation: String = "/Users/pascact1/.budget"
-    val stateFile = File(stateFileLocation)
-    var applicationState: ApplicationState?
-
-    if (stateFile?.exists()) {
-        applicationState = ApplicationState.deserializeJsonToApplicationState(stateFile)
-    } else {
-        applicationState = ApplicationState()
-    }
+    var applicationState: ApplicationState = buildApplicationStateFromDefaultFileLocation()
+    
     var applicationStateManager: ApplicationStateManager = ApplicationStateManager(applicationState)
     applicationStateManager.reconcilePastCurrentFutureBudgetStates()
 
     var applicationStateCLIProcessor: ApplicationStateCLIProcessor =
             ApplicationStateCLIProcessor(applicationState, applicationStateManager)
 
-    var continueRunning = true
 
-    while (continueRunning) {
+    var workingBudgetState: BudgetState? = BudgetState()
+
+    while (workingBudgetState != null) {
         //Options add/remove budget items, add/remove savings accounts, add/remove credit accounts
-        continueRunning = applicationStateCLIProcessor.cliEntryPoint(stateFile)
+        workingBudgetState = applicationStateCLIProcessor.cliEntryPoint(DEFAULT_STATE_FILE)
     }
     exitProcess(0)
 }

@@ -1,9 +1,6 @@
 package control
 
-import model.Account
-import model.AccountItem
-import model.ApplicationState
-import model.BudgetItem
+import model.*
 import model.enums.Recurrence
 import java.io.File
 import java.time.DayOfWeek
@@ -11,11 +8,11 @@ import java.time.LocalDateTime
 
 class ApplicationStateCLIProcessor(var applicationState: ApplicationState, var applicationStateManager: ApplicationStateManager) {
 
-    fun cliEntryPoint(stateFile: File): Boolean {
+    fun cliEntryPoint(stateFile: File): BudgetState? {
         var applicationStateBudgetAnalysis: ApplicationStateBudgetAnalysis = ApplicationStateBudgetAnalysis(applicationState)
-        var continueRunning: Boolean = true
         print("Would you like to modify your [0] Current Budget Items, [1] Future Budget States, [2] Savings Accounts, [3] Credit Accounts, [4] Checking model.Account, [5] Perform Current Week Analysis, [6] Perform Budget Analysis  or [7] Exit? ")
         print("\u001b[H\u001b[2J")
+        var workingBudgetState: BudgetState? = null
         var option: Int = readLine()!!.toInt()
         when (option) {
             0 -> processCLIBudgetState()
@@ -25,11 +22,11 @@ class ApplicationStateCLIProcessor(var applicationState: ApplicationState, var a
             4 -> processCLICheckingAccount()
             5 -> applicationStateBudgetAnalysis.performBudgetAnalysis(false)
             6 -> applicationStateBudgetAnalysis.performBudgetAnalysis(true)
-            7 -> continueRunning = false
+            7 -> workingBudgetState = null
         }
         var applicationStateJson = applicationState?.serializeApplicationStateToJson()
         stateFile.bufferedWriter().use { out -> out.write(applicationStateJson) }
-        return continueRunning
+        return workingBudgetState
     }
 
     private fun processFutureBudgetStates() {

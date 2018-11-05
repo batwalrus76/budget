@@ -2,28 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4735fecd-9ec3-4472-a57f-3bf2f869ea4e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/view/BudgetItemManagementPanel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/BudgetStateNavigationPanel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/CommandsPanel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/ItemsPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/model/view/ApplicationUIComponents.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/BudgetPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/accounts/AccountsPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/accounts/CheckingAccountPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/accounts/CreditAccountPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/accounts/SavingsAccountPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/budgetState/BudgetItemsPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/input/InputPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/items/BaseItemsPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/items/FutureItemsPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/items/ItemsPanel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/items/UnreconciledItemsPanel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Account.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Account.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AccountItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/AccountItem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AccountsPanel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/AccountsPanel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ApplicationState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/ApplicationState.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ApplicationStateBudgetAnalysis.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/ApplicationStateBudgetAnalysis.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ApplicationStateCLIProcessor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/ApplicationStateCLIProcessor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ApplicationStateManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/ApplicationStateManager.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BudgetAnalysis.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/BudgetAnalysis.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BudgetAnalysisState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/BudgetAnalysisState.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BudgetItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/BudgetItem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BudgetState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/BudgetState.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BudgetStatePanel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/BudgetStatePanel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUIApp.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIApp.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KlaxonDate.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/json/KlaxonDate.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KlaxonRecurrence.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/json/KlaxonRecurrence.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Recurrence.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/enums/Recurrence.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/ApplicationStateBudgetAnalysis.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/ApplicationStateBudgetAnalysis.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/ApplicationStateCLIProcessor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/ApplicationStateCLIProcessor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/ApplicationStateManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/ApplicationStateManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Account.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Account.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/BudgetItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/BudgetItem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/AccountsPanel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/BudgetItemManagementPanel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/BudgetStateNavigationPanel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/BudgetStatePanel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/budgetState/BudgetStatePanel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/CommandsPanel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/ItemsPanel.kt" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,7 +40,7 @@
     <session id="1635216743">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="15" />
+          <entry key="project.closed" value="16" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="4" />
           <entry key="project.open.time.10" value="2" />
@@ -44,25 +48,25 @@
           <entry key="project.open.time.6" value="2" />
           <entry key="project.open.time.7" value="1" />
           <entry key="project.open.time.8" value="3" />
-          <entry key="project.open.time.9" value="2" />
-          <entry key="project.opened" value="16" />
+          <entry key="project.open.time.9" value="3" />
+          <entry key="project.opened" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="class" value="13" />
+          <entry key="class" value="20" />
           <entry key="gitignore" value="1" />
           <entry key="gradle" value="2" />
-          <entry key="java" value="12" />
-          <entry key="kt" value="145" />
+          <entry key="java" value="13" />
+          <entry key="kt" value="249" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CLASS" value="13" />
+          <entry key="CLASS" value="20" />
           <entry key="Groovy" value="2" />
-          <entry key="JAVA" value="12" />
-          <entry key="Kotlin" value="145" />
+          <entry key="JAVA" value="13" />
+          <entry key="Kotlin" value="249" />
           <entry key="PLAIN_TEXT" value="1" />
         </counts>
       </usages-collector>
@@ -70,15 +74,15 @@
         <counts>
           <entry key="gitignore" value="4" />
           <entry key="gradle" value="407" />
-          <entry key="java" value="196" />
-          <entry key="kt" value="42692" />
+          <entry key="java" value="197" />
+          <entry key="kt" value="52720" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="407" />
-          <entry key="JAVA" value="196" />
-          <entry key="Kotlin" value="42692" />
+          <entry key="JAVA" value="197" />
+          <entry key="Kotlin" value="52720" />
           <entry key="PLAIN_TEXT" value="4" />
         </counts>
       </usages-collector>
@@ -89,20 +93,68 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GUIApp.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+            <state relative-caret-position="210">
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
               <folding>
-                <element signature="e#0#118#0" expanded="true" />
+                <element signature="e#0#168#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/model/view/ApplicationUIComponents.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="273">
+              <caret line="34" selection-start-line="34" selection-end-line="35" />
+              <folding>
+                <element signature="e#20#375#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/control/ApplicationStateManager.kt">
+        <entry file="file://$PROJECT_DIR$/src/view/budgetState/BudgetItemsPanel.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="540">
+              <caret line="36" column="29" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
+              <folding>
+                <element signature="e#26#243#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/view/items/BaseItemsPanel.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="29" column="24" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
+              <folding>
+                <element signature="e#20#358#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/view/accounts/CheckingAccountPanel.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="345">
+              <caret line="28" selection-start-line="28" selection-end-line="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/view/input/InputPanel.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="570">
+              <caret line="38" column="61" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
+              <folding>
+                <element signature="e#20#289#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -114,8 +166,9 @@
       <list>
         <option value="Kotlin Enum" />
         <option value="Kotlin Object" />
-        <option value="Class" />
         <option value="Kotlin File" />
+        <option value="Kotlin Interface" />
+        <option value="Class" />
         <option value="Kotlin Class" />
       </list>
     </option>
@@ -144,21 +197,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/BudgetItem.java" />
-        <option value="$PROJECT_DIR$/src/CheckingAccount.kt" />
-        <option value="$PROJECT_DIR$/src/account.kt" />
-        <option value="$PROJECT_DIR$/src/BudgetAnalysis.kt" />
-        <option value="$PROJECT_DIR$/src/BudgetCLI.kt" />
-        <option value="$PROJECT_DIR$/src/app.kt" />
-        <option value="$PROJECT_DIR$/src/Recurrence.kt" />
-        <option value="$PROJECT_DIR$/src/ApplicationState.java" />
         <option value="$PROJECT_DIR$/src/KlaxonDate.kt" />
         <option value="$PROJECT_DIR$/src/KlaxonRecurrence.kt" />
         <option value="$PROJECT_DIR$/src/chancedelphia/App.kt" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/src/Account.kt" />
         <option value="$PROJECT_DIR$/src/ApplicationStateBudgetAnalysis.java" />
-        <option value="$PROJECT_DIR$/src/App.kt" />
         <option value="$PROJECT_DIR$/src/AccountItem.kt" />
         <option value="$PROJECT_DIR$/src/BudgetItem.kt" />
         <option value="$PROJECT_DIR$/src/BudgetAnalysisState.kt" />
@@ -173,15 +217,37 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/BudgetStatePanel.kt" />
         <option value="$PROJECT_DIR$/src/AccountsPanel.kt" />
-        <option value="$PROJECT_DIR$/src/control/ApplicationStateManager.kt" />
-        <option value="$PROJECT_DIR$/src/view/ItemsPanel.kt" />
         <option value="$PROJECT_DIR$/src/view/CommandsPanel.java" />
-        <option value="$PROJECT_DIR$/src/view/BudgetStatePanel.kt" />
-        <option value="$PROJECT_DIR$/src/view/AccountsPanel.kt" />
-        <option value="$PROJECT_DIR$/src/GUIApp.kt" />
         <option value="$PROJECT_DIR$/src/view/BudgetStateNavigationPanel.kt" />
         <option value="$PROJECT_DIR$/src/view/BudgetItemManagementPanel.kt" />
         <option value="$PROJECT_DIR$/src/view/CommandsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/ItemsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/control/ApplicationStateManager.kt" />
+        <option value="$PROJECT_DIR$/src/App.kt" />
+        <option value="$PROJECT_DIR$/src/control/ApplicationStateCLIProcessor.kt" />
+        <option value="$PROJECT_DIR$/src/view/BudgetStatePanel.kt" />
+        <option value="$PROJECT_DIR$/src/control/ApplicationStateBudgetAnalysis.kt" />
+        <option value="$PROJECT_DIR$/src/view/AccountsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/GUIApp.kt" />
+        <option value="$PROJECT_DIR$/src/view/BudgetPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/BaseItemsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/items/CurrentItemsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/items/ItemsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/budgetState/BudgetStatePanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/accounts/BaseAccountsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/accounts/SavingsAccountPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/accounts/CreditAccountPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/accounts/CheckingAccountPanel.kt" />
+        <option value="$PROJECT_DIR$/src/model/Account.kt" />
+        <option value="$PROJECT_DIR$/src/view/items/UnreconciledItemsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/items/FutureItemsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/model/BudgetItem.kt" />
+        <option value="$PROJECT_DIR$/src/view/input/InputPanel.java" />
+        <option value="$PROJECT_DIR$/src/view/accounts/AccountsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/input/InputPanel.kt" />
+        <option value="$PROJECT_DIR$/src/model/view/ApplicationUIComponents.kt" />
+        <option value="$PROJECT_DIR$/src/view/items/BaseItemsPanel.kt" />
+        <option value="$PROJECT_DIR$/src/view/budgetState/BudgetItemsPanel.kt" />
       </list>
     </option>
   </component>
@@ -198,7 +264,7 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="width" value="1680" />
     <option name="height" value="1050" />
   </component>
@@ -208,6 +274,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -224,7 +291,20 @@
               <item name="budget" type="b2602c69:ProjectViewProjectNode" />
               <item name="budget" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="control" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="budget" type="b2602c69:ProjectViewProjectNode" />
+              <item name="budget" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="budget" type="b2602c69:ProjectViewProjectNode" />
+              <item name="budget" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="budget" type="b2602c69:ProjectViewProjectNode" />
@@ -234,15 +314,35 @@
             </path>
             <path>
               <item name="budget" type="b2602c69:ProjectViewProjectNode" />
+              <item name="budget" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="accounts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="budget" type="b2602c69:ProjectViewProjectNode" />
+              <item name="budget" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="budgetState" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="budget" type="b2602c69:ProjectViewProjectNode" />
+              <item name="budget" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="items" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="budget" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Course" />
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -260,11 +360,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
-      <recent name="control.json" />
-      <recent name="control.enums" />
-      <recent name="model" />
-      <recent name="control" />
       <recent name="view" />
+      <recent name="view.items" />
+      <recent name="view.budgetState" />
+      <recent name="view.accounts" />
+      <recent name="control.json" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/chancedelphia" />
@@ -282,7 +382,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Kotlin.Appkt">
+  <component name="RunManager" selected="Kotlin.GUIApp">
     <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
     </configuration>
@@ -399,12 +499,13 @@
       <workItem from="1540870901458" duration="380000" />
       <workItem from="1540903572468" duration="7000" />
       <workItem from="1540947843274" duration="7190000" />
-      <workItem from="1541109022331" duration="15079000" />
+      <workItem from="1541109022331" duration="15507000" />
+      <workItem from="1541253789532" duration="34196000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="158912000" />
+    <option name="totallyTimeSpent" value="193536000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -417,8 +518,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25346112" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25612354" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Learn" order="3" />
@@ -426,7 +528,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32920355" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.38672566" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.38672566" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32942238" />
@@ -461,33 +563,9 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/control/ApplicationStateManager.kt</url>
-          <line>54</line>
+          <line>55</line>
           <properties />
           <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/control/ApplicationStateManager.kt</url>
-          <line>12</line>
-          <properties />
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/control/ApplicationStateManager.kt</url>
-          <line>15</line>
-          <properties />
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/control/ApplicationStateManager.kt</url>
-          <line>47</line>
-          <properties />
-          <option name="timeStamp" value="52" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/view/CommandsPanel.kt</url>
-          <line>52</line>
-          <properties />
-          <option name="timeStamp" value="58" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -498,6 +576,13 @@
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
+    <expressions id="breakpointCondition">
+      <expression>
+        <expression-string>formattedNameStringBuilder.length &gt; NAME_LENGTH</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
     <expressions id="watch">
       <expression>
         <expression-string>applicationState.currentPayPeriodBudgetState.endDate = LocalDateTime.of(2018,11,2,7,59)</expression-string>
@@ -541,55 +626,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/app.java" />
-    <entry file="file://$PROJECT_DIR$/src/BudgetItem.java" />
-    <entry file="jar://$KOTLIN_BUNDLED$/lib/kotlin-stdlib-sources.jar!/kotlin/Collections.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="261" column="27" selection-start-line="261" selection-start-column="17" selection-end-line="261" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/BudgetCLI.kt" />
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/src.zip!/java/time/LocalDateTime.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="501" column="12" selection-start-line="501" selection-start-column="12" selection-end-line="501" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/src.zip!/java/time/LocalDate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1033">
-          <caret line="136" column="19" selection-start-line="136" selection-start-column="19" selection-end-line="136" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$KOTLIN_BUNDLED$/lib/kotlin-stdlib-sources.jar!/kotlin/Primitives.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="511" column="24" selection-start-line="511" selection-start-column="24" selection-end-line="511" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Downloads/klaxon-3.0.11.jar!/com/beust/klaxon/Klaxon.class" />
-    <entry file="jar://$USER_HOME$/Downloads/klaxon-3.0.11.jar!/com/beust/klaxon/JsonValue.class" />
-    <entry file="jar://$USER_HOME$/Downloads/klaxon-3.0.11.jar!/com/beust/klaxon/Converter.class" />
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/src.zip!/java/io/FileInputStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="218" column="23" selection-start-line="218" selection-start-column="23" selection-end-line="218" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle" />
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/src.zip!/java/time/DayOfWeek.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="108" column="12" selection-start-line="108" selection-start-column="12" selection-end-line="108" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ApplicationStateBudgetAnalysis.java" />
     <entry file="jar://$KOTLIN_BUNDLED$/lib/kotlin-stdlib-sources.jar!/common/generated/_Collections.kt">
       <provider selected="true" editor-type-id="text-editor">
@@ -622,44 +658,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-          <folding>
-            <element signature="e#0#52#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/control/ApplicationStateCLIProcessor.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4860">
-          <caret line="331" selection-start-line="331" selection-end-line="331" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/AccountItem.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="3" column="30" lean-forward="true" selection-start-line="3" selection-start-column="30" selection-end-line="3" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/control/ApplicationStateBudgetAnalysis.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="6" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
-          <folding>
-            <element signature="e#17#385#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -679,51 +681,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/BudgetItem.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="75" column="19" selection-start-line="75" selection-start-column="19" selection-end-line="75" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/BudgetAnalysisState.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="5" lean-forward="true" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/ApplicationState.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="92" selection-start-line="92" selection-end-line="92" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/CommandsPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/ItemsPanel.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="98">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="62" selection-end-column="5" />
-          <folding>
-            <element signature="e#14#180#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/BudgetStatePanel.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="38" column="97" selection-start-line="38" selection-start-column="97" selection-end-line="38" selection-end-column="97" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/CommandsPanel.java" />
     <entry file="jar://$PROJECT_DIR$/lib/zircon.jvm-2018.5.0-RELEASE.jar!/org/hexworks/zircon/api/GameComponents.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -752,20 +710,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/zircon.jvm-2018.5.0-RELEASE.jar!/org/hexworks/zircon/api/Components.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="48" selection-start-line="14" selection-start-column="43" selection-end-line="14" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/AccountsPanel.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="81" column="36" lean-forward="true" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/view/BudgetStateNavigationPanel.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="166">
@@ -776,47 +720,278 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/CommandsPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="35" column="69" selection-start-line="35" selection-start-column="69" selection-end-line="35" selection-end-column="69" />
+          <folding>
+            <element signature="e#14#225#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/view/BudgetItemManagementPanel.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="52" column="36" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="36" />
+        <state relative-caret-position="255">
+          <caret line="23" column="79" selection-start-line="23" selection-start-column="51" selection-end-line="23" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/control/ApplicationStateManager.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="91" column="16" lean-forward="true" selection-start-line="91" selection-start-column="16" selection-end-line="91" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/zircon.jvm-2018.5.0-RELEASE.jar!/org/hexworks/zircon/api/Components.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="128" selection-start-line="20" selection-start-column="105" selection-end-line="20" selection-end-column="128" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/zircon.jvm-2018.5.0-RELEASE.jar!/org/hexworks/zircon/api/builder/component/RadioButtonGroupBuilder.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="79" selection-start-line="12" selection-start-column="63" selection-end-line="12" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/zircon.jvm-2018.5.0-RELEASE.jar!/org/hexworks/zircon/api/graphics/Layer.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="24" selection-start-line="12" selection-start-column="24" selection-end-line="12" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/control/ApplicationStateBudgetAnalysis.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="89">
+          <caret line="12" column="75" selection-start-line="12" selection-start-column="59" selection-end-line="12" selection-end-column="75" />
           <folding>
-            <element signature="e#14#272#0" expanded="true" />
+            <element signature="e#17#385#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="25" column="71" selection-start-line="25" selection-start-column="58" selection-end-line="25" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/control/ApplicationStateCLIProcessor.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/BudgetAnalysisState.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/zircon.jvm-2018.5.0-RELEASE.jar!/org/hexworks/zircon/api/Sizes.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="43" selection-start-line="6" selection-start-column="43" selection-end-line="6" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/budgetState/BudgetStatePanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="50" selection-start-line="29" selection-start-column="50" selection-end-line="29" selection-end-column="50" />
+          <folding>
+            <element signature="e#26#412#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/items/ItemsPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="16" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="16" />
+          <folding>
+            <element signature="e#20#322#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/accounts/BaseAccountsPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="19" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="19" />
+          <folding>
+            <element signature="e#23#278#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/AccountItem.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="5" column="11" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/ApplicationState.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="13" column="32" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/accounts/SavingsAccountPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="27" lean-forward="true" selection-start-line="27" selection-start-column="27" selection-end-line="27" selection-end-column="27" />
+          <folding>
+            <element signature="e#23#248#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/accounts/CreditAccountPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+          <folding>
+            <element signature="e#23#215#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/items/FutureItemsPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+          <folding>
+            <element signature="e#20#220#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/items/UnreconciledItemsPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="e#20#220#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/Account.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="55" column="34" lean-forward="true" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="34" />
+        <state relative-caret-position="7">
+          <caret line="17" column="9" lean-forward="true" selection-start-line="17" selection-start-column="9" selection-end-line="17" selection-end-column="9" />
+          <folding>
+            <element signature="e#15#219#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/CommandsPanel.kt">
+    <entry file="file://$PROJECT_DIR$/src/model/BudgetItem.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="29" selection-start-line="29" selection-start-column="2" selection-end-line="31" selection-end-column="63" />
+        <state relative-caret-position="335">
+          <caret line="80" column="26" selection-start-line="80" selection-start-column="26" selection-end-line="80" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/BudgetPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="85" selection-start-line="7" selection-start-column="85" selection-end-line="7" selection-end-column="85" />
           <folding>
-            <element signature="e#14#272#0" expanded="true" />
+            <element signature="e#14#174#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/input/InputPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/accounts/AccountsPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="15" column="65" lean-forward="true" selection-start-line="14" selection-start-column="19" selection-end-line="15" selection-end-column="65" />
+          <folding>
+            <element signature="e#23#445#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GUIApp.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        <state relative-caret-position="210">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
           <folding>
-            <element signature="e#0#118#0" expanded="true" />
+            <element signature="e#0#168#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/control/ApplicationStateManager.kt">
+    <entry file="file://$PROJECT_DIR$/src/view/input/InputPanel.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="570">
+          <caret line="38" column="61" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
+          <folding>
+            <element signature="e#20#289#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/accounts/CheckingAccountPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="28" selection-start-line="28" selection-end-line="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/view/ApplicationUIComponents.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="34" selection-start-line="34" selection-end-line="35" />
+          <folding>
+            <element signature="e#20#375#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/zircon.jvm-2018.5.0-RELEASE.jar!/org/hexworks/zircon/api/component/RadioButtonGroup.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="24" selection-start-line="12" selection-start-column="24" selection-end-line="12" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/items/BaseItemsPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="24" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
+          <folding>
+            <element signature="e#20#358#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/budgetState/BudgetItemsPanel.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="36" column="29" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
+          <folding>
+            <element signature="e#26#243#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

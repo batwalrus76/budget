@@ -4,6 +4,7 @@ import model.AccountItem.Companion.parseAccountItemFromJsonObject
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import java.io.Serializable
+import java.time.format.DateTimeFormatter
 
 data class Account(val name: String, var balance: Double, var items: MutableList<AccountItem>,
                    var reconciledItems: MutableList<AccountItem>, var notes: String): Serializable {
@@ -39,7 +40,11 @@ data class Account(val name: String, var balance: Double, var items: MutableList
     }
 
     override fun toString(): String {
-        return "model.Account(name='$name', balance=$balance, items=$items, reconciledItems=$reconciledItems, notes='$notes')"
+        var formattedNameStringBuilder: StringBuilder = StringBuilder(name)
+        for (nameLength in formattedNameStringBuilder.length..Account.NAME_LENGTH){
+            formattedNameStringBuilder.append(' ')
+        }
+        return "${formattedNameStringBuilder.toString()}\tBalance = $balance"
     }
 
     companion object {
@@ -49,6 +54,7 @@ data class Account(val name: String, var balance: Double, var items: MutableList
         val ITEMS_KEY: String = "items"
         val RECONCILED_ITEMS_KEY: String = "reconciledItems"
         val NOTES_KEY: String = "notes"
+        val NAME_LENGTH: Int = 30
 
         fun parseAccountFromJsonObject(accountObj: JsonObject): Account {
             val name: String = accountObj.string(NAME_KEY)!!

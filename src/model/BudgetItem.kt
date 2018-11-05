@@ -32,8 +32,29 @@ data class BudgetItem @JvmOverloads constructor(
         return valid
     }
 
+
     override fun toString():String {
-        return "id: $id\t Due: $due\tName: $name\tScheduledAmount: $scheduledAmount\tActualAmount: $actualAmount"
+        var formattedNameStringBuilder: StringBuilder = StringBuilder(name)
+        for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
+            formattedNameStringBuilder.append(' ')
+        }
+        var scheduledAmountStringBuilder: StringBuilder = StringBuilder(""+scheduledAmount)
+        for (nameLength in scheduledAmountStringBuilder.length..AMOUNT_LENGTH){
+            scheduledAmountStringBuilder.append(' ')
+        }
+        return "Due: ${due.format(DateTimeFormatter.ISO_DATE)}\tName: ${formattedNameStringBuilder.substring(0, NAME_LENGTH)}\tScheduled: ${scheduledAmountStringBuilder}\tActual: $actualAmount"
+    }
+
+    fun toNarrowString():String {
+        var formattedNameStringBuilder: StringBuilder = StringBuilder(name)
+        for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
+            formattedNameStringBuilder.append(' ')
+        }
+        var scheduledAmountStringBuilder: StringBuilder = StringBuilder(""+scheduledAmount)
+        for (nameLength in scheduledAmountStringBuilder.length..AMOUNT_LENGTH){
+            scheduledAmountStringBuilder.append(' ')
+        }
+        return "Due: ${due.format(DateTimeFormatter.ISO_DATE)}\tName: ${formattedNameStringBuilder.substring(0, NAME_LENGTH)}\tScheduled: ${scheduledAmountStringBuilder}\t"
     }
 
     fun serializeBudgetItemToJson(): String {
@@ -57,6 +78,8 @@ data class BudgetItem @JvmOverloads constructor(
         val DUE_KEY = "due"
         val RECURRENCE_KEY = "recurrence"
         val NAME_KEY = "name"
+        val NAME_LENGTH=24
+        val AMOUNT_LENGTH=8
 
         fun parseBudgetItemFromJsonObject(value: JsonObject?): BudgetItem? {
             val id: Int = value?.int(ID_KEY)!!

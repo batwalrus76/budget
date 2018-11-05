@@ -13,7 +13,7 @@ import java.time.LocalTime
 class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
 
 
-    fun performBudgetAnalysis(isComplete: Boolean) {
+    fun performBudgetAnalysis(isComplete: Boolean): MutableList<BudgetAnalysisState> {
         println(String.format("Starting Checking model.Account Balance: %.2f", applicationState.checkingAccount?.balance))
         println("Unreconciled Items:")
         var currentBudgetAnalysisStates =
@@ -43,6 +43,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         }
         println("Future Budget Items:")
         currentBudgetAnalysisStates?.addAll(performAnalysisOnBudgetItems(applicationState.futureBudgetItems))
+        return currentBudgetAnalysisStates
     }
 
     private fun performAnalysisOnBudgetItems(budgetItems: MutableMap<String, BudgetItem>?): MutableList<BudgetAnalysisState> {
