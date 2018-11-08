@@ -22,6 +22,7 @@ object GUIApp {
             workingBudgetState = applicationUIComponents.update()
             applicationUIComponents.display()
             Thread.sleep(60_000)
+            ApplicationStateManager.serializeToDefaultJsonFileLocation(applicationState)
         }
         exitProcess(0)
     }

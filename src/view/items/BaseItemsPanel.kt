@@ -1,6 +1,7 @@
 package view.items
 
 import model.ApplicationState
+import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
@@ -9,7 +10,8 @@ import org.hexworks.zircon.api.component.RadioButtonGroup
 import org.hexworks.zircon.api.data.Position
 import view.input.InputPanel
 
-abstract class BaseItemsPanel (var width: Int, var height: Int, val component: Component, val inputPanel: InputPanel,
+abstract class BaseItemsPanel (var width: Int, var height: Int, val component: Component,
+                               val parent: ApplicationUIComponents,
                                var applicationState: ApplicationState) {
 
     var radioButtonGroup: RadioButtonGroup? = null

@@ -3,7 +3,9 @@ package model
 import model.BudgetItem.Companion.dateStringParser
 import model.BudgetItem.Companion.parseBudgetItemFromJsonObject
 import com.beust.klaxon.JsonObject
+import model.enums.Recurrence
 import java.io.Serializable
+import java.time.DayOfWeek
 import java.time.LocalDateTime
 
 data class BudgetState(var currentBudgetItems: MutableMap<String, BudgetItem>? = HashMap<String, BudgetItem>(),
@@ -58,6 +60,29 @@ data class BudgetState(var currentBudgetItems: MutableMap<String, BudgetItem>? =
         val START_DATE_KEY:String = "startDate"
         val END_DATE_KEY:String = "endDate"
 
-    }
 
+        fun determinePreviousDueLocalDateTime(dayOfWeek: DayOfWeek, currentDateTime: LocalDateTime): LocalDateTime {
+            return when (dayOfWeek) {
+                DayOfWeek.FRIDAY -> currentDateTime
+                DayOfWeek.SATURDAY -> currentDateTime.minusDays(1)
+                DayOfWeek.SUNDAY -> currentDateTime.minusDays(2)
+                DayOfWeek.MONDAY -> currentDateTime.minusDays(3)
+                DayOfWeek.TUESDAY -> currentDateTime.minusDays(4)
+                DayOfWeek.WEDNESDAY -> currentDateTime.minusDays(5)
+                DayOfWeek.THURSDAY -> currentDateTime.minusDays(6)
+            }
+        }
+
+        fun determineNextDueLocalDateTime(futureBudgetItemRecurrence: Recurrence, due: LocalDateTime): LocalDateTime {
+            return when (futureBudgetItemRecurrence) {
+                Recurrence.DAILY -> due.plusDays(Recurrence.DAILY.intervalDaysOrMonths)
+                Recurrence.WEEKLY -> due.plusDays(Recurrence.WEEKLY.intervalDaysOrMonths)
+                Recurrence.BIWEEKLY -> due.plusDays(Recurrence.BIWEEKLY.intervalDaysOrMonths)
+                Recurrence.MONTHLY -> due.plusMonths(Recurrence.MONTHLY.intervalDaysOrMonths)
+                Recurrence.YEARLY -> due.plusMonths(Recurrence.YEARLY.intervalDaysOrMonths)
+                Recurrence.ONETIME -> due.plusMonths(0L)
+            }
+        }
+
+    }
 }

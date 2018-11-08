@@ -2,18 +2,20 @@ package view.accounts
 
 import model.ApplicationState
 import model.BudgetAnalysisState
+import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.data.Position
-import view.BudgetPanel
+import view.items.BaseItemsPanel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class AccountsPanel(width: Int,  height: Int, component: Component, applicationState: ApplicationState) :
-        BudgetPanel(width, height, component, applicationState) {
+class AccountsPanel(width: Int,  height: Int, component: Component, parent:ApplicationUIComponents,
+                                applicationState: ApplicationState) :
+        BaseItemsPanel(width, height, component, parent, applicationState) {
 
     var date: LocalDateTime = LocalDateTime.now()
     var dateLabel: Label = Components.label()
@@ -38,17 +40,16 @@ class AccountsPanel(width: Int,  height: Int, component: Component, applicationS
                 .withSize(Sizes.create(this.width!!, this.height!!)) // the size must be smaller than the parent's size
                 .withPosition(ZERO_OFFSET.relativeToRightOf(component!!))
                 .build() // position is always relative to the parent
-        this.checkingAccountPanel =
-                CheckingAccountPanel(width!!-4, individualSubPanelHeight!!+1, dateLabel, applicationState)
+        this.checkingAccountPanel = CheckingAccountPanel(width!!-4, individualSubPanelHeight!!+1,
+                                dateLabel, this!!.parent!!, applicationState)
         this.checkingAccountPanel!!.build()
         this.savingsAccountsPanel =
                 SavingsAccountPanel(width!!-4, multiAccountSubPanelHeight!!,
-                        checkingAccountPanel!!.panel!!, applicationState!!)
+                        checkingAccountPanel!!.panel!!, parent, applicationState!!)
         this.savingsAccountsPanel!!.build()
         this.checkingAccountPanel!!.build()
-        this.creditAccountsPanel =
-                CreditAccountPanel(width!!-4, multiAccountSubPanelHeight!!,
-                        savingsAccountsPanel!!.panel!!, applicationState)
+        this.creditAccountsPanel = CreditAccountPanel(width!!-4, multiAccountSubPanelHeight!!,
+                        savingsAccountsPanel!!.panel!!, parent, applicationState)
         this.creditAccountsPanel!!.build()
         this.panel!!.addComponent(dateLabel)
         this.panel!!.addComponent(checkingAccountPanel!!.panel!!)
@@ -56,8 +57,14 @@ class AccountsPanel(width: Int,  height: Int, component: Component, applicationS
         this.panel!!.addComponent(creditAccountsPanel!!.panel!!)
     }
 
-    override fun update(budgetAnalysisState: BudgetAnalysisState){
+    fun update(budgetAnalysisState: BudgetAnalysisState){
         checkingAccountPanel!!.update(budgetAnalysisState)
+        savingsAccountsPanel!!.update(budgetAnalysisState)
+        creditAccountsPanel!!.update(budgetAnalysisState)
+    }
+
+    override fun update(){
+        checkingAccountPanel!!.update(applicationState!!.checkingAccount!!.balance)
         savingsAccountsPanel!!.update()
         creditAccountsPanel!!.update()
     }

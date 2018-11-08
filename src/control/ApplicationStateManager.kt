@@ -1,10 +1,10 @@
 package control
 
+import control.ApplicationStateBudgetAnalysis.Companion.processFutureBudgetItemsIntoCurrentItems
 import model.ApplicationState
 import model.BudgetItem
 import model.BudgetState
-import control.ApplicationStateBudgetAnalysis.Companion.processFutureBudgetItemsIntoCurrentItems
-import control.ApplicationStateCLIProcessor.Companion.determineNextDueLocalDateTime
+import model.BudgetState.Companion.determineNextDueLocalDateTime
 import java.io.File
 import java.time.LocalDateTime
 
@@ -124,6 +124,11 @@ class ApplicationStateManager(var applicationState: ApplicationState) {
                 applicationState = ApplicationState()
             }
             return applicationState
+        }
+
+        fun serializeToDefaultJsonFileLocation(applicationState: ApplicationState){
+            var applicationStateJson = applicationState?.serializeApplicationStateToJson()
+            DEFAULT_STATE_FILE.bufferedWriter().use { out -> out.write(applicationStateJson) }
         }
     }
 }

@@ -2,8 +2,11 @@ package model.view
 
 import control.ApplicationStateBudgetAnalysis
 import model.ApplicationState
+import model.BudgetAnalysisState
+import model.BudgetItem
 import model.BudgetState
 import org.hexworks.zircon.api.*
+import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.screen.Screen
 import view.accounts.AccountsPanel
@@ -11,8 +14,10 @@ import view.budgetState.BudgetStatePanel
 import view.input.InputPanel
 import view.items.ItemsPanel
 import java.time.LocalDateTime
+import kotlin.math.max
+import kotlin.math.min
 
-class ApplicationUIComponents() {
+class ApplicationUIComponents{
 
     var budgetStatePanel: BudgetStatePanel? = null
     var accountsPanel: AccountsPanel? = null
@@ -20,9 +25,12 @@ class ApplicationUIComponents() {
     var inputPanel: InputPanel? = null
     var screen: Screen? = null
     var applicationState: ApplicationState? = null
+    var currentViewedBudgetState: BudgetState? = null
+    var applicationStateBudgetAnalysis: ApplicationStateBudgetAnalysis? = null
+    var budgetStateIndex = 0
 
     fun build(){
-
+        applicationStateBudgetAnalysis = ApplicationStateBudgetAnalysis(applicationState!!)
         val fullScreenSize: Size = Size.create(160,98)
         val tileGrid = SwingApplications.startTileGrid(
                 AppConfigs.newConfig()
@@ -30,26 +38,26 @@ class ApplicationUIComponents() {
                         .withDefaultTileset(CP437TilesetResources.rexPaint12x12())
                         .build())
         screen = Screens.createScreenFor(tileGrid)
+        currentViewedBudgetState = applicationState!!.currentPayPeriodBudgetState
 
         val fifthScreenWidth: Int = fullScreenSize.width/5
         val sixthScreenHeight: Int = fullScreenSize.height/6+2
 
+        inputPanel = InputPanel(fullScreenSize.width, sixthScreenHeight-5, 0,
+                            fullScreenSize.height-(sixthScreenHeight-5), this, applicationState!!)
+        inputPanel!!.build()
+
         budgetStatePanel = BudgetStatePanel(fifthScreenWidth * 3+1,
-                sixthScreenHeight * 2, this!!.applicationState!!)
-        budgetStatePanel!!.startDate = LocalDateTime.now()
-        budgetStatePanel!!.endDate = budgetStatePanel!!.startDate.plusDays(6).plusHours(23).plusMinutes(59)
+                            sixthScreenHeight * 2+1, this, this!!.applicationState!!)
         budgetStatePanel!!.build()
 
-        accountsPanel = AccountsPanel(fifthScreenWidth*2 - 1, sixthScreenHeight * 2,
-                                budgetStatePanel!!.panel!!, applicationState!!)
+        accountsPanel = AccountsPanel(fifthScreenWidth*2 - 1, sixthScreenHeight * 2+1,
+                                budgetStatePanel!!.panel!!, this, applicationState!!)
         accountsPanel!!.build()
 
-        itemsPanel = ItemsPanel(fullScreenSize.width, sixthScreenHeight*3-2,
-                                budgetStatePanel!!.panel!!, applicationState!!)
+        itemsPanel = ItemsPanel(fullScreenSize.width, sixthScreenHeight*3-8,
+                                budgetStatePanel!!.panel!!, this, applicationState!!)
         itemsPanel!!.build()
-
-        inputPanel = InputPanel(fullScreenSize.width, sixthScreenHeight-10, itemsPanel!!.panel!!, applicationState!!)
-        inputPanel!!.build()
 
         screen!!.addComponent(budgetStatePanel!!.panel!!)
         screen!!.addComponent(accountsPanel!!.panel!!)
@@ -72,12 +80,59 @@ class ApplicationUIComponents() {
     }
 
     fun update(): BudgetState {
-        var applicationStateBudgetAnalysis = ApplicationStateBudgetAnalysis(applicationState!!)
-        var budgetState = applicationState!!.currentPayPeriodBudgetState
-        var currentBudgetAnalysisStates = applicationStateBudgetAnalysis.performBudgetAnalysis(false)
+        var budgetState = currentViewedBudgetState
+        var currentBudgetAnalysisStates: MutableList<BudgetAnalysisState>? = null
+        when(budgetStateIndex) {
+            0 -> currentBudgetAnalysisStates = applicationStateBudgetAnalysis?.performBudgetAnalysis(false)
+            else -> {
+                currentBudgetAnalysisStates =
+                        currentViewedBudgetState?.let { applicationStateBudgetAnalysis?.performBudgetAnalysis(it) }
+            }
+        }
         budgetStatePanel?.update()
-        accountsPanel?.update(currentBudgetAnalysisStates.first()!!)
+        accountsPanel?.update(currentBudgetAnalysisStates?.first()!!)
         itemsPanel?.update()
         return budgetState!!
+    }
+
+    fun updateInputPanel(panel: Panel){
+        inputPanel?.update(panel)
+    }
+
+    fun clearInputPanel(){
+        inputPanel?.clear()
+    }
+
+    fun projectBalances(){
+        var budgetItems: MutableMap<String, BudgetItem> = HashMap()
+        currentViewedBudgetState?.currentBudgetItems?.let { budgetItems.putAll(it) }
+        applicationState?.pastUnreconciledBudgetItems?.let { budgetItems.putAll(it) }
+        var analysisStates: MutableList<BudgetAnalysisState>? = applicationStateBudgetAnalysis?.performAnalysisOnBudgetItems(budgetItems)
+        var lastAnalysisState: BudgetAnalysisState = analysisStates?.sortedWith(kotlin.comparisons.compareBy({ it.date }))!!.last()
+        accountsPanel?.update(lastAnalysisState)
+    }
+
+    fun currentBalances() {
+        accountsPanel?.update()
+    }
+
+    fun prevBudgetState() {
+        budgetStateIndex = max(0,budgetStateIndex-1)
+        updateBudgetState()
+    }
+
+    fun nextBudgetState() {
+        budgetStateIndex = min(applicationState?.futureBudgetStates?.size!! +1,budgetStateIndex+1)
+        updateBudgetState()
+    }
+
+    private fun updateBudgetState() {
+        when(budgetStateIndex){
+            0 -> currentViewedBudgetState = applicationState?.currentPayPeriodBudgetState
+            else -> {
+                currentViewedBudgetState = applicationState?.futureBudgetStates?.get(budgetStateIndex-1)
+            }
+        }
+        update()
     }
 }

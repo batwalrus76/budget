@@ -47,6 +47,14 @@ data class Account(val name: String, var balance: Double, var items: MutableList
         return "${formattedNameStringBuilder.toString()}\tBalance = $balance"
     }
 
+    fun toString(balance: Double): String {
+        var formattedNameStringBuilder: StringBuilder = StringBuilder(name)
+        for (nameLength in formattedNameStringBuilder.length..Account.NAME_LENGTH){
+            formattedNameStringBuilder.append(' ')
+        }
+        return "${formattedNameStringBuilder.toString()}\tBalance = $balance"
+    }
+
     companion object {
 
         val NAME_KEY: String = "name"

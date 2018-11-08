@@ -1,6 +1,7 @@
 package view.items
 
 import model.ApplicationState
+import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
@@ -8,7 +9,8 @@ import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position
 
-class ItemsPanel (var width: Int, var height: Int, var component: Component, var applicationState: ApplicationState) {
+class ItemsPanel (var width: Int, var height: Int, var component: Component, var parent: ApplicationUIComponents,
+                  var applicationState: ApplicationState) {
 
     var panel: Panel? = null
     var subPanelHeight = height-3
@@ -25,10 +27,10 @@ class ItemsPanel (var width: Int, var height: Int, var component: Component, var
                 .withSize(Sizes.create(width, height)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(0,0).relativeToBottomOf(this!!.component!!))
                 .build()
-        this.unreconciledItemsPanel = UnreconciledItemsPanel(subPanelWidth, subPanelHeight, component, applicationState)
+        this.unreconciledItemsPanel = UnreconciledItemsPanel(subPanelWidth, subPanelHeight, component, parent, applicationState)
         this.unreconciledItemsPanel!!.build()
         this.futureItemPanel = FutureItemsPanel(subPanelWidth, subPanelHeight, unreconciledItemsPanel!!.panel!!,
-                                applicationState)
+                parent, applicationState)
         this.futureItemPanel!!.build()
         this.panel!!.addComponent(unreconciledItemsPanel!!.panel!!)
         this.panel!!.addComponent(futureItemPanel!!.panel!!)
