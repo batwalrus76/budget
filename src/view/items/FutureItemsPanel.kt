@@ -134,7 +134,7 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: A
         val recurrenceRadioButtonGroup: RadioButtonGroup = Components.radioButtonGroup()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
-                .withSize(Sizes.create(30, 10))
+                .withSize(Sizes.create(20, 10))
                 .withPosition(Positions.create(1,0).relativeToRightOf(recurrenceLabel))
                 .build()
         Recurrence.values().forEach { recurrence ->
@@ -148,23 +148,70 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: A
             currentRecurrence = Recurrence.valueOf(it.key)
         }
         newPanel.addComponent(recurrenceRadioButtonGroup)
-        val submitButton: Button = Components.button()
-                .withBoxType(BoxType.DOUBLE)
-                .withText("Update Budget Item")
+        val transferLabel: Label = Components.label()
+                .wrapWithBox(false)
+                .wrapWithShadow(false)
+                .withText("Transfer:")
                 .withPosition(Positions.create(1,0).relativeToRightOf(recurrenceRadioButtonGroup))
                 .build()
+        newPanel.addComponent(transferLabel)
+        var targetSavingsAccountName = budgetItem!!.transferredToSavingsAccountName
+        val transferSavingsAccountButtonGroup: RadioButtonGroup = Components.radioButtonGroup()
+                .wrapWithBox(false)
+                .wrapWithShadow(false)
+                .withSize(Sizes.create(35, 5))
+                .withPosition(Positions.create(1,0).relativeToRightOf(transferLabel))
+                .build()
+        applicationState.savingsAccounts!!.forEach { savingsAccount ->
+            if(savingsAccount.name.equals(targetSavingsAccountName)) {
+                transferSavingsAccountButtonGroup.addOption(savingsAccount.name, savingsAccount.name + " (current)")
+            } else {
+                transferSavingsAccountButtonGroup.addOption(savingsAccount.name, savingsAccount.name)
+            }
+        }
+        transferSavingsAccountButtonGroup.onSelection { it ->
+            targetSavingsAccountName = it.key
+        }
+        newPanel.addComponent(transferSavingsAccountButtonGroup)
+
+        var targetCreditAccountName = budgetItem!!.transferredToCreditAccountName
+        val transferCreditAccountButtonGroup: RadioButtonGroup = Components.radioButtonGroup()
+                .wrapWithBox(false)
+                .wrapWithShadow(false)
+                .withSize(Sizes.create(35, 5))
+                .withPosition(Positions.create(0,0).relativeToBottomOf(transferSavingsAccountButtonGroup))
+                .build()
+        applicationState.creditAccounts!!.forEach { creditAccount ->
+            if(creditAccount.name.equals(targetCreditAccountName)) {
+                transferCreditAccountButtonGroup.addOption(creditAccount.name, creditAccount.name + " (current)")
+            } else {
+                transferCreditAccountButtonGroup.addOption(creditAccount.name, creditAccount.name)
+            }
+        }
+        transferCreditAccountButtonGroup.onSelection { it ->
+            targetCreditAccountName = it.key
+        }
+        newPanel.addComponent(transferCreditAccountButtonGroup)
+
+        val submitButton: Button = Components.button()
+                .withBoxType(BoxType.DOUBLE)
+                .withText("Update")
+                .withPosition(Positions.create(1,0).relativeToRightOf(transferSavingsAccountButtonGroup))
+                .build()
+
         submitButton.onMouseReleased {
             mouseAction ->
             var updatedBudgetItem = BudgetItem(0, scheduledAmountTextArea.text.toDoubleOrNull()!!,
                     actualAmountTextArea.text.toDoubleOrNull()!!,
                     LocalDateTime.of(LocalDate.parse(dueTextArea.text), LocalTime.of(8,0)),
-                    currentRecurrence, nameTextArea.text)
+                    currentRecurrence, nameTextArea.text,
+                    targetSavingsAccountName, targetCreditAccountName)
             updateBudgetItem(name, updatedBudgetItem)
         }
         newPanel.addComponent(submitButton)
         val reconcileButton: Button = Components.button()
                 .withBoxType(BoxType.DOUBLE)
-                .withText("Reconcile Budget Item")
+                .withText("Reconcile")
                 .withPosition(Positions.create(0,1).relativeToBottomOf(submitButton))
                 .build()
         reconcileButton.onMouseReleased {
@@ -173,7 +220,7 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: A
         newPanel.addComponent(reconcileButton)
         val deleteButton: Button = Components.button()
                 .withBoxType(BoxType.DOUBLE)
-                .withText("Delete Budget Item")
+                .withText("Delete")
                 .withPosition(Positions.create(0,1).relativeToBottomOf(reconcileButton))
                 .build()
         deleteButton.onMouseReleased {

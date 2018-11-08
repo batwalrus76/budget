@@ -33,6 +33,8 @@ class AddItemPanel(width: Int, height: Int, var parent: ApplicationUIComponents,
     var due:LocalDateTime = LocalDateTime.now()
     var recurrence = Recurrence.ONETIME
     var name = "PLACEHOLDER"
+    var transferredSavingsAccountName: String? = null
+    var transferredCreditAccountName: String? = null
 
     override fun build() {
         panel  = Components.panel()
@@ -123,7 +125,8 @@ class AddItemPanel(width: Int, height: Int, var parent: ApplicationUIComponents,
         addCurrentItemButton.onMouseReleased {
             mouseAction ->
             var newCurrentItem = BudgetItem(0, scheduledAmountTextArea.text.toDouble(),
-                    scheduledAmountTextArea.text.toDouble(), due, currentRecurrence, name)
+                    scheduledAmountTextArea.text.toDouble(), due, currentRecurrence, name,
+                    transferredSavingsAccountName, transferredCreditAccountName)
             applicationState.currentPayPeriodBudgetState!!.currentBudgetItems!!.put(name, newCurrentItem)
             parent.update()
             parent.clearInputPanel()
@@ -137,7 +140,8 @@ class AddItemPanel(width: Int, height: Int, var parent: ApplicationUIComponents,
         addFutureItemButton.onMouseReleased {
             mouseAction ->
             var newFutureItem = BudgetItem(0, scheduledAmountTextArea.text.toDouble(),
-                    scheduledAmountTextArea.text.toDouble(), due, currentRecurrence, name)
+                    scheduledAmountTextArea.text.toDouble(), due, currentRecurrence, name,
+                    transferredSavingsAccountName, transferredCreditAccountName)
             applicationState.futureBudgetItems!!.put(name, newFutureItem)
             parent.update()
             parent.clearInputPanel()
@@ -151,7 +155,8 @@ class AddItemPanel(width: Int, height: Int, var parent: ApplicationUIComponents,
         addUnreconciledItemButton.onMouseReleased {
             mouseAction ->
             var newFutureItem = BudgetItem(0, scheduledAmountTextArea.text.toDouble(),
-                    scheduledAmountTextArea.text.toDouble(), due, currentRecurrence, name)
+                    scheduledAmountTextArea.text.toDouble(), due, currentRecurrence, name,
+                    transferredSavingsAccountName, transferredCreditAccountName)
             applicationState.pastUnreconciledBudgetItems!!.put(name, newFutureItem)
             parent.update()
             parent.clearInputPanel()

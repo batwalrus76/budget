@@ -22,7 +22,11 @@ data class BudgetItem @JvmOverloads constructor(
         @KlaxonRecurrence
         var recurrence: Recurrence,
         @Json(name="name")
-        var name: String) : Serializable {
+        var name: String,
+        @Json(name="transferredToSavingsAccountName")
+        var transferredToSavingsAccountName: String?,
+        @Json(name="transferredToCreditAccountName")
+        var transferredToCreditAccountName: String?) : Serializable {
 
     fun validForWeek(start: LocalDateTime, end: LocalDateTime): Boolean{
         var valid: Boolean = false
@@ -54,11 +58,15 @@ data class BudgetItem @JvmOverloads constructor(
         for (nameLength in scheduledAmountStringBuilder.length..AMOUNT_LENGTH){
             scheduledAmountStringBuilder.append(' ')
         }
-        return "Due: ${due.format(DateTimeFormatter.ISO_DATE)}\tName: ${formattedNameStringBuilder.substring(0, NAME_LENGTH)}\tScheduled: ${scheduledAmountStringBuilder}\t"
+        var transferString = "[x]"
+        if(transferredToCreditAccountName.equals("null") && transferredToSavingsAccountName.equals("null")){
+            transferString = "[ ]"
+        }
+        return "${due.format(DateTimeFormatter.ISO_DATE)}\t${formattedNameStringBuilder.substring(0, NAME_LENGTH)}\txfer: ${transferString}\tScheduled: ${scheduledAmountStringBuilder}\t"
     }
 
     fun serializeBudgetItemToJson(): String {
-        var budgetStateStringBuilder: StringBuilder = StringBuilder()
+        var budgetStateStringBuilder = StringBuilder()
         budgetStateStringBuilder.append("{\n")
         budgetStateStringBuilder.append(String.format("\"%s\": %d,\n", ID_KEY, id))
         budgetStateStringBuilder.append(String.format("\"%s\": %.2f,\n", SCHEDULED_AMOUNT_KEY, scheduledAmount))
@@ -66,6 +74,8 @@ data class BudgetItem @JvmOverloads constructor(
         budgetStateStringBuilder.append(String.format("\"%s\": %s,\n", DUE_KEY, dateConverter.toJson(due)))
         budgetStateStringBuilder.append(String.format("\"%s\": \"%s\",\n", RECURRENCE_KEY, recurrence.name))
         budgetStateStringBuilder.append(String.format("\"%s\": \"%s\",\n", NAME_KEY, name))
+        budgetStateStringBuilder.append(String.format("\"%s\": \"%s\",\n", SAVINGS_ACCOUNT_NAME_KEY, transferredToSavingsAccountName))
+        budgetStateStringBuilder.append(String.format("\"%s\": \"%s\",\n", CREDIT_ACCOUNT_NAME_KEY, transferredToCreditAccountName))
         budgetStateStringBuilder.append("}\n")
         return budgetStateStringBuilder.toString()
     }
@@ -78,7 +88,9 @@ data class BudgetItem @JvmOverloads constructor(
         val DUE_KEY = "due"
         val RECURRENCE_KEY = "recurrence"
         val NAME_KEY = "name"
-        val NAME_LENGTH=24
+        val SAVINGS_ACCOUNT_NAME_KEY = "transferToSavingsAccount"
+        val CREDIT_ACCOUNT_NAME_KEY = "transferToCreditAccount"
+        val NAME_LENGTH=20
         val AMOUNT_LENGTH=8
 
         fun parseBudgetItemFromJsonObject(value: JsonObject?): BudgetItem? {
@@ -89,7 +101,16 @@ data class BudgetItem @JvmOverloads constructor(
             val due:LocalDateTime = dateStringParser(dueString)
             val recurrence: Recurrence = Recurrence.valueOf(value!!.string(RECURRENCE_KEY)!!)
             val name: String = value?.string(NAME_KEY)!!
-            return BudgetItem(id, scheduledAmount, actualAmount, due, recurrence, name)
+            var transferredToSavingsAccountName: String? = null
+            if(value.containsKey(SAVINGS_ACCOUNT_NAME_KEY)) {
+                transferredToSavingsAccountName = value?.string(SAVINGS_ACCOUNT_NAME_KEY)!!
+            }
+            var transferredToCreditAccountName: String? = null
+            if(value.containsKey(SAVINGS_ACCOUNT_NAME_KEY)) {
+                transferredToCreditAccountName = value?.string(CREDIT_ACCOUNT_NAME_KEY)!!
+            }
+            return BudgetItem(id, scheduledAmount, actualAmount, due, recurrence, name, transferredToSavingsAccountName,
+                    transferredToCreditAccountName)
         }
 
         fun dateStringParser(dateString: String?): LocalDateTime{

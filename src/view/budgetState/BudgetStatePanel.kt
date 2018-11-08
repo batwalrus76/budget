@@ -1,6 +1,7 @@
 package view.budgetState
 
 import model.ApplicationState
+import model.BudgetAnalysisState
 import model.BudgetState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
@@ -12,7 +13,6 @@ import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
-import view.input.InputPanel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -86,7 +86,7 @@ class BudgetStatePanel(var width: Int, var height: Int, var parent: ApplicationU
         this.panel!!.addComponent(payPeriodItineraryPanel!!.panel!!)
     }
 
-    fun update() {
+    fun update(currentBudgetAnalysisStates: MutableList<BudgetAnalysisState>?) {
         var budgetState: BudgetState = parent.currentViewedBudgetState!!
         this.startDate = budgetState.startDate!!
         this.endDate = budgetState.endDate!!
@@ -102,6 +102,7 @@ class BudgetStatePanel(var width: Int, var height: Int, var parent: ApplicationU
                 .withPosition(Position.create(0,-1).relativeToRightOf(startDateLabel!!))
                 .build()
         panel?.addComponent(endDateLabel!!)
+        payPeriodItineraryPanel?.currentBudgetAnalysisStates = currentBudgetAnalysisStates
         payPeriodItineraryPanel!!.update(budgetState)
     }
 

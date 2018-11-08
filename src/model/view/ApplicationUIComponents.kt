@@ -13,7 +13,6 @@ import view.accounts.AccountsPanel
 import view.budgetState.BudgetStatePanel
 import view.input.InputPanel
 import view.items.ItemsPanel
-import java.time.LocalDateTime
 import kotlin.math.max
 import kotlin.math.min
 
@@ -43,15 +42,15 @@ class ApplicationUIComponents{
         val fifthScreenWidth: Int = fullScreenSize.width/5
         val sixthScreenHeight: Int = fullScreenSize.height/6+2
 
-        inputPanel = InputPanel(fullScreenSize.width, sixthScreenHeight-5, 0,
-                            fullScreenSize.height-(sixthScreenHeight-5), this, applicationState!!)
+        inputPanel = InputPanel(fullScreenSize.width, sixthScreenHeight-4, 0,
+                            fullScreenSize.height-(sixthScreenHeight-4), this, applicationState!!)
         inputPanel!!.build()
 
         budgetStatePanel = BudgetStatePanel(fifthScreenWidth * 3+1,
-                            sixthScreenHeight * 2+1, this, this!!.applicationState!!)
+                            sixthScreenHeight * 2, this, this!!.applicationState!!)
         budgetStatePanel!!.build()
 
-        accountsPanel = AccountsPanel(fifthScreenWidth*2 - 1, sixthScreenHeight * 2+1,
+        accountsPanel = AccountsPanel(fifthScreenWidth*2 - 1, sixthScreenHeight * 2,
                                 budgetStatePanel!!.panel!!, this, applicationState!!)
         accountsPanel!!.build()
 
@@ -89,7 +88,7 @@ class ApplicationUIComponents{
                         currentViewedBudgetState?.let { applicationStateBudgetAnalysis?.performBudgetAnalysis(it) }
             }
         }
-        budgetStatePanel?.update()
+        budgetStatePanel?.update(currentBudgetAnalysisStates)
         accountsPanel?.update(currentBudgetAnalysisStates?.first()!!)
         itemsPanel?.update()
         return budgetState!!
