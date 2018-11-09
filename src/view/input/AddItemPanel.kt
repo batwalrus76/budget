@@ -15,6 +15,7 @@ import org.hexworks.zircon.api.kotlin.onKeyStroke
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import org.hexworks.zircon.api.util.Random
+import utils.DateTimeUtils
 import view.BudgetPanel
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -30,7 +31,7 @@ class AddItemPanel(width: Int, height: Int, var parent: ApplicationUIComponents,
     var id = Random.create().nextInt()
     var scheduledAmount = 0.0
     var actualAmount = 0.0
-    var due:LocalDateTime = LocalDateTime.now()
+    var due:LocalDateTime = DateTimeUtils.currentTime()
     var recurrence = Recurrence.ONETIME
     var name = "PLACEHOLDER"
     var transferredSavingsAccountName: String? = null
@@ -60,7 +61,7 @@ class AddItemPanel(width: Int, height: Int, var parent: ApplicationUIComponents,
                 .build()
         nameTextArea.onKeyStroke { name = nameTextArea.text }
         panel!!.addComponent(nameTextArea)
-        due = LocalDateTime.now()
+        due = DateTimeUtils.currentTime()
         val dueLabel: Label = Components.label()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)

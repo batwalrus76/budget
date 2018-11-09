@@ -1,11 +1,12 @@
 package model
 
+import utils.DateTimeUtils
 import java.time.LocalDateTime
 
 data class BudgetAnalysisState(var checkingAccountBalance: Double? = 0.0,
                                var savingsAccountBalances: ArrayList<Double>? = ArrayList<Double>(),
                                var creditAccountBalances: MutableList<Double>? = ArrayList<Double>(),
-                               var date: LocalDateTime? = LocalDateTime.now(),
+                               var date: LocalDateTime? = DateTimeUtils.currentTime(),
                                var budgetItem: BudgetItem? = null) {
 
     constructor(applicationState: ApplicationState) : this() {
@@ -14,7 +15,7 @@ data class BudgetAnalysisState(var checkingAccountBalance: Double? = 0.0,
         this.creditAccountBalances = ArrayList()
         applicationState.savingsAccounts?.forEach { savingsAccount -> savingsAccountBalances!!.add(savingsAccount.balance)}
         applicationState.creditAccounts?.forEach { creditAccount -> creditAccountBalances!!.add(creditAccount.balance)}
-        this.date = LocalDateTime.now()
+        this.date = DateTimeUtils.currentTime()
         this.budgetItem = null
     }
 

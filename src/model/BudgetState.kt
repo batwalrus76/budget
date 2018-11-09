@@ -4,12 +4,13 @@ import model.BudgetItem.Companion.dateStringParser
 import model.BudgetItem.Companion.parseBudgetItemFromJsonObject
 import com.beust.klaxon.JsonObject
 import model.enums.Recurrence
+import utils.DateTimeUtils
 import java.io.Serializable
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 
 data class BudgetState(var currentBudgetItems: MutableMap<String, BudgetItem>? = HashMap<String, BudgetItem>(),
-                       var startDate: LocalDateTime? = LocalDateTime.now(), var endDate: LocalDateTime? = LocalDateTime.now()): Serializable {
+                       var startDate: LocalDateTime? = DateTimeUtils.currentTime(), var endDate: LocalDateTime? = LocalDateTime.now()): Serializable {
 
     fun serializeBudgetStateToJson(): String{
         var budgetStateStringBuilder = StringBuilder()

@@ -5,6 +5,7 @@ import model.ApplicationState
 import model.BudgetItem
 import model.BudgetState
 import model.BudgetState.Companion.determineNextDueLocalDateTime
+import utils.DateTimeUtils
 import java.io.File
 import java.time.LocalDateTime
 
@@ -13,7 +14,7 @@ class ApplicationStateManager(var applicationState: ApplicationState) {
     var minimumFutureBudgetStates: Int = 4
 
     fun reconcilePastCurrentFutureBudgetStates() {
-        val currentDate: LocalDateTime = LocalDateTime.now()
+        val currentDate: LocalDateTime = DateTimeUtils.currentTime()
         rectifyCurrentBudgetStateUnreconciledItems()
         if(applicationState.currentPayPeriodBudgetState!!.endDate!!.isBefore(currentDate)){
             rectifyPastAndCurrentBudgetStates()
@@ -24,7 +25,7 @@ class ApplicationStateManager(var applicationState: ApplicationState) {
     }
 
     private fun rectifyCurrentBudgetStateUnreconciledItems() {
-        val currentDate: LocalDateTime = LocalDateTime.now()
+        val currentDate: LocalDateTime = DateTimeUtils.currentTime()
         var currentBudgetState = applicationState.currentPayPeriodBudgetState
         var currentBudgetItems = currentBudgetState?.currentBudgetItems?.values?.toList()
         currentBudgetItems?.forEach { budgetItem ->

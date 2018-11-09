@@ -9,6 +9,7 @@ import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.data.Position
+import utils.DateTimeUtils
 import view.items.BaseItemsPanel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -17,7 +18,7 @@ class AccountsPanel(width: Int,  height: Int, component: Component, parent:Appli
                                 applicationState: ApplicationState) :
         BaseItemsPanel(width, height, component, parent, applicationState) {
 
-    var date: LocalDateTime = LocalDateTime.now()
+    var date: LocalDateTime = DateTimeUtils.currentTime()
     var dateLabel: Label = Components.label()
             .withText("Date: ${date.format(DateTimeFormatter.ISO_DATE)}")
             .withPosition(Position.offset1x1())
