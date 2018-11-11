@@ -12,15 +12,16 @@ import org.hexworks.zircon.api.component.*
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
+import view.screens.BaseScreen
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
-class UnreconciledItemsPanel (width: Int, height: Int, component: Component, inputPanel: ApplicationUIComponents,
+class UnreconciledItemsPanel (width: Int, height: Int, component: Component, parent: BaseScreen,
                               applicationState: ApplicationState) :
-        BaseItemsPanel(width, height, component, inputPanel, applicationState){
+        BaseItemsPanel(width, height, component, parent, applicationState){
 
     override fun build() {
         this.panel = Components.panel()

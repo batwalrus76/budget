@@ -8,9 +8,10 @@ import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position
+import view.screens.BaseScreen
 
-class ItemsPanel (var width: Int, var height: Int, var component: Component, var parent: ApplicationUIComponents,
-                  var applicationState: ApplicationState) {
+class ItemsPanel (var width: Int, var height: Int, var component: Component, var parent: BaseScreen,
+                        var applicationState: ApplicationState) {
 
     var panel: Panel? = null
     var subPanelHeight = height-3

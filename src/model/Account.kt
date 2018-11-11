@@ -1,10 +1,9 @@
 package model
 
-import model.AccountItem.Companion.parseAccountItemFromJsonObject
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
+import model.AccountItem.Companion.parseAccountItemFromJsonObject
 import java.io.Serializable
-import java.time.format.DateTimeFormatter
 
 data class Account(val name: String, var balance: Double, var items: MutableList<AccountItem>,
                    var reconciledItems: MutableList<AccountItem>, var notes: String): Serializable {

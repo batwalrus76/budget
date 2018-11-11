@@ -11,13 +11,15 @@ import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
+import view.screens.BaseScreen
+import view.screens.WeeklyOverviewScreen
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
-class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: ApplicationUIComponents,
+class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: BaseScreen,
                        applicationState: ApplicationState) :
                                 BaseItemsPanel(width, height, component, parent, applicationState){
 
@@ -41,7 +43,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: Ap
 
     fun update(budgetState: BudgetState) {
         currentBudgetState = budgetState
-        var budgetStateCurrentItems = budgetState.currentBudgetItems!!.values.sortedWith(kotlin.comparisons.compareBy({ it.due }))
+        var budgetStateCurrentItems = budgetState.currentBudgetItems!!.values.sortedWith(compareBy({ it.due as Comparable<*>? }))
         super.update()
         radioButtonGroup!!.onSelection { it ->
             updateInputPanel(it)
@@ -72,7 +74,8 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: Ap
                 .withSize(Sizes.create(inputPanel!!.width-4, inputPanel!!.height-4))
                 .withPosition(Positions.offset1x1())
                 .build()
-        val budgetItem = parent.currentViewedBudgetState!!.currentBudgetItems!!.get(selection.key)
+        val budgetItem =
+                parent.applicationUIComponents.currentViewedBudgetState!!.currentBudgetItems!!.get(selection.key)
         val name: String = budgetItem!!.name
         val nameLabel: Label = Components.label()
                 .wrapWithBox(false)

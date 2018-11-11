@@ -11,8 +11,9 @@ import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
+import view.screens.BaseScreen
 
-class CheckingAccountPanel(width: Int, height: Int, component: Component, parent: ApplicationUIComponents,
+class CheckingAccountPanel(width: Int, height: Int, component: Component, parent: BaseScreen,
                            applicationState: ApplicationState) :
         BaseItemsPanel(width, height, component, parent, applicationState) {
 

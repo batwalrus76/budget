@@ -7,6 +7,7 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import java.io.File
 import java.io.StringReader
+import kotlin.Charsets
 
 data class ApplicationState(var checkingAccount: Account? = Account("Checking model.Account", 0.0,
         ArrayList(), ArrayList(), ""),
@@ -16,6 +17,7 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking mo
                             var currentPayPeriodBudgetState: BudgetState? = BudgetState(),
                             var futureBudgetStates: MutableList<BudgetState> = ArrayList(),
                             var futureBudgetItems: MutableMap<String, BudgetItem>? = HashMap(),
+                            var nonOneTimeBudgetItems: MutableMap<String, BudgetItem>,
                             var oneUpNumber: Int = 0)
                                 : java.io.Serializable {
 
@@ -38,6 +40,8 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking mo
         jsonStringBuilder.append(String.format("\"%s\": [\n", FUTURE_BUDGET_STATES_KEY))
         futureBudgetStates?.forEach {futureBudgetState -> jsonStringBuilder.append(String.format("%s\n", futureBudgetState.serializeBudgetStateToJson())) }
         jsonStringBuilder.append("],\n")
+        jsonStringBuilder.append(String.format("\"%s\": \n%s,\n",
+                NON_ONETIME_BUDGET_ITEMS_KEY, serializeMapBudgetItemstoJson(nonOneTimeBudgetItems)))
         jsonStringBuilder.append(String.format("\"%s\": \n%s,\n",
                 FUTURE_BUDGET_ITEMS_KEY, serializeMapBudgetItemstoJson(futureBudgetItems)))
         jsonStringBuilder.append("}")
@@ -66,6 +70,7 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking mo
         val FUTURE_BUDGET_STATES_KEY = "futureBudgetStates"
         val PAST_UNRECONCILED_BUDGET_ITEMS_KEY:String = "pastUnreconciledBudgetItems"
         val FUTURE_BUDGET_ITEMS_KEY:String = "futureBudgetItems"
+        val NON_ONETIME_BUDGET_ITEMS_KEY:String = "nonOneTimeBudgetItems"
 
         fun deserializeJsonToApplicationState(stateFile: File): ApplicationState {
             val applicationStateFromFile: String = stateFile.readText(Charsets.UTF_8)
@@ -88,13 +93,16 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking mo
                     pastUnreconciledBudgetItems = parseBudgetItemsMapFromJsonObject(pastUnreconciledBudgetItemsObj)
                 }
             }
+            val nonOneTimeBudgetItemsObj: JsonObject = applicationStateObj.obj(NON_ONETIME_BUDGET_ITEMS_KEY)!!
+            var nonOneTimeBudgetItems: MutableMap<String, BudgetItem> =
+                    parseBudgetItemsMapFromJsonObject(nonOneTimeBudgetItemsObj)
             val futureBudgetItemsObj: JsonObject = applicationStateObj.obj(FUTURE_BUDGET_ITEMS_KEY)!!
             var futureBudgetItems: MutableMap<String, BudgetItem> =
                     parseBudgetItemsMapFromJsonObject(futureBudgetItemsObj)
             val currentPayPeriodBudgetState: BudgetState? = parseBudgetStateFromJsonObject(applicationStateObj)
             val futureBudgetStates: MutableList<BudgetState> = parseFutureBudgetStateFromJsonObject(applicationStateObj)
             return ApplicationState(checkingAccount, savingsAccounts, creditAccounts, pastUnreconciledBudgetItems,
-                    currentPayPeriodBudgetState, futureBudgetStates, futureBudgetItems)
+                    currentPayPeriodBudgetState, futureBudgetStates, nonOneTimeBudgetItems, futureBudgetItems)
         }
 
         fun parseAccountsListFromJsonAray(accountsJsonArray: JsonArray<JsonObject>): MutableList<Account> {

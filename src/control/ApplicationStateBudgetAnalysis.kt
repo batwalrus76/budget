@@ -80,7 +80,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         newBudgetAnalysisState.budgetItem = budgetItem
         newBudgetAnalysisState.checkingAccountBalance =
                                 newBudgetAnalysisState.checkingAccountBalance?.plus(budgetItem.actualAmount)
-        if(!budgetItem.transferredToSavingsAccountName.equals("null")){
+        if(budgetItem.transferredToSavingsAccountName != null && !budgetItem.transferredToSavingsAccountName.equals("null")){
             for(savingsAccountIndex in 0 .. applicationState.savingsAccounts?.size!!-1){
                 if(applicationState.savingsAccounts?.get(savingsAccountIndex)!!.name.startsWith(budgetItem!!.transferredToSavingsAccountName!!)){
                     newBudgetAnalysisState.savingsAccountBalances?.set(savingsAccountIndex,
@@ -89,7 +89,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
                     break
                 }
             }
-        } else if(!budgetItem.transferredToCreditAccountName.equals("null")){
+        } else if(budgetItem.transferredToCreditAccountName != null && !budgetItem.transferredToCreditAccountName.equals("null")){
             for(creditAccountIndex in 0 .. applicationState.creditAccounts?.size!! - 1){
                 if(applicationState.creditAccounts?.get(creditAccountIndex)!!.name.startsWith(budgetItem!!.transferredToCreditAccountName!!)){
                     newBudgetAnalysisState.creditAccountBalances?.set(creditAccountIndex,

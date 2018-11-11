@@ -114,15 +114,13 @@ class ApplicationStateManager(var applicationState: ApplicationState) {
     }
 
     companion object {
-        val DEFAULT_STATE_FILE_LOCATION: String = "/Users/pascact1/.budget"
+        val DEFAULT_STATE_FILE_LOCATION: String = "/Users/pascact1/budget.json"
         val DEFAULT_STATE_FILE: File = File(DEFAULT_STATE_FILE_LOCATION)
 
-        fun buildApplicationStateFromDefaultFileLocation(): ApplicationState {
-            var applicationState: ApplicationState?
+        fun buildApplicationStateFromDefaultFileLocation(): ApplicationState? {
+            var applicationState: ApplicationState? = null
             if (DEFAULT_STATE_FILE?.exists()) {
                 applicationState = ApplicationState.deserializeJsonToApplicationState(DEFAULT_STATE_FILE)
-            } else {
-                applicationState = ApplicationState()
             }
             return applicationState
         }

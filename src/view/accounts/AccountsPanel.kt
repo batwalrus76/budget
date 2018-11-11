@@ -2,7 +2,6 @@ package view.accounts
 
 import model.ApplicationState
 import model.BudgetAnalysisState
-import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
@@ -11,10 +10,11 @@ import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.data.Position
 import utils.DateTimeUtils
 import view.items.BaseItemsPanel
+import view.screens.BaseScreen
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class AccountsPanel(width: Int,  height: Int, component: Component, parent:ApplicationUIComponents,
+class AccountsPanel(width: Int,  height: Int, component: Component, parent: BaseScreen,
                                 applicationState: ApplicationState) :
         BaseItemsPanel(width, height, component, parent, applicationState) {
 
@@ -42,7 +42,7 @@ class AccountsPanel(width: Int,  height: Int, component: Component, parent:Appli
                 .withPosition(ZERO_OFFSET.relativeToRightOf(component!!))
                 .build() // position is always relative to the parent
         this.checkingAccountPanel = CheckingAccountPanel(width!!-4, individualSubPanelHeight!!+1,
-                                dateLabel, this!!.parent!!, applicationState)
+                                dateLabel, parent, applicationState)
         this.checkingAccountPanel!!.build()
         this.savingsAccountsPanel =
                 SavingsAccountPanel(width!!-4, multiAccountSubPanelHeight!!,

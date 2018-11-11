@@ -10,10 +10,10 @@ object GUIApp {
     @JvmStatic
     fun main(args: Array<String>) {
         var applicationUIComponents = ApplicationUIComponents()
-        var applicationState: ApplicationState = ApplicationStateManager.buildApplicationStateFromDefaultFileLocation()
+        var applicationState: ApplicationState? = ApplicationStateManager.buildApplicationStateFromDefaultFileLocation()
         applicationUIComponents.applicationState = applicationState
         applicationUIComponents.build()
-        var applicationStateManager = ApplicationStateManager(applicationState)
+        var applicationStateManager = ApplicationStateManager(applicationState!!)
         applicationStateManager.reconcilePastCurrentFutureBudgetStates()
 
         var workingBudgetState: BudgetState? = applicationState.currentPayPeriodBudgetState

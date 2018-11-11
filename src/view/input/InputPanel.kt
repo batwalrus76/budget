@@ -10,8 +10,9 @@ import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position
 import view.BudgetPanel
+import view.screens.BaseScreen
 
-class InputPanel(width: Int, height: Int, var xOffSet: Int, var yOffset: Int, var parent: ApplicationUIComponents,
+class InputPanel(width: Int, height: Int, var xOffSet: Int, var yOffset: Int, var parent: BaseScreen,
                  applicationState: ApplicationState) :
         BudgetPanel(width, height, applicationState) {
 

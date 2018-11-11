@@ -12,9 +12,10 @@ import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
+import view.screens.BaseScreen
 
-class CreditAccountPanel(width: Int, height: Int, component: Component, inputPanel: ApplicationUIComponents,
-                         applicationState: ApplicationState) :
+class CreditAccountPanel(width: Int, height: Int, component: Component, inputPanel: BaseScreen,
+                            applicationState: ApplicationState) :
         BaseItemsPanel(width, height, component, inputPanel, applicationState) {
 
     override fun build(){

@@ -3,24 +3,26 @@ package view.budgetState
 import model.ApplicationState
 import model.BudgetAnalysisState
 import model.BudgetState
-import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Button
+import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
+import view.screens.BaseScreen
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class BudgetStatePanel(var width: Int, var height: Int, var parent: ApplicationUIComponents, var applicationState: ApplicationState) {
+class BudgetStatePanel(var width: Int, var height: Int, var parent: BaseScreen, var component: Component,
+                        var applicationState: ApplicationState) {
 
     var panel: Panel? = null
-    var startDate: LocalDateTime = parent.currentViewedBudgetState!!.startDate!!
-    var endDate: LocalDateTime = parent.currentViewedBudgetState!!.endDate!!
+    var startDate: LocalDateTime = parent.applicationUIComponents.currentViewedBudgetState!!.startDate!!
+    var endDate: LocalDateTime = parent.applicationUIComponents.currentViewedBudgetState!!.endDate!!
     var startDateLabel: Label? = null
     var endDateLabel: Label? = null
     var payPeriodItineraryPanel:BudgetItemsPanel? = null
@@ -36,7 +38,7 @@ class BudgetStatePanel(var width: Int, var height: Int, var parent: ApplicationU
                 .withTitle(TITLE) // if a panel is wrapped in a box a title can be displayed
                 .wrapWithShadow(false) // shadow can be added
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
-                .withPosition(Positions.create(0,1))
+                .withPosition(Positions.create(0,1).relativeToBottomOf(component))
                 .build()
         this.startDateLabel = Components.label()
                 .withText("Start Date: ${startDate.format(DateTimeFormatter.ISO_DATE)}")
@@ -87,7 +89,7 @@ class BudgetStatePanel(var width: Int, var height: Int, var parent: ApplicationU
     }
 
     fun update(currentBudgetAnalysisStates: MutableList<BudgetAnalysisState>?) {
-        var budgetState: BudgetState = parent.currentViewedBudgetState!!
+        var budgetState: BudgetState = parent.applicationUIComponents.currentViewedBudgetState!!
         this.startDate = budgetState.startDate!!
         this.endDate = budgetState.endDate!!
         this!!.startDateLabel?.let { panel!!.removeComponent(it) }

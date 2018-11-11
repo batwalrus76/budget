@@ -17,6 +17,7 @@ import org.hexworks.zircon.api.kotlin.onSelection
 import org.hexworks.zircon.api.util.Random
 import utils.DateTimeUtils
 import view.BudgetPanel
+import view.screens.BaseScreen
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -24,7 +25,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.min
 
-class AddItemPanel(width: Int, height: Int, var parent: ApplicationUIComponents, applicationState: ApplicationState):
+class AddItemPanel(width: Int, height: Int, var parent: BaseScreen, applicationState: ApplicationState):
                 BudgetPanel(width, height, applicationState){
 
 

@@ -12,14 +12,14 @@ import org.hexworks.zircon.api.component.*
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
-import view.input.InputPanel
+import view.screens.BaseScreen
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
-class FutureItemsPanel (width: Int, height: Int, component: Component, parent: ApplicationUIComponents,
+class FutureItemsPanel (width: Int, height: Int, component: Component, parent: BaseScreen,
                                         applicationState: ApplicationState) :
         BaseItemsPanel(width, height, component, parent, applicationState){
 
