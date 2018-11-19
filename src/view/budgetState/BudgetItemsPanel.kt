@@ -11,17 +11,13 @@ import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
-import view.screens.BaseScreen
-import view.screens.WeeklyOverviewScreen
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
-class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: BaseScreen,
+class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
                        applicationState: ApplicationState) :
-                                BaseItemsPanel(width, height, component, parent, applicationState){
+                                BaseItemsPanel(width, height, component, uiComponents, applicationState){
 
     var currentBudgetState: BudgetState? = null
     var currentBudgetAnalysisStates: MutableList<BudgetAnalysisState>? = null
@@ -43,39 +39,46 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: Ba
 
     fun update(budgetState: BudgetState) {
         currentBudgetState = budgetState
-        var budgetStateCurrentItems = budgetState.currentBudgetItems!!.values.sortedWith(compareBy({ it.due as Comparable<*>? }))
+        var applicationStateBudgetAnalysis =  uiComponents.applicationStateBudgetAnalysis
+        var budgetStateCurrentItemMap =
+                applicationStateBudgetAnalysis?.retrieveApplicableBudgetItemsForState(currentBudgetState!!)
+        var budgetStateCurrentItemsList = budgetStateCurrentItemMap?.values?.sortedWith(compareBy({ it.due}))
+        currentBudgetAnalysisStates = applicationStateBudgetAnalysis?.performAnalysisOnBudgetItems(budgetStateCurrentItemMap)
         super.update()
         radioButtonGroup!!.onSelection { it ->
             updateInputPanel(it)
         }
-        budgetStateCurrentItems?.forEach { u ->
+        budgetStateCurrentItemsList?.forEach { u ->
             var budgetItemCheckingAccountBalance: Double? = 0.0
             currentBudgetAnalysisStates?.forEach { associatedBudgetAnalysisState ->
                 if(associatedBudgetAnalysisState.budgetItem?.name.equals(u.name)){
                     budgetItemCheckingAccountBalance = associatedBudgetAnalysisState.checkingAccountBalance
+                    var budgetItemText = u.toNarrowString(associatedBudgetAnalysisState.date) +
+                            String.format("Balance:%.2f", budgetItemCheckingAccountBalance)
+                    associatedBudgetAnalysisState.budgetItem?.name?.let { radioButtonGroup!!.addOption(it,budgetItemText) }
                 }
             }
-            var budgetItemText = u.toNarrowString() + String.format("Balance:%.2f", budgetItemCheckingAccountBalance)
-            radioButtonGroup!!.addOption(u.name,budgetItemText)
         }
     }
 
     fun updateBudgetItem(originalName: String, updatedBudgetItem: BudgetItem){
-        currentBudgetState!!.currentBudgetItems!!.remove(originalName)
-        currentBudgetState!!.currentBudgetItems!!.put(updatedBudgetItem.name, updatedBudgetItem)
+        applicationState.budgetItems?.remove(originalName)
+        applicationState.budgetItems?.put(updatedBudgetItem.name, updatedBudgetItem)
         update(currentBudgetState!!)
     }
 
     private fun updateInputPanel(selection: RadioButtonGroup.Selection) {
-        var inputPanel = parent.inputPanel
+        var inputPanel = uiComponents.weeklyOverviewScreen!!.inputPanel
         var newPanel:Panel = Components.panel()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
                 .withSize(Sizes.create(inputPanel!!.width-4, inputPanel!!.height-4))
                 .withPosition(Positions.offset1x1())
                 .build()
-        val budgetItem =
-                parent.applicationUIComponents.currentViewedBudgetState!!.currentBudgetItems!!.get(selection.key)
+        var applicationStateBudgetAnalysis =  uiComponents.applicationStateBudgetAnalysis
+        var budgetStateCurrentItemMap =
+                applicationStateBudgetAnalysis?.retrieveApplicableBudgetItemsForState(currentBudgetState!!)
+        val budgetItem = budgetStateCurrentItemMap!![selection.key]
         val name: String = budgetItem!!.name
         val nameLabel: Label = Components.label()
                 .wrapWithBox(false)
@@ -92,7 +95,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: Ba
                 .withPosition(Positions.create(1,0).relativeToRightOf(nameLabel))
                 .build()
         newPanel.addComponent(nameTextArea)
-        val due: LocalDateTime = budgetItem!!.due
+        val due: LocalDate = budgetItem!!.due
         val dueLabel: Label = Components.label()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
@@ -180,11 +183,11 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: Ba
                 .withSize(Sizes.create(35, 5))
                 .withPosition(Positions.create(1,0).relativeToRightOf(transferLabel))
                 .build()
-        applicationState.savingsAccounts!!.forEach { savingsAccount ->
-            if(savingsAccount.name.equals(targetSavingsAccountName)) {
-                transferSavingsAccountButtonGroup.addOption(savingsAccount.name, savingsAccount.name + " (current)")
+        applicationState.savingsAccounts!!.forEach { name, savingsAccount ->
+            if(name.equals(targetSavingsAccountName)) {
+                transferSavingsAccountButtonGroup.addOption(name, name + " (current)")
             } else {
-                transferSavingsAccountButtonGroup.addOption(savingsAccount.name, savingsAccount.name)
+                transferSavingsAccountButtonGroup.addOption(name, name)
             }
         }
         transferSavingsAccountButtonGroup.onSelection { it ->
@@ -199,11 +202,11 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: Ba
                 .withSize(Sizes.create(35, 5))
                 .withPosition(Positions.create(0,0).relativeToBottomOf(transferSavingsAccountButtonGroup))
                 .build()
-        applicationState.creditAccounts!!.forEach { creditAccount ->
-            if(creditAccount.name.equals(targetCreditAccountName)) {
-                transferCreditAccountButtonGroup.addOption(creditAccount.name, creditAccount.name + " (current)")
+        applicationState.creditAccounts!!.forEach { name, creditAccount ->
+            if(name.equals(targetCreditAccountName)) {
+                transferCreditAccountButtonGroup.addOption(name, name + " (current)")
             } else {
-                transferCreditAccountButtonGroup.addOption(creditAccount.name, creditAccount.name)
+                transferCreditAccountButtonGroup.addOption(name, name)
             }
         }
         transferCreditAccountButtonGroup.onSelection { it ->
@@ -218,13 +221,14 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: Ba
                 .build()
         submitButton.onMouseReleased {
             mouseAction ->
-            var updatedBudgetItem = BudgetItem(0, scheduledAmountTextArea.text.toDoubleOrNull()!!,
-                    actualAmountTextArea.text.toDoubleOrNull()!!,
-                    LocalDateTime.of(LocalDate.parse(dueTextArea.text), LocalTime.of(8,0)),
-                    currentRecurrence, nameTextArea.text, targetSavingsAccountName, targetCreditAccountName)
+            var updatedBudgetItem = BudgetItem(scheduledAmountTextArea.text.toDoubleOrNull()!!,
+                    actualAmountTextArea.text.toDoubleOrNull()!!,LocalDate.parse(dueTextArea.text),
+                    currentRecurrence, nameTextArea.text, targetSavingsAccountName, targetCreditAccountName,
+                    ArrayList())
+            updatedBudgetItem.fillOutDueDates()
             updateBudgetItem(name, updatedBudgetItem)
-            parent.update()
-            parent.clearInputPanel()
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         newPanel.addComponent(submitButton)
         val reconcileButton: Button = Components.button()
@@ -245,25 +249,40 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, parent: Ba
             deleteBudgetItem(name)
         }
         newPanel.addComponent(deleteButton)
-        parent.updateInputPanel(newPanel)
+        uiComponents.updateInputScreen(newPanel)
     }
 
     private fun reconcileBudgetItem(name: String) {
-        val reconciledBudgetItem = currentBudgetState!!.currentBudgetItems!!.remove(name)
+        var applicationStateBudgetAnalysis =  uiComponents.applicationStateBudgetAnalysis
+        var reconciledBudgetItems = applicationStateBudgetAnalysis?.
+                reconcileApplicationBudgetState(currentBudgetState!!, applicationState.pastUnreconciledBudgetItems!!)
+        val reconciledBudgetItem = reconciledBudgetItems!!.remove(name)
         if(reconciledBudgetItem != null) {
-            applicationState.checkingAccount!!.reconciledItems.add(AccountItem(reconciledBudgetItem?.due!!, reconciledBudgetItem?.name!!, reconciledBudgetItem?.actualAmount!!))
-            applicationState.checkingAccount!!.balance = applicationState.checkingAccount!!.balance + reconciledBudgetItem.actualAmount
+            applicationState.checkingAccount!!.reconciledItems.add(
+                    AccountItem(reconciledBudgetItem?.due!!,
+                            reconciledBudgetItem?.name!!, reconciledBudgetItem?.actualAmount!!))
+            applicationState.checkingAccount!!.balance =
+                    applicationState.checkingAccount!!.balance + reconciledBudgetItem.actualAmount
             update(currentBudgetState!!)
         }
-        parent.update()
-        parent.clearInputPanel()
+        uiComponents.update()
+        uiComponents.clearInputScreen()
     }
 
     private fun deleteBudgetItem(name: String) {
-        currentBudgetState!!.currentBudgetItems!!.remove(name)
+        var applicationStateBudgetAnalysis =  uiComponents.applicationStateBudgetAnalysis
+        var currentBudgetItems =
+                applicationStateBudgetAnalysis!!.retrieveApplicableBudgetItemsForState(this!!.currentBudgetState!!)
+        var budgetItem = currentBudgetItems.remove(name)
+        budgetItem?.dueDates?.forEach { dueDate ->
+            val validDueDate = currentBudgetState?.isValidForDueDate(dueDate)
+            if(validDueDate!!){
+                budgetItem.dueDates.remove(dueDate)
+            }
+        }
         update(currentBudgetState!!)
-        parent.update()
-        parent.clearInputPanel()
+        uiComponents.update()
+        uiComponents.clearInputScreen()
     }
 
 }

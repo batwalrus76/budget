@@ -1,24 +1,22 @@
 package model
 
-import model.BudgetState.Companion.parseBudgetItemsMapFromJsonObject
 import model.BudgetState.Companion.serializeMapBudgetItemstoJson
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
+import model.BudgetState.Companion.parseBudgetItemsMapFromJsonObject
 import java.io.File
 import java.io.StringReader
 import kotlin.Charsets
 
-data class ApplicationState(var checkingAccount: Account? = Account("Checking model.Account", 0.0,
+data class ApplicationState(var checkingAccount: Account? = Account("Checking Account", 0.0,
         ArrayList(), ArrayList(), ""),
-                            var savingsAccounts: MutableList<Account>? = ArrayList<Account>(),
-                            var creditAccounts: MutableList<Account>? = ArrayList<Account>(),
+                            var savingsAccounts: MutableMap<String, Account>? = HashMap(),
+                            var creditAccounts: MutableMap<String, Account>? = HashMap(),
                             var pastUnreconciledBudgetItems: MutableMap<String, BudgetItem>? = HashMap(),
                             var currentPayPeriodBudgetState: BudgetState? = BudgetState(),
                             var futureBudgetStates: MutableList<BudgetState> = ArrayList(),
-                            var futureBudgetItems: MutableMap<String, BudgetItem>? = HashMap(),
-                            var nonOneTimeBudgetItems: MutableMap<String, BudgetItem>,
-                            var oneUpNumber: Int = 0)
+                            var budgetItems: MutableMap<String, BudgetItem>? = HashMap())
                                 : java.io.Serializable {
 
 
@@ -29,36 +27,29 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking mo
         jsonStringBuilder.append(String.format("\"%s\": \n%s,\n",
                 CHECKING_ACCOUNT_KEY,  checkingAccount?.serializeAccountToJson()))
         jsonStringBuilder.append(String.format("\"%s\": \n%s,\n",
-                SAVINGS_ACCOUNTS_KEY, serializeListAccountsToJson(savingsAccounts)))
+                SAVINGS_ACCOUNTS_KEY, serializeMapAccountsToJson(savingsAccounts)))
         jsonStringBuilder.append(String.format("\"%s\": \n%s,\n",
-                CREDIT_ACCOUNTS_KEY, serializeListAccountsToJson(creditAccounts)))
+                CREDIT_ACCOUNTS_KEY, serializeMapAccountsToJson(creditAccounts)))
         jsonStringBuilder.append(String.format("\"%s\": \n%s,\n",
                 PAST_UNRECONCILED_BUDGET_ITEMS_KEY, serializeMapBudgetItemstoJson(pastUnreconciledBudgetItems)))
         jsonStringBuilder.append(String.format("\"%s\": ", CURRENT_PAY_PERIOD_BUDGET_STATE_KEY))
         jsonStringBuilder.append(currentPayPeriodBudgetState?.serializeBudgetStateToJson())
         jsonStringBuilder.append(",\n")
         jsonStringBuilder.append(String.format("\"%s\": [\n", FUTURE_BUDGET_STATES_KEY))
-        futureBudgetStates?.forEach {futureBudgetState -> jsonStringBuilder.append(String.format("%s\n", futureBudgetState.serializeBudgetStateToJson())) }
+        futureBudgetStates?.forEach {futureBudgetState -> jsonStringBuilder.append(String.format("%s,\n", futureBudgetState.serializeBudgetStateToJson())) }
         jsonStringBuilder.append("],\n")
         jsonStringBuilder.append(String.format("\"%s\": \n%s,\n",
-                NON_ONETIME_BUDGET_ITEMS_KEY, serializeMapBudgetItemstoJson(nonOneTimeBudgetItems)))
-        jsonStringBuilder.append(String.format("\"%s\": \n%s,\n",
-                FUTURE_BUDGET_ITEMS_KEY, serializeMapBudgetItemstoJson(futureBudgetItems)))
+                BUDGET_ITEMS_KEY, serializeMapBudgetItemstoJson(budgetItems)))
         jsonStringBuilder.append("}")
         return jsonStringBuilder.toString()
     }
 
-    fun serializeListAccountsToJson(accountsList: MutableList<Account>?) : String {
-        var accountsListStringBuilder = StringBuilder()
-        accountsListStringBuilder.append("[\n")
-        accountsList?.forEach{account: Account -> accountsListStringBuilder.append(String.format("%s,\n", account.serializeAccountToJson()))}
-        accountsListStringBuilder.append("]")
-        return accountsListStringBuilder.toString()
-    }
-
-    fun generateId(): Int {
-        oneUpNumber += 1
-        return oneUpNumber
+    fun serializeMapAccountsToJson(accountsList: MutableMap<String, Account>?) : String {
+        var accountsMapStringBuilder = StringBuilder()
+        accountsMapStringBuilder.append("{\n")
+        accountsList?.forEach{accountName, account -> accountsMapStringBuilder.append(String.format("\"%s\" : %s,\n", accountName, account.serializeAccountToJson()))}
+        accountsMapStringBuilder.append("}")
+        return accountsMapStringBuilder.toString()
     }
 
     companion object {
@@ -69,8 +60,7 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking mo
         val CURRENT_PAY_PERIOD_BUDGET_STATE_KEY = "curentPayPeriodBudgetState"
         val FUTURE_BUDGET_STATES_KEY = "futureBudgetStates"
         val PAST_UNRECONCILED_BUDGET_ITEMS_KEY:String = "pastUnreconciledBudgetItems"
-        val FUTURE_BUDGET_ITEMS_KEY:String = "futureBudgetItems"
-        val NON_ONETIME_BUDGET_ITEMS_KEY:String = "nonOneTimeBudgetItems"
+        val BUDGET_ITEMS_KEY:String = "budgetItems"
 
         fun deserializeJsonToApplicationState(stateFile: File): ApplicationState {
             val applicationStateFromFile: String = stateFile.readText(Charsets.UTF_8)
@@ -82,10 +72,10 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking mo
             val applicationStateObj: JsonObject = parser.parse(StringReader(sourceString)) as JsonObject
             val checkingAccountObj: JsonObject = applicationStateObj.obj(CHECKING_ACCOUNT_KEY)!!
             var checkingAccount: Account = Account.parseAccountFromJsonObject(checkingAccountObj)
-            val savingsAccountsJsonArray: JsonArray<JsonObject> = applicationStateObj.array(SAVINGS_ACCOUNTS_KEY)!!
-            var savingsAccounts: MutableList<Account> = parseAccountsListFromJsonAray(savingsAccountsJsonArray)
-            val creditAccountsJsonArray: JsonArray<JsonObject> = applicationStateObj.array(CREDIT_ACCOUNTS_KEY)!!
-            var creditAccounts: MutableList<Account> = parseAccountsListFromJsonAray(creditAccountsJsonArray)
+                val savingsAccountsJsonObject: JsonObject = applicationStateObj.obj(SAVINGS_ACCOUNTS_KEY)!!
+            var savingsAccounts: MutableMap<String, Account> = parseAccountsMapFromJsonObject(savingsAccountsJsonObject)
+            val creditAccountsJsonObject: JsonObject = applicationStateObj.obj(CREDIT_ACCOUNTS_KEY)!!
+            var creditAccounts: MutableMap<String, Account> = parseAccountsMapFromJsonObject(creditAccountsJsonObject)
             var pastUnreconciledBudgetItems: MutableMap<String, BudgetItem>? = HashMap()
             if(applicationStateObj.containsKey(PAST_UNRECONCILED_BUDGET_ITEMS_KEY)){
                 val pastUnreconciledBudgetItemsObj: JsonObject = applicationStateObj.obj(PAST_UNRECONCILED_BUDGET_ITEMS_KEY)!!
@@ -93,22 +83,21 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking mo
                     pastUnreconciledBudgetItems = parseBudgetItemsMapFromJsonObject(pastUnreconciledBudgetItemsObj)
                 }
             }
-            val nonOneTimeBudgetItemsObj: JsonObject = applicationStateObj.obj(NON_ONETIME_BUDGET_ITEMS_KEY)!!
-            var nonOneTimeBudgetItems: MutableMap<String, BudgetItem> =
-                    parseBudgetItemsMapFromJsonObject(nonOneTimeBudgetItemsObj)
-            val futureBudgetItemsObj: JsonObject = applicationStateObj.obj(FUTURE_BUDGET_ITEMS_KEY)!!
-            var futureBudgetItems: MutableMap<String, BudgetItem> =
-                    parseBudgetItemsMapFromJsonObject(futureBudgetItemsObj)
+            val budgetItemsObject: JsonObject = applicationStateObj.obj(BUDGET_ITEMS_KEY)!!
+            var budgetItems: MutableMap<String, BudgetItem> =
+                    parseBudgetItemsMapFromJsonObject(budgetItemsObject)
             val currentPayPeriodBudgetState: BudgetState? = parseBudgetStateFromJsonObject(applicationStateObj)
             val futureBudgetStates: MutableList<BudgetState> = parseFutureBudgetStateFromJsonObject(applicationStateObj)
             return ApplicationState(checkingAccount, savingsAccounts, creditAccounts, pastUnreconciledBudgetItems,
-                    currentPayPeriodBudgetState, futureBudgetStates, nonOneTimeBudgetItems, futureBudgetItems)
+                    currentPayPeriodBudgetState, futureBudgetStates, budgetItems)
         }
 
-        fun parseAccountsListFromJsonAray(accountsJsonArray: JsonArray<JsonObject>): MutableList<Account> {
-            val accountsList: MutableList<Account> = ArrayList()
-            accountsJsonArray.forEach { jsonObject -> accountsList.add(Account.parseAccountFromJsonObject(jsonObject)) }
-            return accountsList
+        fun parseAccountsMapFromJsonObject(accountsJsonObject: JsonObject): MutableMap<String, Account> {
+            val accountsMap: MutableMap<String, Account> = HashMap()
+            accountsJsonObject.forEach {
+                accountName, value -> accountsMap[accountName] = Account.parseAccountFromJsonObject(value as JsonObject)
+            }
+            return accountsMap
         }
 
         private fun parseFutureBudgetStateFromJsonObject(obj: JsonObject): MutableList<BudgetState> {

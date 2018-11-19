@@ -12,11 +12,10 @@ import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
-import view.screens.BaseScreen
 
-class SavingsAccountPanel(width: Int, height: Int, component: Component, inputPanel: BaseScreen,
+class SavingsAccountPanel(width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
                           applicationState: ApplicationState) :
-                                BaseItemsPanel(width, height, component, inputPanel, applicationState) {
+                                BaseItemsPanel(width, height, component, uiComponents, applicationState) {
 
     override fun build(){
         this.panel = Components.panel()
@@ -27,8 +26,8 @@ class SavingsAccountPanel(width: Int, height: Int, component: Component, inputPa
                 .withPosition(AccountsPanel.DEFAULT_OFFSET.relativeToBottomOf(component))
                 .build()
         super.build()
-        applicationState.savingsAccounts!!.forEach { account ->
-            radioButtonGroup!!.addOption(account.name, account.toString())}
+        applicationState.savingsAccounts!!.forEach { name, account ->
+            radioButtonGroup!!.addOption(name, account.toString())}
         radioButtonGroup!!.onSelection { it ->
             updateInputPanel(it)
         }
@@ -36,12 +35,10 @@ class SavingsAccountPanel(width: Int, height: Int, component: Component, inputPa
     }
 
     fun update(budgetAnalysisState: BudgetAnalysisState){
-        var balances = budgetAnalysisState.savingsAccountBalances!!
         super.update()
-        for (balanceIndex in 0 .. balances.size-1){
-            val savingsAccount: Account = applicationState.savingsAccounts!!.get(balanceIndex)
-            val balance:Double = balances.get(balanceIndex)
-            radioButtonGroup?.addOption(savingsAccount.name, savingsAccount.toString(balance))
+        applicationState.savingsAccounts?.forEach { name, account ->
+            val budgetAnalysisCreditAccountBalance = budgetAnalysisState.savingsAccountBalances!![name]
+            radioButtonGroup?.addOption(name, account.toString(budgetAnalysisCreditAccountBalance!!))
         }
         radioButtonGroup!!.onSelection { it ->
             updateInputPanel(it)
@@ -50,18 +47,18 @@ class SavingsAccountPanel(width: Int, height: Int, component: Component, inputPa
 
     override fun update() {
         super.update()
-        applicationState.savingsAccounts!!.forEach { account ->
-            radioButtonGroup!!.addOption(account.name, account.toString())}
+        applicationState.savingsAccounts!!.forEach { name, account ->
+            radioButtonGroup!!.addOption(name, account.toString())}
         radioButtonGroup!!.onSelection { it ->
             updateInputPanel(it)
         }
     }
 
     private fun updateInputPanel(selection: RadioButtonGroup.Selection) {
-        var inputPanel = parent.inputPanel
+        var inputPanel = uiComponents.weeklyOverviewScreen!!.inputPanel
         var savingsAccount: Account? = null
-        applicationState.savingsAccounts!!.forEach { account ->
-            if(account.name.equals(selection.key)){
+        applicationState.savingsAccounts!!.forEach { name, account ->
+            if(name.equals(selection.key)){
                 savingsAccount = account
             }
         }
@@ -96,8 +93,8 @@ class SavingsAccountPanel(width: Int, height: Int, component: Component, inputPa
         submitButton.onMouseReleased {
             mouseAction ->
             savingsAccount!!.balance = balanceTextArea.text.toDouble()
-            parent.update()
-            parent.clearInputPanel()
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         newPanel.addComponent(submitButton)
         val clearButton: Button = Components.button()
@@ -107,11 +104,11 @@ class SavingsAccountPanel(width: Int, height: Int, component: Component, inputPa
                 .build()
         clearButton.onMouseReleased {
             savingsAccount!!.reconciledItems.clear()
-            parent.update()
-            parent.clearInputPanel()
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         newPanel.addComponent(clearButton)
-        parent.updateInputPanel(newPanel)
+        uiComponents.updateInputScreen(newPanel)
     }
 
     companion object {

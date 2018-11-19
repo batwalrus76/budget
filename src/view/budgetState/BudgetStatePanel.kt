@@ -3,6 +3,7 @@ package view.budgetState
 import model.ApplicationState
 import model.BudgetAnalysisState
 import model.BudgetState
+import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
@@ -13,16 +14,15 @@ import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
-import view.screens.BaseScreen
-import java.time.LocalDateTime
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class BudgetStatePanel(var width: Int, var height: Int, var parent: BaseScreen, var component: Component,
-                        var applicationState: ApplicationState) {
+class BudgetStatePanel(var width: Int, var height: Int, var uiComponents: ApplicationUIComponents,
+                       var applicationState: ApplicationState) {
 
     var panel: Panel? = null
-    var startDate: LocalDateTime = parent.applicationUIComponents.currentViewedBudgetState!!.startDate!!
-    var endDate: LocalDateTime = parent.applicationUIComponents.currentViewedBudgetState!!.endDate!!
+    var startDate: LocalDate = uiComponents.currentViewedBudgetState!!.startDate!!
+    var endDate: LocalDate = uiComponents.currentViewedBudgetState!!.endDate!!
     var startDateLabel: Label? = null
     var endDateLabel: Label? = null
     var payPeriodItineraryPanel:BudgetItemsPanel? = null
@@ -38,7 +38,7 @@ class BudgetStatePanel(var width: Int, var height: Int, var parent: BaseScreen, 
                 .withTitle(TITLE) // if a panel is wrapped in a box a title can be displayed
                 .wrapWithShadow(false) // shadow can be added
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
-                .withPosition(Positions.create(0,1).relativeToBottomOf(component))
+                .withPosition(Positions.create(0,1))
                 .build()
         this.startDateLabel = Components.label()
                 .withText("Start Date: ${startDate.format(DateTimeFormatter.ISO_DATE)}")
@@ -54,30 +54,30 @@ class BudgetStatePanel(var width: Int, var height: Int, var parent: BaseScreen, 
                 .withText("Project Balances")
                 .withPosition(Positions.create(1,0).relativeToRightOf(endDateLabel!!))
                 .build()
-        this.projectedBalancesButton!!.onMouseReleased { this.parent.projectBalances() }
+        this.projectedBalancesButton!!.onMouseReleased { this.uiComponents.weeklyOverviewScreen!!.projectBalances() }
         this.currentBalancesButton = Components.button()
                 .withBoxType(BoxType.DOUBLE)
                 .wrapWithBox(false)
                 .withText("Current Balances")
                 .withPosition(Positions.create(1,0).relativeToRightOf(projectedBalancesButton!!))
                 .build()
-        this.currentBalancesButton!!.onMouseReleased { this.parent.currentBalances() }
+        this.currentBalancesButton!!.onMouseReleased { this.uiComponents.weeklyOverviewScreen!!.currentBalances() }
         this.prevBudgetStateButton = Components.button()
                 .withBoxType(BoxType.SINGLE)
                 .wrapWithBox(false)
                 .withText("<")
                 .withPosition(Positions.create(1,0).relativeToRightOf(currentBalancesButton!!))
                 .build()
-        this.prevBudgetStateButton!!.onMouseReleased { this.parent.prevBudgetState() }
+        this.prevBudgetStateButton!!.onMouseReleased { this.uiComponents.prevBudgetState() }
         this.nextBudgetStateButton = Components.button()
                 .withBoxType(BoxType.SINGLE)
                 .wrapWithBox(false)
                 .withText(">")
                 .withPosition(Positions.create(1,0).relativeToRightOf(prevBudgetStateButton!!))
                 .build()
-        this.nextBudgetStateButton!!.onMouseReleased { this.parent.nextBudgetState() }
+        this.nextBudgetStateButton!!.onMouseReleased { this.uiComponents.nextBudgetState() }
         this.payPeriodItineraryPanel = BudgetItemsPanel(this.width-4,
-                this.height-(this.startDateLabel!!.height+5), startDateLabel!!, parent, applicationState)
+                this.height-(this.startDateLabel!!.height+5), startDateLabel!!, uiComponents, applicationState)
         this.payPeriodItineraryPanel!!.build()
         this.panel!!.addComponent(startDateLabel!!)
         this.panel!!.addComponent(endDateLabel!!)
@@ -89,7 +89,7 @@ class BudgetStatePanel(var width: Int, var height: Int, var parent: BaseScreen, 
     }
 
     fun update(currentBudgetAnalysisStates: MutableList<BudgetAnalysisState>?) {
-        var budgetState: BudgetState = parent.applicationUIComponents.currentViewedBudgetState!!
+        var budgetState: BudgetState = uiComponents.currentViewedBudgetState!!
         this.startDate = budgetState.startDate!!
         this.endDate = budgetState.endDate!!
         this!!.startDateLabel?.let { panel!!.removeComponent(it) }

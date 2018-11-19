@@ -65,7 +65,7 @@ data class Account(val name: String, var balance: Double, var items: MutableList
 
         fun parseAccountFromJsonObject(accountObj: JsonObject): Account {
             val name: String = accountObj.string(NAME_KEY)!!
-            val balance: Double = accountObj.double(BALANCE_KEY)!!
+                val balance: Double = accountObj.double(BALANCE_KEY)!!
             var items: MutableList<AccountItem> = ArrayList()
             val itemsArray: JsonArray<JsonObject>? = accountObj.array(ITEMS_KEY)
             itemsArray?.forEach { jsonObject -> items.add(parseAccountItemFromJsonObject(jsonObject)) }

@@ -4,57 +4,64 @@ import model.ApplicationState
 import model.BudgetAnalysisState
 import model.BudgetItem
 import model.BudgetState
-import model.BudgetState.Companion.determineNextDueLocalDateTime
-import model.BudgetState.Companion.determinePreviousDueLocalDateTime
-import java.time.DayOfWeek
-import java.time.LocalDateTime
-import java.time.LocalTime
+import utils.DateTimeUtils
 
 class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
 
 
-    fun performBudgetAnalysis(isComplete: Boolean): MutableList<BudgetAnalysisState> {
+    fun performBudgetAnalysis(): MutableMap<BudgetState?, MutableList<BudgetAnalysisState>> {
+        var budgetStatesAnalysisStatesMap: MutableMap<BudgetState?, MutableList<BudgetAnalysisState>> = HashMap()
+        val currentBudgetState = applicationState.currentPayPeriodBudgetState
+        var currentPayPeriodBudgetItems =
+                applicationState.pastUnreconciledBudgetItems?.let {
+                    reconcileApplicationBudgetState(currentBudgetState!!, it) }
         var currentBudgetAnalysisStates =
-                                performAnalysisOnBudgetItems(applicationState.pastUnreconciledBudgetItems)
-        var lastBudgetAnalysisState: BudgetAnalysisState? = null
-        if(currentBudgetAnalysisStates != null && currentBudgetAnalysisStates.isNotEmpty()){
-            lastBudgetAnalysisState = currentBudgetAnalysisStates.last()
-        }
-        applicationState.currentPayPeriodBudgetState?.let {
-            currentBudgetAnalysisStates?.addAll(performAndShowWeeklyBudgetAnalysis(lastBudgetAnalysisState,it))
-        }
-        if(currentBudgetAnalysisStates != null && currentBudgetAnalysisStates.isNotEmpty()){
-            lastBudgetAnalysisState = currentBudgetAnalysisStates.last()
-        }
-        if(isComplete && applicationState.futureBudgetStates != null) {
+                                performAnalysisOnBudgetItems(currentPayPeriodBudgetItems)
+        if(currentBudgetAnalysisStates != null && currentBudgetAnalysisStates.isNotEmpty()) {
+            var lastBudgetAnalysisState: BudgetAnalysisState? = currentBudgetAnalysisStates?.last()
+            budgetStatesAnalysisStatesMap[currentBudgetState] = currentBudgetAnalysisStates
             applicationState.futureBudgetStates?.let {
-                it.forEach {
-                    currentBudgetAnalysisStates?.addAll(performAndShowWeeklyBudgetAnalysis(lastBudgetAnalysisState, it))
-                    lastBudgetAnalysisState = currentBudgetAnalysisStates.last()
+                it.forEach { budgetState ->
+                    var budgetStateAnalysisStates = analyzeBudgetState(lastBudgetAnalysisState, budgetState)
+                    budgetStatesAnalysisStatesMap[budgetState] = budgetStateAnalysisStates
+                    lastBudgetAnalysisState = budgetStateAnalysisStates.last()
                 }
             }
         }
-        currentBudgetAnalysisStates?.addAll(performAnalysisOnBudgetItems(applicationState.futureBudgetItems))
-        return currentBudgetAnalysisStates
+        return budgetStatesAnalysisStatesMap
     }
 
-    fun performBudgetAnalysis(budgetState: BudgetState): MutableList<BudgetAnalysisState>{
-        return performAnalysisOnBudgetItems(budgetState.currentBudgetItems)
+    fun reconcileApplicationBudgetState(budgetState: BudgetState, unreconciledBudgetItems: MutableMap<String, BudgetItem>):
+                                MutableMap<String, BudgetItem>{
+        var budgetItems = HashMap(unreconciledBudgetItems)
+        val localDate = DateTimeUtils.currentDate()
+        if(localDate.isAfter(budgetState?.startDate)){
+            budgetItems.putAll(retrieveApplicableBudgetItemsForState(budgetState))
+        }
+        return budgetItems
+    }
+
+    fun retrieveApplicableBudgetItemsForState(budgetState: BudgetState): MutableMap<String, BudgetItem> {
+        var budgetItems: MutableMap<String, BudgetItem> = HashMap()
+        applicationState.budgetItems!!.forEach { name, budgetItem ->
+            if(budgetItem.validDueDateForBudgetState(budgetState!!)){
+                budgetItems[name] = budgetItem
+            }
+        }
+        return budgetItems
     }
 
     fun performAnalysisOnBudgetItems(budgetItems: MutableMap<String, BudgetItem>?): MutableList<BudgetAnalysisState> {
         var budgetAnalysisState = BudgetAnalysisState(applicationState)
         var budgetAnalysisStates = analyzeBudgetItems(budgetAnalysisState, budgetItems)
         return budgetAnalysisStates
-
     }
-    fun performAndShowWeeklyBudgetAnalysis(lastBudgetAnalysisState: BudgetAnalysisState?, budgetState: BudgetState):
-            MutableList<BudgetAnalysisState> {
-        val budgetAnalysisStates: MutableList<BudgetAnalysisState> =
-                                        analyzeBudgetItems(lastBudgetAnalysisState, budgetState.currentBudgetItems)
-        var budgetStateDailyItinerary = processCurrentBudgetStatetinerary(budgetAnalysisStates)
-        analyzeBudgetDailyItinerary(budgetStateDailyItinerary)
-        return budgetAnalysisStates
+
+    private fun analyzeBudgetState(lastBudgetAnalysisState: BudgetAnalysisState?,
+                                   budgetState: BudgetState?): MutableList<BudgetAnalysisState> {
+
+        val budgetItemsMap: MutableMap<String, BudgetItem> = retrieveApplicableBudgetItemsForState(budgetState!!)
+        return analyzeBudgetItems(lastBudgetAnalysisState, budgetItemsMap)
     }
 
     private fun analyzeBudgetItems(lastBudgetAnalysisState: BudgetAnalysisState?,
@@ -68,7 +75,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         orderedBudgetItems?.forEach { budgetItem ->
             budgetAnalysisState = budgetAnalysisState?.let { processBudgetItemBudgetAnalysisStateForAnalysis(it, budgetItem) }
             budgetAnalysisState?.let { budgetAnalysisStates.add(it) }
-            budgetAnalysisState = budgetAnalysisState?.copy()
+//            budgetAnalysisState = budgetAnalysisState?.copy()
         }
         return (budgetAnalysisStates.sortedWith(kotlin.comparisons.compareBy({ it.date }))).toMutableList()
     }
@@ -79,137 +86,21 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         newBudgetAnalysisState.date = budgetItem.due
         newBudgetAnalysisState.budgetItem = budgetItem
         newBudgetAnalysisState.checkingAccountBalance =
-                                newBudgetAnalysisState.checkingAccountBalance?.plus(budgetItem.actualAmount)
-        if(budgetItem.transferredToSavingsAccountName != null && !budgetItem.transferredToSavingsAccountName.equals("null")){
-            for(savingsAccountIndex in 0 .. applicationState.savingsAccounts?.size!!-1){
-                if(applicationState.savingsAccounts?.get(savingsAccountIndex)!!.name.startsWith(budgetItem!!.transferredToSavingsAccountName!!)){
-                    newBudgetAnalysisState.savingsAccountBalances?.set(savingsAccountIndex,
-                            newBudgetAnalysisState.savingsAccountBalances?.
-                                    get(savingsAccountIndex)?.minus(budgetItem.actualAmount)!!)
-                    break
-                }
-            }
-        } else if(budgetItem.transferredToCreditAccountName != null && !budgetItem.transferredToCreditAccountName.equals("null")){
-            for(creditAccountIndex in 0 .. applicationState.creditAccounts?.size!! - 1){
-                if(applicationState.creditAccounts?.get(creditAccountIndex)!!.name.startsWith(budgetItem!!.transferredToCreditAccountName!!)){
-                    newBudgetAnalysisState.creditAccountBalances?.set(creditAccountIndex,
-                            newBudgetAnalysisState.creditAccountBalances?.
-                                    get(creditAccountIndex)?.minus(budgetItem.actualAmount)!!)
-                    break
-                }
-            }
+                newBudgetAnalysisState.checkingAccountBalance?.plus(budgetItem.actualAmount)
+        val transferringSavingsAccountName = budgetItem.transferredToSavingsAccountName
+        if(transferringSavingsAccountName != null && !transferringSavingsAccountName.equals("null")){
+            newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName] =
+                    newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName]!!.minus(budgetItem.actualAmount)
+        }
+        val transferredCreditAccountName = budgetItem.transferredToCreditAccountName
+        if(transferredCreditAccountName != null && !transferredCreditAccountName.equals("null")){
+            newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName] =
+                    newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName]!!.minus(budgetItem.actualAmount)
         }
         return newBudgetAnalysisState
     }
 
-    private fun analyzeBudgetDailyItinerary(budgetAnalysisStateItinerary: MutableMap<DayOfWeek,
-                            MutableList<BudgetAnalysisState>>) {
-        //process pay period from Friday to Thursday
-        var finalCheckingAccountBalance = processCurrentBudgetDay(DayOfWeek.FRIDAY, budgetAnalysisStateItinerary)
-        var tempCheckingAccountBalance  = processCurrentBudgetDay(DayOfWeek.SATURDAY, budgetAnalysisStateItinerary)
-        finalCheckingAccountBalance =
-                if (tempCheckingAccountBalance != null) tempCheckingAccountBalance else finalCheckingAccountBalance
-        tempCheckingAccountBalance  = processCurrentBudgetDay(DayOfWeek.SUNDAY, budgetAnalysisStateItinerary)
-        finalCheckingAccountBalance =
-                if (tempCheckingAccountBalance != null) tempCheckingAccountBalance else finalCheckingAccountBalance
-        tempCheckingAccountBalance  = processCurrentBudgetDay(DayOfWeek.MONDAY, budgetAnalysisStateItinerary)
-        finalCheckingAccountBalance =
-                if (tempCheckingAccountBalance != null) tempCheckingAccountBalance else finalCheckingAccountBalance
-        tempCheckingAccountBalance  = processCurrentBudgetDay(DayOfWeek.TUESDAY, budgetAnalysisStateItinerary)
-        finalCheckingAccountBalance =
-                if (tempCheckingAccountBalance != null) tempCheckingAccountBalance else finalCheckingAccountBalance
-        tempCheckingAccountBalance  = processCurrentBudgetDay(DayOfWeek.WEDNESDAY, budgetAnalysisStateItinerary)
-        finalCheckingAccountBalance =
-                if (tempCheckingAccountBalance != null) tempCheckingAccountBalance else finalCheckingAccountBalance
-        tempCheckingAccountBalance  = processCurrentBudgetDay(DayOfWeek.THURSDAY, budgetAnalysisStateItinerary)
-        finalCheckingAccountBalance =
-                if (tempCheckingAccountBalance != null) tempCheckingAccountBalance else finalCheckingAccountBalance
-        if(finalCheckingAccountBalance == null) {
-            finalCheckingAccountBalance = 0.0
-        }
-    }
-
-    private fun processCurrentBudgetDay(dayOfWeek: DayOfWeek,
-                                        analysisBudgetDailyItinerary: MutableMap<DayOfWeek,
-                                                MutableList<BudgetAnalysisState>>): Double? {
-        val currentDayofWeekBudgetItems: MutableList<BudgetAnalysisState>? = analysisBudgetDailyItinerary.get(dayOfWeek)
-        var checkingAccountBalance: Double? = null
-        currentDayofWeekBudgetItems?.forEach { budgetAnalysisState ->
-            checkingAccountBalance = budgetAnalysisState.checkingAccountBalance!!
-        }
-        return checkingAccountBalance
-    }
-
-    private fun processCurrentBudgetStatetinerary(budgetAnalysisStates: MutableList<BudgetAnalysisState>)
-            : MutableMap<DayOfWeek, MutableList<BudgetAnalysisState>> {
-        var mondayBudgetStates: MutableList<BudgetAnalysisState> = ArrayList()
-        var tuesdayBudgetStates: MutableList<BudgetAnalysisState> = ArrayList()
-        var wednesdayBudgetStates: MutableList<BudgetAnalysisState> = ArrayList()
-        var thursdayBudgetStates: MutableList<BudgetAnalysisState> = ArrayList()
-        var fridayBudgetStates: MutableList<BudgetAnalysisState> = ArrayList()
-        var saturdayBudgetStates: MutableList<BudgetAnalysisState> = ArrayList()
-        var sundayBudgetStates: MutableList<BudgetAnalysisState> = ArrayList()
-        budgetAnalysisStates.forEach { budgetAnalysisState ->
-            when (budgetAnalysisState.date?.dayOfWeek) {
-                DayOfWeek.MONDAY -> mondayBudgetStates.add(budgetAnalysisState)
-                DayOfWeek.TUESDAY -> tuesdayBudgetStates.add(budgetAnalysisState)
-                DayOfWeek.WEDNESDAY -> wednesdayBudgetStates.add(budgetAnalysisState)
-                DayOfWeek.THURSDAY -> thursdayBudgetStates.add(budgetAnalysisState)
-                DayOfWeek.FRIDAY -> fridayBudgetStates.add(budgetAnalysisState)
-                DayOfWeek.SATURDAY -> saturdayBudgetStates.add(budgetAnalysisState)
-                DayOfWeek.SUNDAY -> sundayBudgetStates.add(budgetAnalysisState)
-            }
-        }
-        var budgetStateDailyItinerary: HashMap<DayOfWeek, MutableList<BudgetAnalysisState>> = HashMap()
-        budgetStateDailyItinerary.put(DayOfWeek.MONDAY, mondayBudgetStates)
-        budgetStateDailyItinerary.put(DayOfWeek.TUESDAY, tuesdayBudgetStates)
-        budgetStateDailyItinerary.put(DayOfWeek.WEDNESDAY, wednesdayBudgetStates)
-        budgetStateDailyItinerary.put(DayOfWeek.THURSDAY, thursdayBudgetStates)
-        budgetStateDailyItinerary.put(DayOfWeek.FRIDAY, fridayBudgetStates)
-        budgetStateDailyItinerary.put(DayOfWeek.SATURDAY, saturdayBudgetStates)
-        budgetStateDailyItinerary.put(DayOfWeek.SUNDAY, sundayBudgetStates)
-        return budgetStateDailyItinerary
-    }
-
-    private fun processCurrentWeekFutureBudgetItems(beginningOfTimePeriod: LocalDateTime,
-                                                    endOfTimePeriod: LocalDateTime): MutableMap<String, BudgetItem>? {
-        var newBudgetItems: MutableMap<String, BudgetItem>? = HashMap()
-        if (applicationState.futureBudgetItems != null) {
-            var futureBudgetItemsEntryIterator = applicationState.futureBudgetItems?.entries?.iterator()
-            while (futureBudgetItemsEntryIterator?.hasNext()!!) {
-                var futureBudgetItemEntry = futureBudgetItemsEntryIterator?.next()
-                var futureBudgetItem = futureBudgetItemEntry?.value?.copy()
-                if (futureBudgetItem != null) {
-                    if (futureBudgetItem.validForWeek(beginningOfTimePeriod, endOfTimePeriod)) {
-                        applicationState.currentPayPeriodBudgetState?.currentBudgetItems?.put(futureBudgetItem.name, futureBudgetItem.copy())
-                        val nextDueDate: LocalDateTime = determineNextDueLocalDateTime(futureBudgetItem.recurrence,
-                                futureBudgetItem.due)
-                        futureBudgetItem = futureBudgetItem.copy(due = nextDueDate)
-                        newBudgetItems?.put(futureBudgetItem.name, futureBudgetItem)
-                    }
-                }
-
-            }
-        }
-        return newBudgetItems
-    }
-
     companion object {
 
-        fun processFutureBudgetItemsIntoCurrentItems(applicationStateBudgetAnalysis: ApplicationStateBudgetAnalysis,
-                                                     currentDateTime: LocalDateTime): MutableMap<String, BudgetItem>? {
-            var newBudgetItems: MutableMap<String, BudgetItem>? = HashMap()
-            if (applicationStateBudgetAnalysis.applicationState.futureBudgetItems != null) {
-                var beginningOfTimePeriod: LocalDateTime? =
-                        determinePreviousDueLocalDateTime(currentDateTime.dayOfWeek, currentDateTime)
-                if (beginningOfTimePeriod != null) {
-                    beginningOfTimePeriod.with(LocalTime.of(8, 0, 0))
-                    var endOfTimePeriod: LocalDateTime = beginningOfTimePeriod.plusDays(7).minusSeconds(1)
-                    newBudgetItems = applicationStateBudgetAnalysis.
-                            processCurrentWeekFutureBudgetItems(beginningOfTimePeriod, endOfTimePeriod)
-                }
-            }
-            return newBudgetItems
-        }
     }
 }

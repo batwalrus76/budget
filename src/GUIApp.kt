@@ -14,9 +14,10 @@ object GUIApp {
         applicationUIComponents.applicationState = applicationState
         applicationUIComponents.build()
         var applicationStateManager = ApplicationStateManager(applicationState!!)
-        applicationStateManager.reconcilePastCurrentFutureBudgetStates()
+        applicationStateManager.augmentApplicationFutureBudgetStates()
 
         var workingBudgetState: BudgetState? = applicationState.currentPayPeriodBudgetState
+        applicationUIComponents.weeklyOverviewScreen?.currentBalances()
         while (workingBudgetState != null) {
             applicationUIComponents.clear()
             workingBudgetState = applicationUIComponents.update()

@@ -6,13 +6,11 @@ import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
-import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position
 import view.BudgetPanel
-import view.screens.BaseScreen
 
-class InputPanel(width: Int, height: Int, var xOffSet: Int, var yOffset: Int, var parent: BaseScreen,
+class InputPanel(width: Int, height: Int, var xOffSet: Int, var yOffset: Int, var uiComponents: ApplicationUIComponents,
                  applicationState: ApplicationState) :
         BudgetPanel(width, height, applicationState) {
 
@@ -30,7 +28,7 @@ class InputPanel(width: Int, height: Int, var xOffSet: Int, var yOffset: Int, va
     }
 
     fun clear(){
-        addItemPanel = AddItemPanel(width-4,height-2, parent, applicationState)
+        addItemPanel = AddItemPanel(width-2,height-2, uiComponents, applicationState)
         addItemPanel!!.build()
         this.panel!!.children.forEach { child -> this.panel!!.removeComponent(child) }
         this.innerPanel = addItemPanel!!.panel
@@ -45,15 +43,14 @@ class InputPanel(width: Int, height: Int, var xOffSet: Int, var yOffset: Int, va
                 .withSize(Sizes.create(width!!, height!!)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(xOffSet, yOffset))
                 .build() // position is always relative to the parent
-        addItemPanel = AddItemPanel(width-4,height-2, parent, applicationState)
+        addItemPanel = AddItemPanel(width-2,height-2, uiComponents, applicationState)
         addItemPanel!!.build()
         innerPanel = addItemPanel!!.panel
         panel!!.addComponent(this!!.innerPanel!!)
     }
 
     companion object {
-        val TITLE = "Input Panel"
-        val DEFAULT_POSITION: Position = Positions.create(0,0)
+        const val TITLE = "Input Panel"
     }
 
 }

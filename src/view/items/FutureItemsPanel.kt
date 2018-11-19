@@ -12,16 +12,13 @@ import org.hexworks.zircon.api.component.*
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
-import view.screens.BaseScreen
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
-class FutureItemsPanel (width: Int, height: Int, component: Component, parent: BaseScreen,
+class FutureItemsPanel (width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
                                         applicationState: ApplicationState) :
-        BaseItemsPanel(width, height, component, parent, applicationState){
+        BaseItemsPanel(width, height, component, uiComponents, applicationState){
 
     override fun build() {
         this.panel = Components.panel()
@@ -36,13 +33,13 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: B
     }
 
     override fun update(){
-        var futureBudgetItems = applicationState.futureBudgetItems!!.values.sortedWith(kotlin.comparisons.compareBy({ it.due }))
+        var budgetItems = applicationState.budgetItems!!.values.sortedWith(kotlin.comparisons.compareBy({ it.due }))
         super.update()
         radioButtonGroup!!.onSelection { it ->
             updateInputPanel(it)
         }
-        futureBudgetItems?.forEach { futureBudgetItem ->
-            radioButtonGroup!!.addOption(futureBudgetItem.name, futureBudgetItem.toNarrowString())
+        budgetItems?.forEach { budgetItem ->
+            radioButtonGroup!!.addOption(budgetItem.name, budgetItem.toNarrowString())
         }
     }
 
@@ -51,14 +48,14 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: B
     }
 
     private fun updateInputPanel(selection: RadioButtonGroup.Selection) {
-        var inputPanel = parent.inputPanel
+        var inputPanel = uiComponents.weeklyOverviewScreen!!.inputPanel
         var newPanel: Panel = Components.panel()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
                 .withSize(Sizes.create(inputPanel!!.width-4, inputPanel!!.height-4))
                 .withPosition(Positions.offset1x1())
                 .build()
-        val budgetItem = applicationState.futureBudgetItems!!.get(selection.key)
+        val budgetItem = applicationState.budgetItems!!.get(selection.key)
         val name: String = budgetItem!!.name
         val nameLabel: Label = Components.label()
                 .wrapWithBox(false)
@@ -75,7 +72,7 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: B
                 .withPosition(Positions.create(1,0).relativeToRightOf(nameLabel))
                 .build()
         newPanel.addComponent(nameTextArea)
-        val due: LocalDateTime = budgetItem!!.due
+        val due: LocalDate = budgetItem!!.due
         val dueLabel: Label = Components.label()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
@@ -162,11 +159,11 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: B
                 .withSize(Sizes.create(35, 5))
                 .withPosition(Positions.create(1,0).relativeToRightOf(transferLabel))
                 .build()
-        applicationState.savingsAccounts!!.forEach { savingsAccount ->
-            if(savingsAccount.name.equals(targetSavingsAccountName)) {
-                transferSavingsAccountButtonGroup.addOption(savingsAccount.name, savingsAccount.name + " (current)")
+        applicationState.savingsAccounts!!.forEach { name, savingsAccount ->
+            if(name.equals(targetSavingsAccountName)) {
+                transferSavingsAccountButtonGroup.addOption(name, name + " (current)")
             } else {
-                transferSavingsAccountButtonGroup.addOption(savingsAccount.name, savingsAccount.name)
+                transferSavingsAccountButtonGroup.addOption(name, name)
             }
         }
         transferSavingsAccountButtonGroup.onSelection { it ->
@@ -181,11 +178,11 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: B
                 .withSize(Sizes.create(35, 5))
                 .withPosition(Positions.create(0,0).relativeToBottomOf(transferSavingsAccountButtonGroup))
                 .build()
-        applicationState.creditAccounts!!.forEach { creditAccount ->
-            if(creditAccount.name.equals(targetCreditAccountName)) {
-                transferCreditAccountButtonGroup.addOption(creditAccount.name, creditAccount.name + " (current)")
+        applicationState.creditAccounts!!.forEach { name, creditAccount ->
+            if(name.equals(targetCreditAccountName)) {
+                transferCreditAccountButtonGroup.addOption(name, name + " (current)")
             } else {
-                transferCreditAccountButtonGroup.addOption(creditAccount.name, creditAccount.name)
+                transferCreditAccountButtonGroup.addOption(name, name)
             }
         }
         transferCreditAccountButtonGroup.onSelection { it ->
@@ -201,11 +198,10 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: B
 
         submitButton.onMouseReleased {
             mouseAction ->
-            var updatedBudgetItem = BudgetItem(0, scheduledAmountTextArea.text.toDoubleOrNull()!!,
-                    actualAmountTextArea.text.toDoubleOrNull()!!,
-                    LocalDateTime.of(LocalDate.parse(dueTextArea.text), LocalTime.of(8,0)),
-                    currentRecurrence, nameTextArea.text,
-                    targetSavingsAccountName, targetCreditAccountName)
+            var updatedBudgetItem = BudgetItem(scheduledAmountTextArea.text.toDoubleOrNull()!!,
+                    actualAmountTextArea.text.toDoubleOrNull()!!, LocalDate.parse(dueTextArea.text),  currentRecurrence,
+                    nameTextArea.text,  targetSavingsAccountName, targetCreditAccountName, ArrayList())
+            updatedBudgetItem.fillOutDueDates()
             updateBudgetItem(name, updatedBudgetItem)
         }
         newPanel.addComponent(submitButton)
@@ -227,11 +223,11 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: B
             deleteBudgetItem(name)
         }
         newPanel.addComponent(deleteButton)
-        parent.updateInputPanel(newPanel)
+        uiComponents.updateInputScreen(newPanel)
     }
 
     private fun reconcileBudgetItem(name: String) {
-        val reconciledBudgetItem = applicationState.futureBudgetItems!!.remove(name)
+        val reconciledBudgetItem = applicationState.budgetItems!!.remove(name)
         if(reconciledBudgetItem != null) {
             applicationState.checkingAccount!!.reconciledItems.add(AccountItem(reconciledBudgetItem?.due!!, reconciledBudgetItem?.name!!, reconciledBudgetItem?.actualAmount!!))
             applicationState.checkingAccount!!.balance = applicationState.checkingAccount!!.balance + reconciledBudgetItem.actualAmount
@@ -240,19 +236,19 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, parent: B
     }
 
     private fun deleteBudgetItem(name: String) {
-        applicationState.futureBudgetItems!!.remove(name)
+        applicationState.budgetItems!!.remove(name)
         budgetItemChange()
     }
 
     fun updateBudgetItem(originalName: String, updatedBudgetItem: BudgetItem){
-        applicationState.futureBudgetItems!!.remove(originalName)
-        applicationState.futureBudgetItems!!.put(updatedBudgetItem.name, updatedBudgetItem)
+        applicationState.budgetItems!!.remove(originalName)
+        applicationState.budgetItems!!.put(updatedBudgetItem.name, updatedBudgetItem)
         budgetItemChange()
     }
 
     fun budgetItemChange(){
         update()
-        parent.update()
-        parent.clearInputPanel()
+        uiComponents.update()
+        uiComponents.clearInputScreen()
     }
 }

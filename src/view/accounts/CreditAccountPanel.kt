@@ -12,11 +12,10 @@ import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
-import view.screens.BaseScreen
 
-class CreditAccountPanel(width: Int, height: Int, component: Component, inputPanel: BaseScreen,
+class CreditAccountPanel(width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
                             applicationState: ApplicationState) :
-        BaseItemsPanel(width, height, component, inputPanel, applicationState) {
+        BaseItemsPanel(width, height, component, uiComponents, applicationState) {
 
     override fun build(){
         this.panel = Components.panel()
@@ -27,8 +26,8 @@ class CreditAccountPanel(width: Int, height: Int, component: Component, inputPan
                 .withPosition(AccountsPanel.DEFAULT_OFFSET.relativeToBottomOf(component))
                 .build()
         super.build()
-        applicationState.creditAccounts!!.forEach { account ->
-            radioButtonGroup!!.addOption(account.name, account.toString())}
+        applicationState.creditAccounts!!.forEach { name, account ->
+            radioButtonGroup!!.addOption(name, account.toString())}
         radioButtonGroup!!.onSelection { it ->
             updateInputPanel(it)
         }
@@ -36,12 +35,10 @@ class CreditAccountPanel(width: Int, height: Int, component: Component, inputPan
     }
 
     fun update(budgetAnalysisState: BudgetAnalysisState){
-        var balances = budgetAnalysisState.creditAccountBalances!!
         super.update()
-        for (balanceIndex in 0 .. balances.size-1){
-            val creditAccount: Account = applicationState.creditAccounts!!.get(balanceIndex)
-            val balance:Double = balances.get(balanceIndex)
-            radioButtonGroup?.addOption(creditAccount.name, creditAccount.toString(balance))
+        applicationState.creditAccounts?.forEach { name, account ->
+            val budgetAnalysisCreditAccountBalance = budgetAnalysisState.creditAccountBalances!![name]
+            radioButtonGroup?.addOption(name, account.toString(budgetAnalysisCreditAccountBalance!!))
         }
         radioButtonGroup!!.onSelection { it ->
             updateInputPanel(it)
@@ -50,8 +47,8 @@ class CreditAccountPanel(width: Int, height: Int, component: Component, inputPan
 
     override fun update() {
         super.update()
-        applicationState.creditAccounts!!.forEach { account ->
-            radioButtonGroup!!.addOption(account.name, account.toString())}
+        applicationState.creditAccounts!!.forEach { name, account ->
+            radioButtonGroup!!.addOption(name, account.toString())}
         radioButtonGroup!!.onSelection { it ->
             updateInputPanel(it)
         }
@@ -59,10 +56,10 @@ class CreditAccountPanel(width: Int, height: Int, component: Component, inputPan
 
 
     private fun updateInputPanel(selection: RadioButtonGroup.Selection) {
-        var inputPanel = parent.inputPanel
+        var inputPanel = uiComponents.weeklyOverviewScreen!!.inputPanel
         var creditAccount: Account? = null
-        applicationState.creditAccounts!!.forEach { account ->
-            if(account.name.equals(selection.key)){
+        applicationState.creditAccounts!!.forEach { name, account ->
+            if(name.equals(selection.key)){
                 creditAccount = account
             }
         }
@@ -97,8 +94,8 @@ class CreditAccountPanel(width: Int, height: Int, component: Component, inputPan
         submitButton.onMouseReleased {
             mouseAction ->
             creditAccount!!.balance = balanceTextArea.text.toDouble()
-            parent.update()
-            parent.clearInputPanel()
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         newPanel.addComponent(submitButton)
         val clearButton: Button = Components.button()
@@ -108,11 +105,11 @@ class CreditAccountPanel(width: Int, height: Int, component: Component, inputPan
                 .build()
         clearButton.onMouseReleased {
             creditAccount!!.reconciledItems.clear()
-            parent.update()
-            parent.clearInputPanel()
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         newPanel.addComponent(clearButton)
-        parent.updateInputPanel(newPanel)
+        uiComponents.updateInputScreen(newPanel)
     }
 
 

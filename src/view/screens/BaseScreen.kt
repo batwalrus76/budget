@@ -8,10 +8,9 @@ import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.grid.TileGrid
 import view.input.InputPanel
 
-abstract class BaseScreen(var width: Int, var height: Int, var tileGrid: TileGrid,
+abstract class BasePanel(var width: Int, var height: Int, var tileGrid: TileGrid,
                                 var applicationUIComponents: ApplicationUIComponents) {
 
-    var screen = Screens.createScreenFor(tileGrid)
     var inputPanel: InputPanel? = null
 
     abstract fun build()
@@ -25,13 +24,11 @@ abstract class BaseScreen(var width: Int, var height: Int, var tileGrid: TileGri
     abstract fun nextBudgetState()
 
     open fun clear() {
-        screen.clear()
     }
 
     abstract fun update(): BudgetState
 
     open fun display() {
-       screen.display()
     }
 
     abstract fun clearInputPanel()

@@ -17,13 +17,62 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="klaxon-3.0.11" level="application" />
-    <orderEntry type="library" name="KotlinJavaRuntime Brew" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="klaxon-4.0.1" level="project" />
-    <orderEntry type="library" name="klaxon-4.0.1-javadoc" level="project" />
-    <orderEntry type="library" name="klaxon-4.0.1-sources" level="project" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="library" exported="" name="KotlinJavaRuntime Brew" level="project" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="klaxon-4.0.1" level="project" />
+    <orderEntry type="library" exported="" name="klaxon-4.0.1-javadoc" level="project" />
+    <orderEntry type="library" exported="" name="klaxon-4.0.1-sources" level="project" />
+    <orderEntry type="library" exported="" name="annotations-13.0" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/annotations-13.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/asm-3.3.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/asm-analysis-3.3.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/asm-tree-3.3.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/asm-util-3.3.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/caffeine-2.5.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/filters-2.0.235-1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/java-concurrent-hash-trie-map-0.2.23.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kdoc-0.11.91.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/klaxon-4.0.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-compiler-0.11.91.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-reflect-1.2.71.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-reflect.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-runtime-0.11.91.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-stdlib-0.11.91.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-stdlib-1.2.71.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-stdlib-jdk7.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-stdlib-jdk8.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-stdlib.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-test.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/parboiled-core-1.0.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/parboiled-java-1.0.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/pegdown-1.1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/slf4j-api-1.7.25.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/slf4j-simple-1.7.25.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/snakeyaml-1.18.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/zircon.jvm-2018.5.0-RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/zircon.jvm.swing-2018.5.0-RELEASE.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/kdoc-0.11.91-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/klaxon-4.0.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-compiler-0.11.91-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-reflect-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-runtime-0.11.91-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-stdlib-0.11.91-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-stdlib-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/kotlin-test-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/parboiled-core-1.0.2-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/parboiled-java-1.0.2-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/pegdown-1.1.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="library" exported="" name="org.hexworks.zircon:zircon.jvm.swing:2018.5.0-RELEASE" level="application" />
   </component>
 </module>

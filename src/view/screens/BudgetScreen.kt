@@ -2,57 +2,32 @@ package view.screens
 
 import model.BudgetState
 import model.view.ApplicationUIComponents
-import org.hexworks.zircon.api.ColorThemes
-import org.hexworks.zircon.api.Screens
+import org.hexworks.zircon.api.*
+import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.grid.TileGrid
 import view.budget.MonthlyBudgetPanel
 import view.control.MainControlsPanel
 
-class BudgetScreen(width: Int, height: Int, tileGrid: TileGrid, var uiComponents: ApplicationUIComponents) :
-        BaseScreen(width, height, tileGrid, uiComponents) {
+class BudgetScreen(var width: Int, var height: Int, var component: Component, var uiComponents: ApplicationUIComponents){
 
-    var mainControlPanel: MainControlsPanel? = null
+    var panel: Panel? = Components.panel()
+            .wrapWithBox(false) // panels can be wrapped in a box
+            .wrapWithShadow(false) // shadow can be added
+            .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
+            .withPosition(Positions.create(0,0).relativeToBottomOf(component))
+            .build()
     var monthlyBudgetPanel: MonthlyBudgetPanel? = null
 
-    override fun update(): BudgetState {
+    fun update(): BudgetState {
         return uiComponents.currentViewedBudgetState!!
     }
 
-    override fun clearInputPanel() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun updateInputPanel(panel: Panel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun projectBalances() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun currentBalances() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun prevBudgetState() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun nextBudgetState() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun build() {
-        screen = Screens.createScreenFor(tileGrid)
-        mainControlPanel = MainControlsPanel(width-2, 6, uiComponents)
-        mainControlPanel!!.build()
-        monthlyBudgetPanel = MonthlyBudgetPanel(width-2, height- mainControlPanel!!.height-2,
-                mainControlPanel!!.panel!!, uiComponents.applicationState!!)
+    fun build() {
+        panel!!.children.forEach { child -> panel!!.removeComponent(child) }
+        monthlyBudgetPanel = MonthlyBudgetPanel(width-2, height-2, uiComponents.applicationState!!)
         monthlyBudgetPanel!!.build()
-        mainControlPanel!!.panel?.let { screen.addComponent(it) }
-        monthlyBudgetPanel!!.panel?.let { screen.addComponent(it) }
-        screen!!.applyColorTheme(ColorThemes.monokaiBlue())
+        monthlyBudgetPanel!!.panel?.let { panel?.addComponent(it) }
     }
 
 }

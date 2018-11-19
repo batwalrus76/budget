@@ -28,7 +28,7 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
                 .withTitle(BudgetStatePanel.TITLE) // if a panel is wrapped in a box a title can be displayed
                 .wrapWithShadow(false) // shadow can be added
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
-                .withPosition(Positions.offset1x1())
+                .withPosition(Positions.create(0,0))
                 .build()
         this.weeklyViewButton = Components.button()
                 .withBoxType(BoxType.DOUBLE)

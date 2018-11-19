@@ -11,11 +11,10 @@ import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
-import view.screens.BaseScreen
 
-class CheckingAccountPanel(width: Int, height: Int, component: Component, parent: BaseScreen,
+class CheckingAccountPanel(width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
                            applicationState: ApplicationState) :
-        BaseItemsPanel(width, height, component, parent, applicationState) {
+        BaseItemsPanel(width, height, component, uiComponents, applicationState) {
 
     fun update(budgetAnalysisState: BudgetAnalysisState){
         var balance: Double = budgetAnalysisState.checkingAccountBalance!!
@@ -44,7 +43,7 @@ class CheckingAccountPanel(width: Int, height: Int, component: Component, parent
     }
 
     private fun updateCheckingAccount() {
-        var inputPanel = parent.inputPanel
+        var inputPanel = uiComponents.weeklyOverviewScreen!!.inputPanel
         var newPanel: Panel = Components.panel()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
@@ -77,8 +76,8 @@ class CheckingAccountPanel(width: Int, height: Int, component: Component, parent
         submitButton.onMouseReleased {
             mouseAction ->
             checkingAccount!!.balance = balanceTextArea.text.toDouble()
-            parent.update()
-            parent.clearInputPanel()
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         newPanel.addComponent(submitButton)
         val clearButton: Button = Components.button()
@@ -88,11 +87,11 @@ class CheckingAccountPanel(width: Int, height: Int, component: Component, parent
                 .build()
         clearButton.onMouseReleased {
             checkingAccount!!.reconciledItems.clear()
-            parent.update()
-            parent.clearInputPanel()
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         newPanel.addComponent(clearButton)
-        parent.updateInputPanel(newPanel)
+        uiComponents.updateInputScreen(newPanel)
     }
 
     companion object {

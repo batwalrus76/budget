@@ -8,9 +8,8 @@ import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position
-import view.screens.BaseScreen
 
-class ItemsPanel (var width: Int, var height: Int, var component: Component, var parent: BaseScreen,
+class ItemsPanel (var width: Int, var height: Int, var component: Component, var uiComponents: ApplicationUIComponents,
                         var applicationState: ApplicationState) {
 
     var panel: Panel? = null
@@ -28,10 +27,11 @@ class ItemsPanel (var width: Int, var height: Int, var component: Component, var
                 .withSize(Sizes.create(width, height)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(0,0).relativeToBottomOf(this!!.component!!))
                 .build()
-        this.unreconciledItemsPanel = UnreconciledItemsPanel(subPanelWidth, subPanelHeight, component, parent, applicationState)
+        this.unreconciledItemsPanel = UnreconciledItemsPanel(subPanelWidth, subPanelHeight, component, uiComponents,
+                applicationState)
         this.unreconciledItemsPanel!!.build()
         this.futureItemPanel = FutureItemsPanel(subPanelWidth, subPanelHeight, unreconciledItemsPanel!!.panel!!,
-                parent, applicationState)
+                uiComponents, applicationState)
         this.futureItemPanel!!.build()
         this.panel!!.addComponent(unreconciledItemsPanel!!.panel!!)
         this.panel!!.addComponent(futureItemPanel!!.panel!!)

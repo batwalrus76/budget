@@ -1,52 +1,37 @@
 package model
 
+import com.beust.klaxon.JsonObject
 import model.BudgetItem.Companion.dateStringParser
 import model.BudgetItem.Companion.parseBudgetItemFromJsonObject
-import com.beust.klaxon.JsonObject
-import model.enums.Recurrence
 import utils.DateTimeUtils
+import utils.DateTimeUtils.Companion.currentDate
+import utils.DateTimeUtils.Companion.nextThursday
+import utils.DateTimeUtils.Companion.previousFriday
 import java.io.Serializable
-import java.time.DayOfWeek
-import java.time.LocalDateTime
+import java.time.LocalDate
 
-data class BudgetState(var currentBudgetItems: MutableMap<String, BudgetItem>? = HashMap<String, BudgetItem>(),
-                       var startDate: LocalDateTime? = DateTimeUtils.currentTime(), var endDate: LocalDateTime? = LocalDateTime.now()): Serializable {
+data class BudgetState(var startDate:LocalDate = previousFriday(currentDate()), var endDate: LocalDate = nextThursday(currentDate())): Serializable {
 
     fun serializeBudgetStateToJson(): String{
         var budgetStateStringBuilder = StringBuilder()
         budgetStateStringBuilder.append("{\n")
-        budgetStateStringBuilder.append(String.format("\"%s\": \n%s,\n",
-                CURRENT_BUDGET_ITEMS_KEY, serializeMapBudgetItemstoJson(currentBudgetItems)))
         budgetStateStringBuilder.append(String.format("\"%s\": \"%s\",\n", START_DATE_KEY, startDate?.toString()))
         budgetStateStringBuilder.append(String.format("\"%s\": \"%s\"\n", END_DATE_KEY, endDate?.toString()))
         budgetStateStringBuilder.append("}\n");
         return budgetStateStringBuilder.toString()
     }
 
+    fun isValidForDueDate(dueDate: LocalDate): Boolean {
+        return (dueDate.isAfter(startDate)&&dueDate.isBefore(endDate))
+    }
+
     companion object {
         fun deserializeFromJsonObject(budgetStateObj: JsonObject): BudgetState? {
-            val currentBudgetItemObj: JsonObject = budgetStateObj.obj(CURRENT_BUDGET_ITEMS_KEY)!!
-            var currentBudgetItems: MutableMap<String, BudgetItem> =
-                    parseBudgetItemsMapFromJsonObject(currentBudgetItemObj)
             val startDateString: String = budgetStateObj.string(START_DATE_KEY)!!
-            var startDate: LocalDateTime = dateStringParser(startDateString)
+            var startDate: LocalDate = dateStringParser(startDateString)
             val endDateString: String = budgetStateObj.string(END_DATE_KEY)!!
-            var endDate: LocalDateTime = dateStringParser(endDateString)
-            return BudgetState(currentBudgetItems, startDate, endDate)
-        }
-
-        fun parseBudgetItemsMapFromJsonObject(budgetItemsObject: JsonObject):
-                                                                            MutableMap<String, BudgetItem> {
-            var budgetItemsMap:MutableMap<String, BudgetItem> = HashMap()
-            val entries: MutableSet<MutableMap.MutableEntry<String, Any?>> = budgetItemsObject.entries
-            for(entry in entries){
-                budgetItemsMap.put(entry.key, parseBudgetItemFromJson(entry.value as JsonObject))
-            }
-            return budgetItemsMap
-        }
-
-        private fun parseBudgetItemFromJson(jsonObject: JsonObject): BudgetItem {
-            return parseBudgetItemFromJsonObject(jsonObject)!!
+            var endDate: LocalDate = dateStringParser(endDateString)
+            return BudgetState(startDate, endDate)
         }
 
         fun serializeMapBudgetItemstoJson(mapBudgetItems: MutableMap<String, BudgetItem>?): String {
@@ -56,34 +41,24 @@ data class BudgetState(var currentBudgetItems: MutableMap<String, BudgetItem>? =
             mapBudgetItemStringBuilder.append("}\n")
             return mapBudgetItemStringBuilder.toString()
         }
+        
+        fun parseBudgetItemsMapFromJsonObject(budgetItemsObject: JsonObject):
+                MutableMap<String, BudgetItem> {
+            var budgetItemsMap:MutableMap<String, BudgetItem> = HashMap()
+            val entries: MutableSet<MutableMap.MutableEntry<String, Any?>> = budgetItemsObject.entries
+            for(entry in entries){
+                budgetItemsMap.put(entry.key, parseBudgetItemFromJson(entry.value as JsonObject))
+            }
+            return budgetItemsMap
+        }
 
-        val CURRENT_BUDGET_ITEMS_KEY:String = "currentBudgetItems"
+        fun parseBudgetItemFromJson(jsonObject: JsonObject): BudgetItem {
+            return parseBudgetItemFromJsonObject(jsonObject)!!
+        }
+
         val START_DATE_KEY:String = "startDate"
         val END_DATE_KEY:String = "endDate"
 
-
-        fun determinePreviousDueLocalDateTime(dayOfWeek: DayOfWeek, currentDateTime: LocalDateTime): LocalDateTime {
-            return when (dayOfWeek) {
-                DayOfWeek.FRIDAY -> currentDateTime
-                DayOfWeek.SATURDAY -> currentDateTime.minusDays(1)
-                DayOfWeek.SUNDAY -> currentDateTime.minusDays(2)
-                DayOfWeek.MONDAY -> currentDateTime.minusDays(3)
-                DayOfWeek.TUESDAY -> currentDateTime.minusDays(4)
-                DayOfWeek.WEDNESDAY -> currentDateTime.minusDays(5)
-                DayOfWeek.THURSDAY -> currentDateTime.minusDays(6)
-            }
-        }
-
-        fun determineNextDueLocalDateTime(futureBudgetItemRecurrence: Recurrence, due: LocalDateTime): LocalDateTime {
-            return when (futureBudgetItemRecurrence) {
-                Recurrence.DAILY -> due.plusDays(Recurrence.DAILY.intervalDaysOrMonths)
-                Recurrence.WEEKLY -> due.plusDays(Recurrence.WEEKLY.intervalDaysOrMonths)
-                Recurrence.BIWEEKLY -> due.plusDays(Recurrence.BIWEEKLY.intervalDaysOrMonths)
-                Recurrence.MONTHLY -> due.plusMonths(Recurrence.MONTHLY.intervalDaysOrMonths)
-                Recurrence.YEARLY -> due.plusMonths(Recurrence.YEARLY.intervalDaysOrMonths)
-                Recurrence.ONETIME -> due.plusMonths(0L)
-            }
-        }
 
     }
 }

@@ -5,7 +5,6 @@ import model.BudgetAnalysisState
 import model.BudgetItem
 import model.enums.Recurrence
 import model.view.ApplicationUIComponents
-import org.hexworks.zircon.api.ColorThemes
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
@@ -17,23 +16,17 @@ import org.hexworks.zircon.api.kotlin.onSelection
 import org.hexworks.zircon.api.util.Random
 import utils.DateTimeUtils
 import view.BudgetPanel
-import view.screens.BaseScreen
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.min
 
-class AddItemPanel(width: Int, height: Int, var parent: BaseScreen, applicationState: ApplicationState):
+class AddItemPanel(width: Int, height: Int, var uiComponents: ApplicationUIComponents,
+                   applicationState: ApplicationState):
                 BudgetPanel(width, height, applicationState){
 
-
-    var id = Random.create().nextInt()
     var scheduledAmount = 0.0
-    var actualAmount = 0.0
-    var due:LocalDateTime = DateTimeUtils.currentTime()
-    var recurrence = Recurrence.ONETIME
+    var due:LocalDate = DateTimeUtils.currentDate()
     var name = "PLACEHOLDER"
     var transferredSavingsAccountName: String? = null
     var transferredCreditAccountName: String? = null
@@ -43,7 +36,7 @@ class AddItemPanel(width: Int, height: Int, var parent: BaseScreen, applicationS
             .wrapWithBox(false)
             .wrapWithShadow(false)
             .withSize(Sizes.create(width,height-1))
-            .withPosition(Positions.offset1x1())
+            .withPosition(Positions.create(0,1))
             .build()
         name = "PLACEHOLDER"
         val nameLabel: Label = Components.label()
@@ -62,7 +55,7 @@ class AddItemPanel(width: Int, height: Int, var parent: BaseScreen, applicationS
                 .build()
         nameTextArea.onKeyStroke { name = nameTextArea.text }
         panel!!.addComponent(nameTextArea)
-        due = DateTimeUtils.currentTime()
+        due = DateTimeUtils.currentDate()
         val dueLabel: Label = Components.label()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
@@ -126,12 +119,12 @@ class AddItemPanel(width: Int, height: Int, var parent: BaseScreen, applicationS
                 .build()
         addCurrentItemButton.onMouseReleased {
             mouseAction ->
-            var newCurrentItem = BudgetItem(0, scheduledAmountTextArea.text.toDouble(),
-                    scheduledAmountTextArea.text.toDouble(), due, currentRecurrence, name,
-                    transferredSavingsAccountName, transferredCreditAccountName)
-            applicationState.currentPayPeriodBudgetState!!.currentBudgetItems!!.put(name, newCurrentItem)
-            parent.update()
-            parent.clearInputPanel()
+            var newCurrentItem = BudgetItem(scheduledAmountTextArea.text.toDouble(),
+                    scheduledAmountTextArea.text.toDouble(), LocalDate.parse(dueTextArea.text), currentRecurrence, name,
+                    transferredSavingsAccountName, transferredCreditAccountName, ArrayList())
+            applicationState.budgetItems?.set(name, newCurrentItem)
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         panel!!.addComponent(addCurrentItemButton)
         val addFutureItemButton: Button = Components.button()
@@ -141,12 +134,13 @@ class AddItemPanel(width: Int, height: Int, var parent: BaseScreen, applicationS
                 .build()
         addFutureItemButton.onMouseReleased {
             mouseAction ->
-            var newFutureItem = BudgetItem(0, scheduledAmountTextArea.text.toDouble(),
-                    scheduledAmountTextArea.text.toDouble(), due, currentRecurrence, name,
-                    transferredSavingsAccountName, transferredCreditAccountName)
-            applicationState.futureBudgetItems!!.put(name, newFutureItem)
-            parent.update()
-            parent.clearInputPanel()
+            var newFutureItem = BudgetItem(scheduledAmountTextArea.text.toDouble(),
+                    scheduledAmountTextArea.text.toDouble(), LocalDate.parse(dueTextArea.text), currentRecurrence, name,
+                    transferredSavingsAccountName, transferredCreditAccountName, ArrayList())
+            newFutureItem.fillOutDueDates()
+            applicationState.budgetItems?.set(name, newFutureItem)
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         panel!!.addComponent(addFutureItemButton)
         val addUnreconciledItemButton: Button = Components.button()
@@ -156,12 +150,13 @@ class AddItemPanel(width: Int, height: Int, var parent: BaseScreen, applicationS
                 .build()
         addUnreconciledItemButton.onMouseReleased {
             mouseAction ->
-            var newFutureItem = BudgetItem(0, scheduledAmountTextArea.text.toDouble(),
-                    scheduledAmountTextArea.text.toDouble(), due, currentRecurrence, name,
-                    transferredSavingsAccountName, transferredCreditAccountName)
-            applicationState.pastUnreconciledBudgetItems!!.put(name, newFutureItem)
-            parent.update()
-            parent.clearInputPanel()
+            var newFutureItem = BudgetItem(scheduledAmountTextArea.text.toDouble(),
+                    scheduledAmountTextArea.text.toDouble(), LocalDate.parse(dueTextArea.text), currentRecurrence, name,
+                    transferredSavingsAccountName, transferredCreditAccountName, ArrayList())
+            newFutureItem.fillOutDueDates()
+            applicationState.pastUnreconciledBudgetItems?.set(name, newFutureItem)
+            uiComponents.update()
+            uiComponents.clearInputScreen()
         }
         panel!!.addComponent(addUnreconciledItemButton)
     }
