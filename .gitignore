@@ -31,3 +31,5 @@ out/
 \.idea/libraries/
 
 lib/
+
+\.idea/

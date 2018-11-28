@@ -1,15 +1,17 @@
 package control
 
 import model.ApplicationState
+import model.BudgetItem
 import model.BudgetState
+import utils.DateTimeUtils
 import java.io.File
 import java.time.LocalDate
 
-class ApplicationStateManager(var applicationState: ApplicationState) {
-
+class ApplicationStateManager(var applicationState: ApplicationState,
+                                var applicationStateBudgetAnalysis: ApplicationStateBudgetAnalysis) {
 
     fun augmentApplicationFutureBudgetStates() {
-        val todaysDate = LocalDate.now()
+        val todaysDate = DateTimeUtils.currentDate()
         val endOfOneYearPeriod = todaysDate.plusYears(1).minusDays(1)
         var lastFutureBudgetState: BudgetState? = null
         if(applicationState.futureBudgetStates.isNotEmpty()) {
@@ -23,6 +25,26 @@ class ApplicationStateManager(var applicationState: ApplicationState) {
             applicationState.futureBudgetStates.add(newFutureBudgetState)
             lastFutureBudgetState = newFutureBudgetState
         }
+    }
+
+    fun reconcileApplicationStateToTodaysDate() {
+        val todaysDate = DateTimeUtils.currentDate()
+        if(todaysDate.isAfter(applicationState.currentPayPeriodBudgetState?.endDate)){
+            this.augmentUnreconciledItemsFromPastBudgetState()
+            applicationState.currentPayPeriodBudgetState = applicationState.futureBudgetStates.removeAt(0)
+            while(todaysDate.isAfter(applicationState.currentPayPeriodBudgetState!!.endDate)){
+                this.augmentUnreconciledItemsFromPastBudgetState()
+                applicationState.currentPayPeriodBudgetState = applicationState.futureBudgetStates.removeAt(0)
+            }
+        }
+        augmentApplicationFutureBudgetStates()
+    }
+
+    private fun augmentUnreconciledItemsFromPastBudgetState() {
+        var newUnreconciledBudgetItems: MutableMap<String, BudgetItem> =
+                applicationStateBudgetAnalysis.
+                        retrieveApplicableBudgetItemsForState(applicationState.currentPayPeriodBudgetState!!)
+        applicationState.pastUnreconciledBudgetItems!!.putAll(newUnreconciledBudgetItems)
     }
 
 

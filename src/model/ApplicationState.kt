@@ -9,8 +9,7 @@ import java.io.File
 import java.io.StringReader
 import kotlin.Charsets
 
-data class ApplicationState(var checkingAccount: Account? = Account("Checking Account", 0.0,
-        ArrayList(), ArrayList(), ""),
+data class ApplicationState(var checkingAccount: Account? = Account("Checking Account", 0.0),
                             var savingsAccounts: MutableMap<String, Account>? = HashMap(),
                             var creditAccounts: MutableMap<String, Account>? = HashMap(),
                             var pastUnreconciledBudgetItems: MutableMap<String, BudgetItem>? = HashMap(),
@@ -50,6 +49,22 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking Ac
         accountsList?.forEach{accountName, account -> accountsMapStringBuilder.append(String.format("\"%s\" : %s,\n", accountName, account.serializeAccountToJson()))}
         accountsMapStringBuilder.append("}")
         return accountsMapStringBuilder.toString()
+    }
+
+    fun addSavingsAccount(savingsAccount: Account){
+        this.savingsAccounts?.put(savingsAccount.name, savingsAccount)
+    }
+
+    fun deleteSavingsAccount(savingsAccount: Account){
+        this.savingsAccounts?.remove(savingsAccount.name)
+    }
+
+    fun addCreditAccount(creditAccount: Account){
+        this.creditAccounts?.put(creditAccount.name, creditAccount)
+    }
+
+    fun deleteCreditAccount(creditAccount: Account){
+        this.creditAccounts?.remove(creditAccount.name)
     }
 
     companion object {

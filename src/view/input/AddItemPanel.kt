@@ -9,6 +9,7 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.*
+import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onKeyStroke
 import org.hexworks.zircon.api.kotlin.onMouseReleased
@@ -16,6 +17,7 @@ import org.hexworks.zircon.api.kotlin.onSelection
 import org.hexworks.zircon.api.util.Random
 import utils.DateTimeUtils
 import view.BudgetPanel
+import view.items.ItemConfigurationPanel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -26,102 +28,31 @@ class AddItemPanel(width: Int, height: Int, var uiComponents: ApplicationUICompo
                 BudgetPanel(width, height, applicationState){
 
     var scheduledAmount = 0.0
+    var actualAmount = 0.0
     var due:LocalDate = DateTimeUtils.currentDate()
     var name = "PLACEHOLDER"
     var transferredSavingsAccountName: String? = null
     var transferredCreditAccountName: String? = null
 
     override fun build() {
-        panel  = Components.panel()
+        panel = Components.panel()
             .wrapWithBox(false)
             .wrapWithShadow(false)
             .withSize(Sizes.create(width,height-1))
             .withPosition(Positions.create(0,1))
             .build()
-        name = "PLACEHOLDER"
-        val nameLabel: Label = Components.label()
-                .wrapWithBox(false)
-                .wrapWithShadow(false)
-                .withText("Name:")
-                .withPosition(Positions.create(0,0))
-                .build()
-        panel!!.addComponent(nameLabel)
-        var nameTextArea: TextArea = Components.textArea()
-                .wrapWithBox(false)
-                .wrapWithShadow(false)
-                .withText(name.substring(0, min(name.length,20)))
-                .withSize(Sizes.create(20,2))
-                .withPosition(Positions.create(1,0).relativeToRightOf(nameLabel))
-                .build()
-        nameTextArea.onKeyStroke { name = nameTextArea.text }
-        panel!!.addComponent(nameTextArea)
-        due = DateTimeUtils.currentDate()
-        val dueLabel: Label = Components.label()
-                .wrapWithBox(false)
-                .wrapWithShadow(false)
-                .withText("Due: ")
-                .withPosition(Positions.create(0,1).relativeToBottomOf(nameLabel))
-                .build()
-        panel!!.addComponent(dueLabel)
-        var dueTextArea: TextArea = Components.textArea()
-                .wrapWithBox(false)
-                .wrapWithShadow(false)
-                .withText(due.format(DateTimeFormatter.ISO_DATE))
-                .withSize(Sizes.create(10,2))
-                .withPosition(Positions.create(1,0).relativeToRightOf(dueLabel))
-                .build()
-        panel!!.addComponent(dueTextArea)
-        scheduledAmount = 0.0
-        val scheduledAmountLabel: Label = Components.label()
-                .wrapWithBox(false)
-                .wrapWithShadow(false)
-                .withText("Scheduled Amount:")
-                .withPosition(Positions.create(1,0).relativeToRightOf(nameTextArea))
-                .build()
-        panel!!.addComponent(scheduledAmountLabel)
-        var scheduledAmountTextArea: TextArea = Components.textArea()
-                .wrapWithBox(false)
-                .wrapWithShadow(false)
-                .withText(String.format("%.2f",scheduledAmount))
-                .withSize(Sizes.create(10,2))
-                .withPosition(Positions.create(1,0).relativeToRightOf(scheduledAmountLabel))
-                .build()
-        panel!!.addComponent(scheduledAmountTextArea)
-        val recurrenceLabel: Label = Components.label()
-                .wrapWithBox(false)
-                .wrapWithShadow(false)
-                .withText("Recurrence:")
-                .withPosition(Positions.create(1,0).relativeToRightOf(scheduledAmountTextArea))
-                .build()
-        panel!!.addComponent(recurrenceLabel)
-        var currentRecurrence = Recurrence.ONETIME
-        val recurrenceRadioButtonGroup: RadioButtonGroup = Components.radioButtonGroup()
-                .wrapWithBox(false)
-                .wrapWithShadow(false)
-                .withSize(Sizes.create(30, 10))
-                .withPosition(Positions.create(1,0).relativeToRightOf(recurrenceLabel))
-                .build()
-        Recurrence.values().forEach { recurrence ->
-            if(recurrence != currentRecurrence) {
-                recurrenceRadioButtonGroup.addOption(recurrence.name, recurrence.name)
-            } else {
-                recurrenceRadioButtonGroup.addOption(recurrence.name, recurrence.name + " (current)")
-            }
-        }
-        recurrenceRadioButtonGroup.onSelection { it ->
-            currentRecurrence = Recurrence.valueOf(it.key)
-        }
-        panel!!.addComponent(recurrenceRadioButtonGroup)
+        var itemConfigurationPanel =  ItemConfigurationPanel(name, LocalDate.now(), false, false,
+                scheduledAmount, actualAmount, Recurrence.ONETIME, width-25, height-1,
+                "null", "null", applicationState)
+        itemConfigurationPanel.build()
+        panel!!.addComponent(itemConfigurationPanel.panel!!)
         val addCurrentItemButton: Button = Components.button()
                 .withBoxType(BoxType.DOUBLE)
-                .withText("Add Current Budget Item")
-                .withPosition(Positions.create(1,0).relativeToRightOf(recurrenceRadioButtonGroup))
+                .withText("Add Current Item")
+                .withPosition(Positions.create(0,0).relativeToRightOf(itemConfigurationPanel.panel!!))
                 .build()
-        addCurrentItemButton.onMouseReleased {
-            mouseAction ->
-            var newCurrentItem = BudgetItem(scheduledAmountTextArea.text.toDouble(),
-                    scheduledAmountTextArea.text.toDouble(), LocalDate.parse(dueTextArea.text), currentRecurrence, name,
-                    transferredSavingsAccountName, transferredCreditAccountName, ArrayList())
+        addCurrentItemButton.onMouseReleased { it ->
+            var newCurrentItem = itemConfigurationPanel.generateItem()
             applicationState.budgetItems?.set(name, newCurrentItem)
             uiComponents.update()
             uiComponents.clearInputScreen()
@@ -129,14 +60,12 @@ class AddItemPanel(width: Int, height: Int, var uiComponents: ApplicationUICompo
         panel!!.addComponent(addCurrentItemButton)
         val addFutureItemButton: Button = Components.button()
                 .withBoxType(BoxType.DOUBLE)
-                .withText("Add Future Budget Item")
+                .withText("Add Future Item")
                 .withPosition(Positions.create(0,1).relativeToBottomOf(addCurrentItemButton))
                 .build()
         addFutureItemButton.onMouseReleased {
             mouseAction ->
-            var newFutureItem = BudgetItem(scheduledAmountTextArea.text.toDouble(),
-                    scheduledAmountTextArea.text.toDouble(), LocalDate.parse(dueTextArea.text), currentRecurrence, name,
-                    transferredSavingsAccountName, transferredCreditAccountName, ArrayList())
+            var newFutureItem = itemConfigurationPanel.generateItem()
             newFutureItem.fillOutDueDates()
             applicationState.budgetItems?.set(name, newFutureItem)
             uiComponents.update()
@@ -145,20 +74,22 @@ class AddItemPanel(width: Int, height: Int, var uiComponents: ApplicationUICompo
         panel!!.addComponent(addFutureItemButton)
         val addUnreconciledItemButton: Button = Components.button()
                 .withBoxType(BoxType.DOUBLE)
-                .withText("Add Unreconciled Budget Item")
+                .withText("Add Unreconciled")
                 .withPosition(Positions.create(0,1).relativeToBottomOf(addFutureItemButton))
                 .build()
         addUnreconciledItemButton.onMouseReleased {
             mouseAction ->
-            var newFutureItem = BudgetItem(scheduledAmountTextArea.text.toDouble(),
-                    scheduledAmountTextArea.text.toDouble(), LocalDate.parse(dueTextArea.text), currentRecurrence, name,
-                    transferredSavingsAccountName, transferredCreditAccountName, ArrayList())
+            var newFutureItem = itemConfigurationPanel.generateItem()
             newFutureItem.fillOutDueDates()
             applicationState.pastUnreconciledBudgetItems?.set(name, newFutureItem)
             uiComponents.update()
             uiComponents.clearInputScreen()
         }
         panel!!.addComponent(addUnreconciledItemButton)
+    }
+
+    private fun addCurrentItem(itemConfigurationPanel: ItemConfigurationPanel){
+
     }
 
     override fun update(budgetAnalysisState: BudgetAnalysisState) {

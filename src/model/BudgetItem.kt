@@ -22,6 +22,10 @@ data class BudgetItem @JvmOverloads constructor(
         var recurrence: Recurrence,
         @Json(name="name")
         var name: String,
+        @Json(name="autopay")
+        var autopay: Boolean,
+        @Json(name="required")
+        var required: Boolean,
         @Json(name="transferredToSavingsAccountName")
         var transferredToSavingsAccountName: String?,
         @Json(name="transferredToCreditAccountName")
@@ -47,6 +51,14 @@ data class BudgetItem @JvmOverloads constructor(
 
     fun toNarrowString(date: LocalDate?): String {
         var formattedNameStringBuilder = StringBuilder(name)
+        var autopayString = "<x>"
+        if(!autopay){
+            autopayString = "< >"
+        }
+        var requiredString = "{x}"
+        if(!required){
+            requiredString = "{ }"
+        }
         for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
             formattedNameStringBuilder.append(' ')
         }
@@ -58,12 +70,14 @@ data class BudgetItem @JvmOverloads constructor(
         if(transferredToCreditAccountName.equals("null") && transferredToSavingsAccountName.equals("null")){
             transferString = "[ ]"
         }
-        return "${date}\t${formattedNameStringBuilder.substring(0, NAME_LENGTH)}\txfer: ${transferString}\tScheduled: ${scheduledAmountStringBuilder}\t"
+        return "| ${autopayString}  | ${requiredString}\t| ${date}\t | ${formattedNameStringBuilder.substring(0, NAME_LENGTH)} | ${transferString}  | ${scheduledAmountStringBuilder} "
     }
 
     fun serializeBudgetItemToJson(): String {
         var budgetStateStringBuilder = StringBuilder()
         budgetStateStringBuilder.append("{\n")
+        budgetStateStringBuilder.append(String.format("\"%s\": %b,\n", AUTOPAY_KEY, autopay))
+        budgetStateStringBuilder.append(String.format("\"%s\": %b,\n", REQUIRED_KEY, required))
         budgetStateStringBuilder.append(String.format("\"%s\": %.2f,\n", SCHEDULED_AMOUNT_KEY, scheduledAmount))
         budgetStateStringBuilder.append(String.format("\"%s\": %.2f,\n", ACTUAL_AMOUNT_KEY, actualAmount))
         budgetStateStringBuilder.append(String.format("\"%s\": %s,\n", DUE_KEY, dateConverter.toJson(due)))
@@ -176,6 +190,8 @@ data class BudgetItem @JvmOverloads constructor(
         val ID_KEY = "id"
         val SCHEDULED_AMOUNT_KEY = "scheduledAmount"
         val ACTUAL_AMOUNT_KEY = "actualAmount"
+        val AUTOPAY_KEY = "autopay"
+        val REQUIRED_KEY = "required"
         val DUE_KEY = "due"
         val RECURRENCE_KEY = "recurrence"
         val NAME_KEY = "name"
@@ -183,9 +199,11 @@ data class BudgetItem @JvmOverloads constructor(
         val CREDIT_ACCOUNT_NAME_KEY = "transferToCreditAccount"
         val DUE_DATES_KEY = "dueDates"
         val NAME_LENGTH=20
-        val AMOUNT_LENGTH=8
+        val AMOUNT_LENGTH=6
 
         fun parseBudgetItemFromJsonObject(value: JsonObject?): BudgetItem? {
+            val required: Boolean = value?.boolean(REQUIRED_KEY)!!
+            val autopay: Boolean = value?.boolean(AUTOPAY_KEY)!!
             val scheduledAmount: Double = value?.double(SCHEDULED_AMOUNT_KEY)!!
             val actualAmount: Double = value?.double(ACTUAL_AMOUNT_KEY)!!
             val dueString: String = value?.string(DUE_KEY)!!
@@ -202,8 +220,8 @@ data class BudgetItem @JvmOverloads constructor(
             }
             var dueDatesArray = value.array<String>(DUE_DATES_KEY)
             var dueDates = convertJsonArrayToListLocalDate(dueDatesArray)
-            var budgetItem = BudgetItem(scheduledAmount, actualAmount, due, recurrence, name, transferredToSavingsAccountName,
-                    transferredToCreditAccountName, dueDates)
+            var budgetItem = BudgetItem(scheduledAmount, actualAmount, due, recurrence, name, autopay, required,
+                    transferredToSavingsAccountName, transferredToCreditAccountName, dueDates)
             budgetItem.fillOutDueDates()
             return budgetItem
         }
@@ -244,6 +262,12 @@ data class BudgetItem @JvmOverloads constructor(
             override fun toJson(o: Any) =
                     '\"' + o.toString() + '\"'
 
+        }
+
+        fun narrowStringHeader(): String {
+            var formattedHeaderStringBuilder = StringBuilder()
+            formattedHeaderStringBuilder.append("Choose | Auto | Req |     Due     |         Name         | Xfer |  Amount  ")
+            return formattedHeaderStringBuilder.toString()
         }
     }
 

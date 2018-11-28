@@ -5,8 +5,11 @@ import com.beust.klaxon.JsonObject
 import model.AccountItem.Companion.parseAccountItemFromJsonObject
 import java.io.Serializable
 
-data class Account(val name: String, var balance: Double, var items: MutableList<AccountItem>,
-                   var reconciledItems: MutableList<AccountItem>, var notes: String): Serializable {
+data class Account(val name: String, var balance: Double) : Serializable {
+
+    var items: MutableList<AccountItem> = ArrayList()
+    var reconciledItems: MutableList<AccountItem> = ArrayList()
+    var notes = ""
 
     fun reconcile() {
         var balance: Double = balance
@@ -73,7 +76,11 @@ data class Account(val name: String, var balance: Double, var items: MutableList
             val reconciledItemsAray: JsonArray<JsonObject>? = accountObj.array(RECONCILED_ITEMS_KEY)
             reconciledItemsAray?.forEach{ jsonObject -> reconciledItems.add(parseAccountItemFromJsonObject(jsonObject))}
             val notes:String = accountObj.string(NOTES_KEY)!!
-            return Account(name, balance, items, reconciledItems, notes)
+            var account = Account(name, balance)
+            account.items = items
+            account.reconciledItems = reconciledItems
+            account.notes = notes
+            return account
         }
     }
 }

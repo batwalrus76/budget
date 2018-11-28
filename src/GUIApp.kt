@@ -1,3 +1,4 @@
+import control.ApplicationStateBudgetAnalysis
 import control.ApplicationStateManager
 import model.ApplicationState
 import model.BudgetState
@@ -9,13 +10,13 @@ object GUIApp {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        var applicationUIComponents = ApplicationUIComponents()
-        var applicationState: ApplicationState? = ApplicationStateManager.buildApplicationStateFromDefaultFileLocation()
-        applicationUIComponents.applicationState = applicationState
-        applicationUIComponents.build()
-        var applicationStateManager = ApplicationStateManager(applicationState!!)
-        applicationStateManager.augmentApplicationFutureBudgetStates()
 
+        var applicationState: ApplicationState = ApplicationStateManager.buildApplicationStateFromDefaultFileLocation()!!
+        var applicationStateBudgetAnalysis = ApplicationStateBudgetAnalysis(applicationState!!)
+        var applicationStateManager = ApplicationStateManager(applicationState,applicationStateBudgetAnalysis)
+        applicationStateManager.reconcileApplicationStateToTodaysDate()
+        var applicationUIComponents = ApplicationUIComponents(applicationStateBudgetAnalysis, applicationState)
+        applicationUIComponents.build()
         var workingBudgetState: BudgetState? = applicationState.currentPayPeriodBudgetState
         applicationUIComponents.weeklyOverviewScreen?.currentBalances()
         while (workingBudgetState != null) {

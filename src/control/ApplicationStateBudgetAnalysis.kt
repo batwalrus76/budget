@@ -75,7 +75,6 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         orderedBudgetItems?.forEach { budgetItem ->
             budgetAnalysisState = budgetAnalysisState?.let { processBudgetItemBudgetAnalysisStateForAnalysis(it, budgetItem) }
             budgetAnalysisState?.let { budgetAnalysisStates.add(it) }
-//            budgetAnalysisState = budgetAnalysisState?.copy()
         }
         return (budgetAnalysisStates.sortedWith(kotlin.comparisons.compareBy({ it.date }))).toMutableList()
     }
@@ -88,19 +87,17 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         newBudgetAnalysisState.checkingAccountBalance =
                 newBudgetAnalysisState.checkingAccountBalance?.plus(budgetItem.actualAmount)
         val transferringSavingsAccountName = budgetItem.transferredToSavingsAccountName
-        if(transferringSavingsAccountName != null && !transferringSavingsAccountName.equals("null")){
+        if(transferringSavingsAccountName != null && !transferringSavingsAccountName.equals("null") &&
+                transferringSavingsAccountName.length>0){
             newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName] =
                     newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName]!!.minus(budgetItem.actualAmount)
         }
         val transferredCreditAccountName = budgetItem.transferredToCreditAccountName
-        if(transferredCreditAccountName != null && !transferredCreditAccountName.equals("null")){
+        if(transferredCreditAccountName != null && !transferredCreditAccountName.equals("null") && transferredCreditAccountName.length>0){
             newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName] =
                     newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName]!!.minus(budgetItem.actualAmount)
         }
         return newBudgetAnalysisState
     }
 
-    companion object {
-
-    }
 }

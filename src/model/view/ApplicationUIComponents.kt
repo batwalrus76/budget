@@ -14,14 +14,12 @@ import view.screens.WeeklyOverviewScreen
 import kotlin.math.max
 import kotlin.math.min
 
-class ApplicationUIComponents{
+class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationStateBudgetAnalysis,
+                              var applicationState: ApplicationState){
 
     var weeklyOverviewScreen: WeeklyOverviewScreen? = null
     var budgetViewScreen:BudgetScreen? = null
     var currentView: View = View.WEEKLY
-
-    var applicationState: ApplicationState? = null
-    var applicationStateBudgetAnalysis: ApplicationStateBudgetAnalysis? = null
     var currentViewedBudgetState: BudgetState? = null
     var budgetStateIndex = 0
     private val fullScreenSize: Size = Size.create(WIDTH, HEIGHT)
@@ -36,7 +34,6 @@ class ApplicationUIComponents{
 
 
     fun build() {
-        applicationStateBudgetAnalysis = ApplicationStateBudgetAnalysis(applicationState!!)
         currentViewedBudgetState = applicationState!!.currentPayPeriodBudgetState
 
         mainControlPanel = MainControlsPanel(fullScreenSize.width, 4, this)

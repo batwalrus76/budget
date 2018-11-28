@@ -7,14 +7,17 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.*
+import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
 
-class CheckingAccountPanel(width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
-                           applicationState: ApplicationState) :
-        BaseItemsPanel(width, height, component, uiComponents, applicationState) {
+class CheckingAccountPanel(var width: Int, var height: Int, var component: Component,
+                           var uiComponents: ApplicationUIComponents, var applicationState: ApplicationState) {
+
+    var radioButtonGroup: RadioButtonGroup? = null
+    var panel: Panel? = null
 
     fun update(budgetAnalysisState: BudgetAnalysisState){
         var balance: Double = budgetAnalysisState.checkingAccountBalance!!
@@ -22,22 +25,30 @@ class CheckingAccountPanel(width: Int, height: Int, component: Component, uiComp
     }
 
      fun update(balance: Double){
-         val balanceString = String.format("Balance: %.2f", balance)
-         super.update()
+         val balanceString = String.format("                                Balance: %.2f", balance)
+         this.panel!!.removeComponent(this!!.radioButtonGroup!!)
+         radioButtonGroup = Components.radioButtonGroup()
+                 .withPosition(Position.create(0,0))
+                 .withSize(Sizes.create(this.width-2, 1))
+                 .build()
+         this.panel!!.addComponent(radioButtonGroup!!)
          radioButtonGroup!!.addOption("CheckingAccount", balanceString)
          radioButtonGroup!!.onSelection { updateCheckingAccount() }
      }
 
-    override fun build(){
+    fun build(){
         this.panel = Components.panel()
                 .wrapWithBox(true) // panels can be wrapped in a box
                 .wrapWithShadow(false) // shadow can be added
                 .withTitle(CHECKING_ACCOUNT_TITLE) // if a panel is wrapped in a box a title can be displayed
-                .withSize(Sizes.create(width, height))
+                .withSize(Sizes.create(width, 3))
                 .withPosition(AccountsPanel.DEFAULT_OFFSET.relativeToBottomOf(component))
                 .build()
-        super.build()
-        radioButtonGroup!!.addOption("CheckingAccount","Balance: 0.00")
+        radioButtonGroup = Components.radioButtonGroup()
+                .withPosition(Position.create(0,0))
+                .withSize(Sizes.create(this.width-4, 1))
+                .build()
+        radioButtonGroup!!.addOption("CheckingAccount","                                Balance: 0.00")
         radioButtonGroup!!.onSelection { updateCheckingAccount() }
         this.panel!!.addComponent(radioButtonGroup!!)
     }
@@ -48,7 +59,7 @@ class CheckingAccountPanel(width: Int, height: Int, component: Component, uiComp
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
                 .withTitle("Checking Account")
-                .withSize(Sizes.create(inputPanel!!.width-4, inputPanel!!.height-4))
+                .withSize(Sizes.create(inputPanel!!.width-4, 3))
                 .withPosition(Positions.offset1x1())
                 .build()
         var checkingAccount = applicationState.checkingAccount

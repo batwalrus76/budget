@@ -19,7 +19,7 @@ class AccountsPanel(width: Int,  height: Int, component: Component, uiComponents
 
     var date: LocalDateTime = DateTimeUtils.currentTime()
     var dateLabel: Label = Components.label()
-            .withText("Date: ${date.format(DateTimeFormatter.ISO_DATE)}")
+            .withText(" Date: ${date.format(DateTimeFormatter.ISO_DATE)}")
             .withPosition(Position.offset1x1())
             .build()
     var totalSubPanelHeight:Int? = null
@@ -44,11 +44,11 @@ class AccountsPanel(width: Int,  height: Int, component: Component, uiComponents
                                 dateLabel, uiComponents, applicationState)
         this.checkingAccountPanel!!.build()
         this.savingsAccountsPanel =
-                SavingsAccountPanel(width!!-4, multiAccountSubPanelHeight!!+1,
+                SavingsAccountPanel(width!!-4, multiAccountSubPanelHeight!!+2,
                         checkingAccountPanel!!.panel!!, uiComponents, applicationState!!)
         this.savingsAccountsPanel!!.build()
         this.checkingAccountPanel!!.build()
-        this.creditAccountsPanel = CreditAccountPanel(width!!-4, multiAccountSubPanelHeight!!+1,
+        this.creditAccountsPanel = CreditAccountPanel(width!!-4, multiAccountSubPanelHeight!!+2,
                         savingsAccountsPanel!!.panel!!, uiComponents, applicationState)
         this.creditAccountsPanel!!.build()
         this.panel!!.addComponent(dateLabel)
