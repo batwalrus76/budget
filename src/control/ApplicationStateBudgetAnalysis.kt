@@ -35,7 +35,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
                                 MutableMap<String, BudgetItem>{
         var budgetItems = HashMap(unreconciledBudgetItems)
         val localDate = DateTimeUtils.currentDate()
-        if(localDate.isAfter(budgetState?.startDate)){
+        if(localDate.isAfter(budgetState?.startDate)|| localDate.isEqual(budgetState?.startDate)){
             budgetItems.putAll(retrieveApplicableBudgetItemsForState(budgetState))
         }
         return budgetItems

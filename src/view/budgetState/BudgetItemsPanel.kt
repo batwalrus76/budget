@@ -151,32 +151,15 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 reconcileApplicationBudgetState(currentBudgetState!!, applicationState.pastUnreconciledBudgetItems!!)
         val reconciledBudgetItem = reconciledBudgetItems!!.remove(name)
         if(reconciledBudgetItem != null) {
-            if((reconciledBudgetItem.due.isAfter(currentBudgetState?.startDate)||
-                            reconciledBudgetItem.due.isEqual(currentBudgetState?.startDate))
-                    && (reconciledBudgetItem.due.isBefore(currentBudgetState?.endDate)||
-                            reconciledBudgetItem.due.isEqual(currentBudgetState?.endDate))){
-                reconciledBudgetItem.due = reconciledBudgetItem.dueDates.removeAt(0)
-            } else {
-                for(reconciledDueDateIndex in 0..reconciledBudgetItem.dueDates.size-1){
-                    var reconciledDueDate = reconciledBudgetItem.dueDates[reconciledDueDateIndex]
-                    if((reconciledDueDate.isAfter(currentBudgetState?.startDate) ||
-                                    reconciledDueDate.isEqual(currentBudgetState?.startDate))
-                            && (reconciledDueDate.isBefore(currentBudgetState?.endDate)) ||
-                            reconciledDueDate.isEqual(currentBudgetState?.startDate)){
-                        reconciledBudgetItem.dueDates.removeAt(reconciledDueDateIndex)
-                        break
-                    }
-                }
-            }
             applicationState.checkingAccount!!.reconciledItems.add(
                     AccountItem(reconciledBudgetItem?.due!!,
                             reconciledBudgetItem?.name!!, reconciledBudgetItem?.actualAmount!!))
             applicationState.checkingAccount!!.balance =
                     applicationState.checkingAccount!!.balance + reconciledBudgetItem.actualAmount
             update(currentBudgetState!!)
+            super.reconcileBudgetItem(reconciledBudgetItem)
         }
-        uiComponents.update()
-        uiComponents.clearInputScreen()
+        update()
     }
 
     private fun deleteBudgetItem(name: String) {
