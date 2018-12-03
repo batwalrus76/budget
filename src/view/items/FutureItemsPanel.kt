@@ -13,6 +13,7 @@ import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
+import utils.DateTimeUtils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
@@ -144,11 +145,7 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, uiCompone
 
     private fun reconcileBudgetItem(name: String) {
         val reconciledBudgetItem = applicationState.budgetItems!!.remove(name)
-        if(reconciledBudgetItem != null) {
-            applicationState.checkingAccount!!.reconciledItems.add(AccountItem(reconciledBudgetItem?.due!!, reconciledBudgetItem?.name!!, reconciledBudgetItem?.actualAmount!!))
-            applicationState.checkingAccount!!.balance = applicationState.checkingAccount!!.balance + reconciledBudgetItem.actualAmount
-        }
-        budgetItemChange()
+        reconciledBudgetItem?.let { super.reconcileBudgetItem(it) }
     }
 
     private fun deleteBudgetItem(name: String) {
@@ -160,11 +157,5 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, uiCompone
         applicationState.budgetItems!!.remove(originalName)
         applicationState.budgetItems!!.put(updatedBudgetItem.name, updatedBudgetItem)
         budgetItemChange()
-    }
-
-    fun budgetItemChange(){
-        update()
-        uiComponents.update()
-        uiComponents.clearInputScreen()
     }
 }

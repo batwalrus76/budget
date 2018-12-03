@@ -122,11 +122,7 @@ class UnreconciledItemsPanel (width: Int, height: Int, component: Component, uiC
 
     private fun reconcileBudgetItem(name: String) {
         val reconciledBudgetItem = applicationState.pastUnreconciledBudgetItems!!.remove(name)
-        if(reconciledBudgetItem != null) {
-            applicationState.checkingAccount!!.reconciledItems.add(AccountItem(reconciledBudgetItem?.due!!, reconciledBudgetItem?.name!!, reconciledBudgetItem?.actualAmount!!))
-            applicationState.checkingAccount!!.balance = applicationState.checkingAccount!!.balance + reconciledBudgetItem.actualAmount
-        }
-        budgetItemChange()
+        reconciledBudgetItem?.let { super.reconcileBudgetItem(it) }
     }
 
     private fun deleteBudgetItem(name: String) {
@@ -140,9 +136,4 @@ class UnreconciledItemsPanel (width: Int, height: Int, component: Component, uiC
         budgetItemChange()
     }
 
-    fun budgetItemChange(){
-        update()
-        uiComponents.update()
-        uiComponents.clearInputScreen()
-    }
 }

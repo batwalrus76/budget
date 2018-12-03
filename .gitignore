@@ -32,4 +32,6 @@ out/
 
 lib/
 
+\.gradle/
+
 \.idea/

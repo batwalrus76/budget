@@ -174,12 +174,11 @@ data class BudgetItem @JvmOverloads constructor(
         if(dueDates.isEmpty()){
             dueDates.add(due)
         }
-        if(budgetState.endDate.isAfter(dueDates.get(0))) {
-            dueDates.forEach { dueDate ->
-                if (!isValid && dueDate.isAfter(budgetState.startDate.minusDays(1)) &&
-                        dueDate.isBefore(budgetState.endDate)) {
-                    isValid = true
-                }
+        dueDates.forEach {
+            dueDate ->
+            if (!isValid && dueDate.isAfter(budgetState.startDate.minusDays(1)) &&
+                    dueDate.isBefore(budgetState.endDate.plusDays(1))) {
+                isValid = true
             }
         }
         return isValid

@@ -1,19 +1,13 @@
 package view.budget
 
-import javaslang.Tuple
 import model.ApplicationState
 import model.BudgetItem
 import model.enums.Recurrence
-import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
-import org.hexworks.zircon.api.component.Component
-import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Size
-import org.hexworks.zircon.api.grid.TileGrid
 import org.parboiled.common.Tuple2
-import org.parboiled.common.Tuple3
 
 class MonthlyBudgetPanel(var width: Int, var height: Int, var applicationState: ApplicationState) {
 
