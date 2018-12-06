@@ -13,8 +13,6 @@ import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
 import view.items.ItemConfigurationPanel
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
 class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
