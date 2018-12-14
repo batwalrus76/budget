@@ -1,10 +1,13 @@
-package model
+package model.state
 
-import model.BudgetState.Companion.serializeMapBudgetItemstoJson
+import model.budget.BudgetState.Companion.serializeMapBudgetItemstoJson
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import model.BudgetState.Companion.parseBudgetItemsMapFromJsonObject
+import model.account.Account
+import model.budget.BudgetItem
+import model.budget.BudgetState
+import model.budget.BudgetState.Companion.parseBudgetItemsMapFromJsonObject
 import java.io.File
 import java.io.StringReader
 import kotlin.Charsets

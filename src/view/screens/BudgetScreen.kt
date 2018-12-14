@@ -1,6 +1,6 @@
 package view.screens
 
-import model.BudgetState
+import model.budget.BudgetState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.*
 import org.hexworks.zircon.api.component.Component

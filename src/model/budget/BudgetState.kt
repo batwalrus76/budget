@@ -1,9 +1,8 @@
-package model
+package model.budget
 
 import com.beust.klaxon.JsonObject
-import model.BudgetItem.Companion.dateStringParser
-import model.BudgetItem.Companion.parseBudgetItemFromJsonObject
-import utils.DateTimeUtils
+import model.budget.BudgetItem.Companion.dateStringParser
+import model.budget.BudgetItem.Companion.parseBudgetItemFromJsonObject
 import utils.DateTimeUtils.Companion.currentDate
 import utils.DateTimeUtils.Companion.nextThursday
 import utils.DateTimeUtils.Companion.previousFriday

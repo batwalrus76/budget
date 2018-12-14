@@ -1,14 +1,13 @@
 package view.budgetState
 
-import model.ApplicationState
-import model.BudgetAnalysisState
-import model.BudgetState
+import model.state.ApplicationState
+import model.budget.BudgetAnalysisState
+import model.budget.BudgetState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Button
-import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position

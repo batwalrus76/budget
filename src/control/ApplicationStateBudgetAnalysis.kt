@@ -1,9 +1,9 @@
 package control
 
-import model.ApplicationState
-import model.BudgetAnalysisState
-import model.BudgetItem
-import model.BudgetState
+import model.state.ApplicationState
+import model.budget.BudgetAnalysisState
+import model.budget.BudgetItem
+import model.budget.BudgetState
 import utils.DateTimeUtils
 
 class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
@@ -17,8 +17,8 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
                     reconcileApplicationBudgetState(currentBudgetState!!, it) }
         var currentBudgetAnalysisStates =
                                 performAnalysisOnBudgetItems(currentPayPeriodBudgetItems)
-        if(currentBudgetAnalysisStates != null && currentBudgetAnalysisStates.isNotEmpty()) {
-            var lastBudgetAnalysisState: BudgetAnalysisState? = currentBudgetAnalysisStates?.last()
+        if(currentBudgetAnalysisStates.isNotEmpty()) {
+            var lastBudgetAnalysisState = currentBudgetAnalysisStates.last()
             budgetStatesAnalysisStatesMap[currentBudgetState] = currentBudgetAnalysisStates
             applicationState.futureBudgetStates?.let {
                 it.forEach { budgetState ->
@@ -71,7 +71,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         if(lastBudgetAnalysisState == null){
             budgetAnalysisState = BudgetAnalysisState(applicationState)
         }
-        var orderedBudgetItems: List<BudgetItem>? = budgetItems?.values?.sortedWith(kotlin.comparisons.compareBy({ it.due }))
+        var orderedBudgetItems: List<BudgetItem>? = budgetItems?.values?.sortedWith(kotlin.comparisons.compareBy({ it.due.dueDate }))
         orderedBudgetItems?.forEach { budgetItem ->
             budgetAnalysisState = budgetAnalysisState?.let { processBudgetItemBudgetAnalysisStateForAnalysis(it, budgetItem) }
             budgetAnalysisState?.let { budgetAnalysisStates.add(it) }
@@ -82,7 +82,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
     private fun processBudgetItemBudgetAnalysisStateForAnalysis(budgetAnalysisState: BudgetAnalysisState,
                                                                 budgetItem: BudgetItem): BudgetAnalysisState {
         var newBudgetAnalysisState: BudgetAnalysisState = budgetAnalysisState.copy()
-        newBudgetAnalysisState.date = budgetItem.due
+        newBudgetAnalysisState.date = budgetItem.due.dueDate
         newBudgetAnalysisState.budgetItem = budgetItem
         newBudgetAnalysisState.checkingAccountBalance =
                 newBudgetAnalysisState.checkingAccountBalance?.plus(budgetItem.actualAmount)

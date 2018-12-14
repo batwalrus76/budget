@@ -1,7 +1,10 @@
 package view.budgetState
 
-import model.*
-import model.enums.Recurrence
+import model.account.AccountItem
+import model.budget.BudgetAnalysisState
+import model.budget.BudgetItem
+import model.budget.BudgetState
+import model.state.ApplicationState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
@@ -13,7 +16,6 @@ import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
 import view.items.BaseItemsPanel
 import view.items.ItemConfigurationPanel
-import kotlin.math.min
 
 class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
                        applicationState: ApplicationState) :
@@ -56,7 +58,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
         var applicationStateBudgetAnalysis =  uiComponents.applicationStateBudgetAnalysis
         var budgetStateCurrentItemMap =
                 applicationStateBudgetAnalysis?.retrieveApplicableBudgetItemsForState(currentBudgetState!!)
-        var budgetStateCurrentItemsList = budgetStateCurrentItemMap?.values?.sortedWith(compareBy({ it.due}))
+        var budgetStateCurrentItemsList = budgetStateCurrentItemMap?.values?.sortedWith(compareBy({ it.due.dueDate}))
         currentBudgetAnalysisStates = applicationStateBudgetAnalysis?.performAnalysisOnBudgetItems(budgetStateCurrentItemMap)
         this.panel!!.removeComponent(this!!.radioButtonGroup!!)
         radioButtonGroup = Components.radioButtonGroup()
@@ -101,7 +103,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 .build()
 
         itemConfigurationPanel = budgetItem?.scheduledAmount?.let {
-            ItemConfigurationPanel(budgetItem.name, budgetItem.due, budgetItem.required,
+            ItemConfigurationPanel(budgetItem.name, budgetItem.due.dueDate, budgetItem.required,
                     budgetItem.autopay, it, budgetItem.actualAmount, budgetItem.recurrence,
                     newPanel!!.width-25, newPanel!!.height-1, "null", "null",
                     applicationState)
@@ -151,7 +153,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
         val reconciledBudgetItem = reconciledBudgetItems!!.remove(name)
         if(reconciledBudgetItem != null) {
             applicationState.checkingAccount!!.reconciledItems.add(
-                    AccountItem(reconciledBudgetItem?.due!!,
+                    AccountItem(reconciledBudgetItem?.due.dueDate!!,
                             reconciledBudgetItem?.name!!, reconciledBudgetItem?.actualAmount!!))
             applicationState.checkingAccount!!.balance =
                     applicationState.checkingAccount!!.balance + reconciledBudgetItem.actualAmount
@@ -168,14 +170,14 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
         var budgetItem = currentBudgetItems.remove(name)
         for(dueDateIndex in 0..budgetItem?.dueDates!!.size-1){
             val dueDate = budgetItem!!.dueDates[dueDateIndex]
-            if(currentBudgetState?.isValidForDueDate(dueDate)!!){
+            if(currentBudgetState?.isValidForDueDate(dueDate.dueDate)!!){
                 budgetItem.dueDates.remove(dueDate)
                 break
             }
         }
         budgetItem?.dueDates?.forEach { dueDate ->
         }
-        if(currentBudgetState?.isValidForDueDate(budgetItem!!.due)!! && budgetItem?.dueDates?.size == 0) {
+        if(currentBudgetState?.isValidForDueDate(budgetItem!!.due.dueDate)!! && budgetItem?.dueDates?.size == 0) {
             uiComponents.applicationState.budgetItems?.remove(budgetItem.name)
         }
         update(currentBudgetState!!)

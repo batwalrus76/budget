@@ -1,6 +1,6 @@
 package view.items
 
-import model.ApplicationState
+import model.state.ApplicationState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Label

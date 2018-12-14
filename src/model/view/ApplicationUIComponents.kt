@@ -2,8 +2,8 @@ package model.view
 
 import control.ApplicationStateBudgetAnalysis
 import control.ApplicationStateManager
-import model.ApplicationState
-import model.BudgetState
+import model.state.ApplicationState
+import model.budget.BudgetState
 import model.enums.View
 import org.hexworks.zircon.api.*
 import org.hexworks.zircon.api.component.Panel

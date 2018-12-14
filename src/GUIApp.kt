@@ -1,7 +1,7 @@
 import control.ApplicationStateBudgetAnalysis
 import control.ApplicationStateManager
-import model.ApplicationState
-import model.BudgetState
+import model.state.ApplicationState
+import model.budget.BudgetState
 import model.view.ApplicationUIComponents
 import kotlin.system.exitProcess
 
@@ -12,7 +12,7 @@ object GUIApp {
     fun main(args: Array<String>) {
 
         var applicationState: ApplicationState = ApplicationStateManager.buildApplicationStateFromDefaultFileLocation()!!
-        var applicationStateBudgetAnalysis = ApplicationStateBudgetAnalysis(applicationState!!)
+        var applicationStateBudgetAnalysis = ApplicationStateBudgetAnalysis(applicationState)
         var applicationStateManager = ApplicationStateManager(applicationState,applicationStateBudgetAnalysis)
         applicationStateManager.reconcileApplicationStateToTodaysDate()
         var applicationUIComponents = ApplicationUIComponents(applicationStateBudgetAnalysis, applicationState)

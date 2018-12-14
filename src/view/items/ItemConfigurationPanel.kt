@@ -1,7 +1,8 @@
 package view.items
 
-import model.ApplicationState
-import model.BudgetItem
+import model.state.ApplicationState
+import model.budget.BudgetItem
+import model.core.DueDate
 import model.enums.Recurrence
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
@@ -230,8 +231,9 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
         panel!!.addComponent(transferCreditAccountButtonGroup)
     }
 
-    open fun generateItem(): BudgetItem{
-        return BudgetItem(scheduledAmountText!!.toDouble(), actualAmountText!!.toDouble(), due, currentRecurrence, name, isAutopay, isRequired,
+    open fun generateItem(): BudgetItem {
+        return BudgetItem(scheduledAmountText!!.toDouble(), actualAmountText!!.toDouble(), DueDate(due, actualAmount),
+                currentRecurrence, name, isAutopay, isRequired,
                 targetSavingsAccountName, targetCreditAccountName, ArrayList())
     }
 }

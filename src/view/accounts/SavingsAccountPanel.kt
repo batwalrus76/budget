@@ -1,7 +1,7 @@
 package view.accounts
 
-import model.ApplicationState
-import model.BudgetAnalysisState
+import model.state.ApplicationState
+import model.budget.BudgetAnalysisState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes

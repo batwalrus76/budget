@@ -1,7 +1,6 @@
 package view.budget;
 
-import model.ApplicationState
-import model.BudgetAnalysisState
+import model.budget.BudgetAnalysisState
 import model.enums.Recurrence
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components

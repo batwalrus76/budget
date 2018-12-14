@@ -1,7 +1,7 @@
 package view.accounts
 
-import model.ApplicationState
-import model.BudgetAnalysisState
+import model.state.ApplicationState
+import model.budget.BudgetAnalysisState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
@@ -11,7 +11,6 @@ import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
-import view.items.BaseItemsPanel
 
 class CheckingAccountPanel(var width: Int, var height: Int, var component: Component,
                            var uiComponents: ApplicationUIComponents, var applicationState: ApplicationState) {

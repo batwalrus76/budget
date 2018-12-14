@@ -1,9 +1,10 @@
-package model
+package model.budget
 
-import model.json.KlaxonDate
+import  model.json.KlaxonDate
 import model.json.KlaxonRecurrence
 import model.enums.Recurrence
 import com.beust.klaxon.*
+import model.core.DueDate
 import java.io.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -16,7 +17,7 @@ data class BudgetItem @JvmOverloads constructor(
         var actualAmount: Double,
         @Json(name="due")
         @KlaxonDate
-        var due: LocalDate,
+        var due: DueDate,
         @Json(name="recurrence")
         @KlaxonRecurrence
         var recurrence: Recurrence,
@@ -31,18 +32,18 @@ data class BudgetItem @JvmOverloads constructor(
         @Json(name="transferredToCreditAccountName")
         var transferredToCreditAccountName: String?,
         @Json(name="transferredToCreditAccountName")
-        var dueDates: MutableList<LocalDate>) : Serializable {
+        var dueDates: MutableList<DueDate>) : Serializable {
 
     override fun toString():String {
-        var formattedNameStringBuilder: StringBuilder = StringBuilder(name)
+        var formattedNameStringBuilder = StringBuilder(name)
         for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
             formattedNameStringBuilder.append(' ')
         }
-        var scheduledAmountStringBuilder: StringBuilder = StringBuilder(""+scheduledAmount)
+        var scheduledAmountStringBuilder = StringBuilder(""+scheduledAmount)
         for (nameLength in scheduledAmountStringBuilder.length..AMOUNT_LENGTH){
             scheduledAmountStringBuilder.append(' ')
         }
-        return "Due: ${due.format(DateTimeFormatter.ISO_DATE)}  Name: ${formattedNameStringBuilder.substring(0, NAME_LENGTH)}\tScheduled: ${scheduledAmountStringBuilder}\tActual: $actualAmount"
+        return "Due: ${due.dueDate.format(DateTimeFormatter.ISO_DATE)}  Name: ${formattedNameStringBuilder.substring(0, NAME_LENGTH)}\tScheduled: ${scheduledAmountStringBuilder}\tActual: ${due.amount}"
     }
 
     fun toNarrowString():String {
@@ -73,6 +74,30 @@ data class BudgetItem @JvmOverloads constructor(
         return "| ${autopayString}  | ${requiredString}\t| ${date}\t | ${formattedNameStringBuilder.substring(0, NAME_LENGTH)} | ${transferString}  | ${scheduledAmountStringBuilder} "
     }
 
+    fun toNarrowString(date: DueDate?): String {
+        var formattedNameStringBuilder = StringBuilder(name)
+        var autopayString = "<x>"
+        if(!autopay){
+            autopayString = "< >"
+        }
+        var requiredString = "{x}"
+        if(!required){
+            requiredString = "{ }"
+        }
+        for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
+            formattedNameStringBuilder.append(' ')
+        }
+        var scheduledAmountStringBuilder = StringBuilder(""+scheduledAmount)
+        for (nameLength in scheduledAmountStringBuilder.length..AMOUNT_LENGTH){
+            scheduledAmountStringBuilder.append(' ')
+        }
+        var transferString = "[x]"
+        if(transferredToCreditAccountName.equals("null") && transferredToSavingsAccountName.equals("null")){
+            transferString = "[ ]"
+        }
+        return "| ${autopayString}  | ${requiredString}\t| ${date?.dueDate}\t | ${formattedNameStringBuilder.substring(0, NAME_LENGTH)} | ${transferString}  | ${scheduledAmountStringBuilder} "
+    }
+
     fun serializeBudgetItemToJson(): String {
         var budgetStateStringBuilder = StringBuilder()
         budgetStateStringBuilder.append("{\n")
@@ -90,7 +115,7 @@ data class BudgetItem @JvmOverloads constructor(
         return budgetStateStringBuilder.toString()
     }
 
-    private fun convertToDatesList(dueDates: MutableList<LocalDate>): String? {
+    private fun convertToDatesList(dueDates: MutableList<DueDate>): String? {
         var dueDatesStringBuilder = StringBuilder()
         dueDatesStringBuilder.append("[\n")
         dueDates.forEach { dueDate ->
@@ -110,7 +135,7 @@ data class BudgetItem @JvmOverloads constructor(
                 }
                 val lastDueDate = dueDates.last()
                 val oneYearFromToday = LocalDate.now().plusMonths(12).minusDays(1)
-                if(lastDueDate.isBefore(oneYearFromToday)) {
+                if(lastDueDate.dueDate.isBefore(oneYearFromToday)) {
                     fillOutDueDatesRegularRecurrence()
                 }
             }
@@ -122,7 +147,7 @@ data class BudgetItem @JvmOverloads constructor(
         var pastDueDatesFinalIndex = -1
         for (dueDateIndex in 0..dueDates.size - 1) {
             val dueDate = dueDates.get(dueDateIndex)
-            if (!todaysDate.isAfter(dueDate)) {
+            if (!todaysDate.isAfter(dueDate.dueDate)) {
                 break
             } else {
                 pastDueDatesFinalIndex = dueDateIndex
@@ -140,30 +165,30 @@ data class BudgetItem @JvmOverloads constructor(
         }
         var lastDueDate = dueDates.last()
         val oneYearFromToday = todaysDate.plusMonths(12).minusDays(1)
-        while (lastDueDate.isBefore(oneYearFromToday)) {
+        while (lastDueDate.dueDate.isBefore(oneYearFromToday)) {
             when (recurrence) {
                 Recurrence.WEEKLY -> {
-                    lastDueDate = lastDueDate.plusWeeks(1)
+                    lastDueDate.dueDate = lastDueDate.dueDate.plusWeeks(1)
                     dueDates.add(lastDueDate)
                 }
                 Recurrence.BIWEEKLY -> {
-                    lastDueDate = lastDueDate.plusWeeks(2)
+                    lastDueDate.dueDate = lastDueDate.dueDate.plusWeeks(2)
                     dueDates.add(lastDueDate)
                 }
                 Recurrence.MONTHLY -> {
-                    lastDueDate = lastDueDate.plusMonths(1)
+                    lastDueDate.dueDate = lastDueDate.dueDate.plusMonths(1)
                     dueDates.add(lastDueDate)
                 }
                 Recurrence.YEARLY -> {
-                    lastDueDate = lastDueDate.plusYears(1)
+                    lastDueDate.dueDate = lastDueDate.dueDate.plusYears(1)
                     dueDates.add(lastDueDate)
                 }
-                else -> lastDueDate = oneYearFromToday
+                else -> lastDueDate.dueDate = oneYearFromToday
             }
         }
     }
 
-    fun validDueDateForBudgetState(budgetState:BudgetState): Boolean{
+    fun validDueDateForBudgetState(budgetState: BudgetState): Boolean{
         var isValid = false
         if(dueDates.isEmpty()){
             when(recurrence) {
@@ -176,8 +201,8 @@ data class BudgetItem @JvmOverloads constructor(
         }
         dueDates.forEach {
             dueDate ->
-            if (!isValid && dueDate.isAfter(budgetState.startDate.minusDays(1)) &&
-                    dueDate.isBefore(budgetState.endDate.plusDays(1))) {
+            if (!isValid && dueDate.dueDate.isAfter(budgetState.startDate.minusDays(1)) &&
+                    dueDate.dueDate.isBefore(budgetState.endDate.plusDays(1))) {
                 isValid = true
             }
         }
@@ -205,8 +230,8 @@ data class BudgetItem @JvmOverloads constructor(
             val autopay: Boolean = value?.boolean(AUTOPAY_KEY)!!
             val scheduledAmount: Double = value?.double(SCHEDULED_AMOUNT_KEY)!!
             val actualAmount: Double = value?.double(ACTUAL_AMOUNT_KEY)!!
-            val dueString: String = value?.string(DUE_KEY)!!
-            val due:LocalDate = dateStringParser(dueString)
+            val dueObj: JsonObject = value?.obj(DUE_KEY)!!
+            val dueDate:DueDate? = dueDateStringParser(dueObj)
             val recurrence: Recurrence = Recurrence.valueOf(value!!.string(RECURRENCE_KEY)!!)
             val name: String = value?.string(NAME_KEY)!!
             var transferredToSavingsAccountName: String? = null
@@ -217,18 +242,18 @@ data class BudgetItem @JvmOverloads constructor(
             if(value.containsKey(SAVINGS_ACCOUNT_NAME_KEY)) {
                 transferredToCreditAccountName = value?.string(CREDIT_ACCOUNT_NAME_KEY)!!
             }
-            var dueDatesArray = value.array<String>(DUE_DATES_KEY)
-            var dueDates = convertJsonArrayToListLocalDate(dueDatesArray)
-            var budgetItem = BudgetItem(scheduledAmount, actualAmount, due, recurrence, name, autopay, required,
+            var dueDatesArray = value.array<JsonObject>(DUE_DATES_KEY)
+            var dueDates = convertJsonArrayToListDueDate(dueDatesArray)
+            var budgetItem = BudgetItem(scheduledAmount, actualAmount, dueDate!!, recurrence, name, autopay, required,
                     transferredToSavingsAccountName, transferredToCreditAccountName, dueDates)
             budgetItem.fillOutDueDates()
             return budgetItem
         }
 
-        private fun convertJsonArrayToListLocalDate(dueDatesArray: JsonArray<String>?): MutableList<LocalDate> {
-            var dueDates: MutableList<LocalDate> = ArrayList<LocalDate>()
-            dueDatesArray?.forEach { dueDateString ->
-                dueDates.add(dateStringParser(dueDateString))
+        private fun convertJsonArrayToListDueDate(dueDatesArray: JsonArray<JsonObject>?): MutableList<DueDate> {
+            var dueDates: MutableList<DueDate> = ArrayList<DueDate>()
+            dueDatesArray?.forEach { dueDateObject ->
+                dueDateStringParser(dueDateObject)?.let { dueDates.add(it) }
             }
             return dueDates
         }
@@ -247,6 +272,22 @@ data class BudgetItem @JvmOverloads constructor(
             return localDate
         }
 
+        fun dueDateStringParser(dateObject: JsonObject?): DueDate?{
+            var localDate: LocalDate? = null
+            var localDateString:String = dateObject!!.string("dueDate")!!
+            if (localDateString?.contains('.', true)!!) {
+                localDate =
+                        LocalDateTime.parse(localDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")).toLocalDate()
+            } else if (localDateString?.contains('T', true)) {
+                localDate =
+                        LocalDateTime.parse(localDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")).toLocalDate()
+            } else {
+                localDate = LocalDate.parse(localDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            }
+            var amount = dateObject.double("amount")
+            return DueDate(localDate, amount!!)
+        }
+
         val dateConverter = object: Converter {
             override fun canConvert(cls: Class<*>)
                     = cls == LocalDateTime::class.java
@@ -259,7 +300,7 @@ data class BudgetItem @JvmOverloads constructor(
                     }
 
             override fun toJson(o: Any) =
-                    '\"' + o.toString() + '\"'
+                    o.toString()
 
         }
 

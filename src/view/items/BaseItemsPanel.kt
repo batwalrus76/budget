@@ -1,14 +1,13 @@
 package view.items
 
-import model.AccountItem
-import model.ApplicationState
-import model.BudgetItem
+import model.account.AccountItem
+import model.state.ApplicationState
+import model.budget.BudgetItem
+import model.core.DueDate
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
-import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
-import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.component.RadioButtonGroup
 import org.hexworks.zircon.api.data.Position
@@ -30,11 +29,12 @@ abstract class BaseItemsPanel (var width: Int, var height: Int, val component: C
 
     open fun reconcileBudgetItem(reconciledBudgetItem: BudgetItem) {
         if(reconciledBudgetItem != null) {
-            applicationState.checkingAccount!!.reconciledItems.add(AccountItem(reconciledBudgetItem?.due!!, reconciledBudgetItem?.name!!, reconciledBudgetItem?.actualAmount!!))
+            applicationState.checkingAccount!!.reconciledItems.add(AccountItem(reconciledBudgetItem?.due!!.dueDate,
+                    reconciledBudgetItem?.name!!, reconciledBudgetItem?.actualAmount!!))
             applicationState.checkingAccount!!.balance = applicationState.checkingAccount!!.balance + reconciledBudgetItem.actualAmount
-            var newReconciledBudgetItemDueDates =  ArrayList<LocalDate>()
+            var newReconciledBudgetItemDueDates =  ArrayList<DueDate>()
             reconciledBudgetItem.dueDates.forEach { dueDate ->
-                if(dueDate.isAfter(DateTimeUtils.currentDate())){
+                if(dueDate.dueDate.isAfter(DateTimeUtils.currentDate())){
                     newReconciledBudgetItemDueDates.add(dueDate)
                 }
             }

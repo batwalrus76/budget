@@ -1,7 +1,7 @@
 package view.screens
 
-import model.BudgetAnalysisState
-import model.BudgetState
+import model.budget.BudgetAnalysisState
+import model.budget.BudgetState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions

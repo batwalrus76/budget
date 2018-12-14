@@ -1,6 +1,6 @@
 package view.control
 
-import model.BudgetAnalysisState
+import model.budget.BudgetAnalysisState
 import model.enums.View
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components

@@ -1,27 +1,19 @@
 package view.input
 
-import model.ApplicationState
-import model.BudgetAnalysisState
-import model.BudgetItem
+import model.state.ApplicationState
+import model.budget.BudgetAnalysisState
 import model.enums.Recurrence
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.*
-import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
-import org.hexworks.zircon.api.kotlin.onKeyStroke
 import org.hexworks.zircon.api.kotlin.onMouseReleased
-import org.hexworks.zircon.api.kotlin.onSelection
-import org.hexworks.zircon.api.util.Random
 import utils.DateTimeUtils
 import view.BudgetPanel
 import view.items.ItemConfigurationPanel
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.math.min
 
 class AddItemPanel(width: Int, height: Int, var uiComponents: ApplicationUIComponents,
                    applicationState: ApplicationState):

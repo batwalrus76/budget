@@ -1,9 +1,7 @@
 package view.items
 
-import model.AccountItem
-import model.ApplicationState
-import model.BudgetItem
-import model.enums.Recurrence
+import model.state.ApplicationState
+import model.budget.BudgetItem
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
@@ -13,10 +11,6 @@ import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
-import utils.DateTimeUtils
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import kotlin.math.min
 
 class FutureItemsPanel (width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
                                         applicationState: ApplicationState) :
@@ -49,7 +43,8 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, uiCompone
     }
 
     override fun update(){
-        var budgetItems = applicationState.budgetItems!!.values.sortedWith(kotlin.comparisons.compareBy({ it.due }))
+        var budgetItems =
+                applicationState.budgetItems!!.values.sortedWith(kotlin.comparisons.compareBy({ it.due.dueDate }))
         this.panel!!.removeComponent(this!!.radioButtonGroup!!)
         radioButtonGroup = Components.radioButtonGroup()
                 .withPosition(Position.create(-1,-1).relativeToBottomOf(dividerLabel))
@@ -61,7 +56,7 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, uiCompone
         }
         budgetItems?.forEach { budgetItem ->
             if((budgetItem.dueDates.size>0 && !budgetItem.dueDates.get(0).equals(budgetItem.due)) ||
-                    budgetItem.due.isAfter(applicationState.currentPayPeriodBudgetState?.endDate)) {
+                    budgetItem.due.dueDate.isAfter(applicationState.currentPayPeriodBudgetState?.endDate)) {
                 radioButtonGroup!!.addOption(budgetItem.name, budgetItem.toNarrowString())
             }
         }
@@ -82,7 +77,7 @@ class FutureItemsPanel (width: Int, height: Int, component: Component, uiCompone
         val budgetItem = applicationState.budgetItems!!.get(selection.key)
 
         var itemConfigurationPanel = budgetItem?.scheduledAmount?.let {
-            ItemConfigurationPanel(budgetItem.name, budgetItem.due, budgetItem.required,
+            ItemConfigurationPanel(budgetItem.name, budgetItem.due.dueDate, budgetItem.required,
                     budgetItem.autopay, it, budgetItem.actualAmount, budgetItem.recurrence,
                     newPanel!!.width-25, newPanel!!.height-1, "null", "null",
                     applicationState)

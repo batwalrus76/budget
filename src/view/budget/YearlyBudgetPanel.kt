@@ -1,7 +1,7 @@
 package view.budget
 
-import model.ApplicationState
-import model.BudgetItem
+import model.state.ApplicationState
+import model.budget.BudgetItem
 import model.enums.Recurrence
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions

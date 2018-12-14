@@ -1,9 +1,7 @@
 package view.screens
 
-import model.ApplicationState
-import model.BudgetState
+import model.budget.BudgetState
 import model.view.ApplicationUIComponents
-import org.hexworks.zircon.api.Screens
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.grid.TileGrid
 import view.input.InputPanel

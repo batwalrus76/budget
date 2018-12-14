@@ -1,7 +1,7 @@
 package view.accounts
 
-import model.Account
-import model.ApplicationState
+import model.account.Account
+import model.state.ApplicationState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
@@ -106,7 +106,7 @@ abstract class BaseAccountsPanel(var width: Int, var height: Int, val component:
     }
 
     fun updateInputPanel(title: String, accounts: MutableMap<String, Account>,
-                                 isSavings: Boolean, selection: RadioButtonGroup.Selection) {
+                         isSavings: Boolean, selection: RadioButtonGroup.Selection) {
         var inputPanel = uiComponents.weeklyOverviewScreen!!.inputPanel
         var targetAccount: Account? = null
         accounts.forEach { name, account ->

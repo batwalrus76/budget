@@ -1,8 +1,8 @@
-package model
+package model.account
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import model.AccountItem.Companion.parseAccountItemFromJsonObject
+import model.account.AccountItem.Companion.parseAccountItemFromJsonObject
 import java.io.Serializable
 
 data class Account(val name: String, var balance: Double) : Serializable {
@@ -44,7 +44,7 @@ data class Account(val name: String, var balance: Double) : Serializable {
 
     override fun toString(): String {
         var formattedNameStringBuilder: StringBuilder = StringBuilder(name)
-        for (nameLength in formattedNameStringBuilder.length..Account.NAME_LENGTH){
+        for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
             formattedNameStringBuilder.append(' ')
         }
         return "${formattedNameStringBuilder.toString()}\tBalance = $balance"
@@ -52,7 +52,7 @@ data class Account(val name: String, var balance: Double) : Serializable {
 
     fun toString(balance: Double): String {
         var formattedNameStringBuilder: StringBuilder = StringBuilder(name)
-        for (nameLength in formattedNameStringBuilder.length..Account.NAME_LENGTH){
+        for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
             formattedNameStringBuilder.append(' ')
         }
         return "${formattedNameStringBuilder.toString()}\tBalance = $balance"

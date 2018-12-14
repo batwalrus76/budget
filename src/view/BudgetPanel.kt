@@ -1,7 +1,7 @@
 package view
 
-import model.ApplicationState
-import model.BudgetAnalysisState
+import model.state.ApplicationState
+import model.budget.BudgetAnalysisState
 import org.hexworks.zircon.api.component.Panel
 
 abstract class BudgetPanel(var width: Int, var height: Int, var applicationState: ApplicationState) {

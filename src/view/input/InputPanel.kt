@@ -1,13 +1,12 @@
 package view.input
 
-import model.ApplicationState
-import model.BudgetAnalysisState
+import model.state.ApplicationState
+import model.budget.BudgetAnalysisState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Panel
-import org.hexworks.zircon.api.data.Position
 import view.BudgetPanel
 
 class InputPanel(width: Int, height: Int, var xOffSet: Int, var yOffset: Int, var uiComponents: ApplicationUIComponents,

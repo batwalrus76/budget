@@ -1,8 +1,8 @@
-package model
+package model.account
 
 import com.beust.klaxon.JsonObject
+import model.budget.BudgetItem
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 data class AccountItem(var date: LocalDate, var name: String, var amount: Double): java.io.Serializable {
 
@@ -24,7 +24,7 @@ data class AccountItem(var date: LocalDate, var name: String, var amount: Double
 
         fun parseAccountItemFromJsonObject(jsonObject: JsonObject): AccountItem {
             val name: String = jsonObject.string(NAME_KEY)!!
-            val date: LocalDate = BudgetItem.dateStringParser(jsonObject.string(DATE_KEY))
+            val date: LocalDate = BudgetItem.dateStringParser(jsonObject.string(DATE_KEY))!!
             val amount: Double = jsonObject.double(AMOUNT_KEY)!!
             return AccountItem(date, name, amount)
         }

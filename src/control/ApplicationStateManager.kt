@@ -1,14 +1,13 @@
 package control
 
-import model.ApplicationState
-import model.BudgetItem
-import model.BudgetState
+import model.state.ApplicationState
+import model.budget.BudgetItem
+import model.budget.BudgetState
 import utils.DateTimeUtils
 import java.io.File
-import java.time.LocalDate
 
 class ApplicationStateManager(var applicationState: ApplicationState,
-                                var applicationStateBudgetAnalysis: ApplicationStateBudgetAnalysis) {
+                              var applicationStateBudgetAnalysis: ApplicationStateBudgetAnalysis) {
 
     fun augmentApplicationFutureBudgetStates() {
         val todaysDate = DateTimeUtils.currentDate()
