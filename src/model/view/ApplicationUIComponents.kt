@@ -1,6 +1,7 @@
 package model.view
 
 import control.ApplicationStateBudgetAnalysis
+import control.ApplicationStateManager
 import model.ApplicationState
 import model.BudgetState
 import model.enums.View
@@ -94,6 +95,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     }
 
     private fun updateBudgetState() {
+        ApplicationStateManager.serializeToDefaultJsonFileLocation(applicationState)
         when(budgetStateIndex){
             0 -> currentViewedBudgetState = applicationState?.currentPayPeriodBudgetState
             else -> {
@@ -109,6 +111,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     }
 
     fun update(): BudgetState? {
+        ApplicationStateManager.serializeToDefaultJsonFileLocation(applicationState)
         when(currentView) {
             View.WEEKLY -> {
                 weeklyOverviewScreen?.update()

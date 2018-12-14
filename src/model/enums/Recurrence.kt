@@ -6,5 +6,6 @@ enum class Recurrence(val intervalDaysOrMonths: Long) {
     BIWEEKLY(14L),
     MONTHLY(1L),
     YEARLY(12L),
-    ONETIME(0L)
+    ONETIME(0L),
+    NONE(-1L)
 }

@@ -31,8 +31,6 @@ class AddItemPanel(width: Int, height: Int, var uiComponents: ApplicationUICompo
     var actualAmount = 0.0
     var due:LocalDate = DateTimeUtils.currentDate()
     var name = "PLACEHOLDER"
-    var transferredSavingsAccountName: String? = null
-    var transferredCreditAccountName: String? = null
 
     override fun build() {
         panel = Components.panel()
@@ -53,7 +51,7 @@ class AddItemPanel(width: Int, height: Int, var uiComponents: ApplicationUICompo
                 .build()
         addCurrentItemButton.onMouseReleased { it ->
             var newCurrentItem = itemConfigurationPanel.generateItem()
-            applicationState.budgetItems?.set(name, newCurrentItem)
+            applicationState.budgetItems?.set(newCurrentItem.name, newCurrentItem)
             uiComponents.update()
             uiComponents.clearInputScreen()
         }
@@ -86,10 +84,6 @@ class AddItemPanel(width: Int, height: Int, var uiComponents: ApplicationUICompo
             uiComponents.clearInputScreen()
         }
         panel!!.addComponent(addUnreconciledItemButton)
-    }
-
-    private fun addCurrentItem(itemConfigurationPanel: ItemConfigurationPanel){
-
     }
 
     override fun update(budgetAnalysisState: BudgetAnalysisState) {

@@ -36,7 +36,8 @@ data class Account(val name: String, var balance: Double) : Serializable {
     private fun serialzeListAccountItem(accountItems: MutableList<AccountItem>): String {
         var accountItemListStringBuilder = StringBuilder()
         accountItemListStringBuilder.append("[\n")
-        accountItems.forEach{accountItem -> accountItemListStringBuilder.append(accountItem.serializeAccountItemToJson())}
+        accountItems.forEach{accountItem -> accountItemListStringBuilder.append(accountItem.serializeAccountItemToJson()).append(',')}
+        accountItemListStringBuilder.deleteCharAt(accountItemListStringBuilder.length-1)
         accountItemListStringBuilder.append("],\n")
         return accountItemListStringBuilder.toString()
     }

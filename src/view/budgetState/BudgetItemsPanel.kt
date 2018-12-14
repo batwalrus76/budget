@@ -29,6 +29,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
             .build()
     var currentBudgetState: BudgetState? = null
     var currentBudgetAnalysisStates: MutableList<BudgetAnalysisState>? = null
+    var itemConfigurationPanel: ItemConfigurationPanel? = null
 
     override fun build() {
         this.panel = Components.panel()
@@ -59,8 +60,8 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
         currentBudgetAnalysisStates = applicationStateBudgetAnalysis?.performAnalysisOnBudgetItems(budgetStateCurrentItemMap)
         this.panel!!.removeComponent(this!!.radioButtonGroup!!)
         radioButtonGroup = Components.radioButtonGroup()
-                .withPosition(Position.create(-1,-1).relativeToBottomOf(dividerLabel))
-                .withSize(Sizes.create(this.width-2, this.height-5))
+                .withPosition(Position.create(0,0).relativeToBottomOf(dividerLabel))
+                .withSize(Sizes.create(this.width-3, this.height-6))
                 .build()
         this.panel!!.addComponent(radioButtonGroup!!)
         radioButtonGroup!!.onSelection { it ->
@@ -99,7 +100,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 .withPosition(Positions.offset1x1())
                 .build()
 
-        var itemConfigurationPanel = budgetItem?.scheduledAmount?.let {
+        itemConfigurationPanel = budgetItem?.scheduledAmount?.let {
             ItemConfigurationPanel(budgetItem.name, budgetItem.due, budgetItem.required,
                     budgetItem.autopay, it, budgetItem.actualAmount, budgetItem.recurrence,
                     newPanel!!.width-25, newPanel!!.height-1, "null", "null",
@@ -115,7 +116,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 .build()
         submitButton.onMouseReleased {
             mouseAction ->
-            var updatedBudgetItem = itemConfigurationPanel.generateItem()
+            var updatedBudgetItem = itemConfigurationPanel!!.generateItem()
             updatedBudgetItem.fillOutDueDates()
             updateBudgetItem(updatedBudgetItem.name, updatedBudgetItem)
             uiComponents.update()
@@ -128,7 +129,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 .withPosition(Positions.create(0,1).relativeToBottomOf(submitButton))
                 .build()
         reconcileButton.onMouseReleased {
-            reconcileBudgetItem(itemConfigurationPanel.name)
+            reconcileBudgetItem(itemConfigurationPanel!!.name)
         }
         newPanel.addComponent(reconcileButton)
         val deleteButton: Button = Components.button()
@@ -137,7 +138,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 .withPosition(Positions.create(0,1).relativeToBottomOf(reconcileButton))
                 .build()
         deleteButton.onMouseReleased {
-            deleteBudgetItem(itemConfigurationPanel.name)
+            deleteBudgetItem(itemConfigurationPanel!!.name)
         }
         newPanel.addComponent(deleteButton)
         uiComponents.updateInputScreen(newPanel)

@@ -5,6 +5,7 @@ import model.BudgetItem
 import model.enums.Recurrence
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
+import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Size
 import org.parboiled.common.Tuple2
@@ -12,8 +13,18 @@ import org.parboiled.common.Tuple2
 class MonthlyBudgetPanel(var width: Int, var height: Int, var applicationState: ApplicationState) {
 
     var panel: Panel? = null
+    var balanceTuple: Tuple2<Double, Double> = Tuple2(0.0,0.0)
+    var previousLabel: Label? = null
+    var dividerLabel: Label? = null
+    var lowerDividerLabel: Label? = null
+    var headerString = "  Occurrence | Auto | Req |     Due     |         Name         | Xfer |    Amt    |      Monthly      |     Req'd Amt     |      Opt Amt      |    Total Amt"
+    var dividerString = "-------------------------------------------------------------------------------------------------------------------------------------------------------------"
 
     fun build(){
+        fillOutPanel(null)
+    }
+
+    open fun fillOutPanel(additionalBudgetItem: BudgetItem?) {
         panel = Components.panel()
                 .wrapWithBox(true)
                 .wrapWithShadow(false)
@@ -21,36 +32,33 @@ class MonthlyBudgetPanel(var width: Int, var height: Int, var applicationState: 
                 .withSize(Size.create(width, height))
                 .withPosition(Positions.create(0,0))
                 .build()
-        var balanceTuple: Tuple2<Double, Double> = Tuple2(0.0,0.0)
-        val budgetItems = applicationState?.budgetItems
-        var headerStringBuilder: StringBuilder = StringBuilder()
-        headerStringBuilder.append("  Occurrence  | Auto | Req |     Due     |         Name         | Xfer |    Amt    |      Monthly      |     Req'd Amt     |      Opt Amt      |    Total Amt")
-        var previousLabel = Components.label()
-                .withText(headerStringBuilder.toString())
+        var budgetItems = applicationState?.budgetItems
+        previousLabel = Components.label()
+                .withText(headerString)
                 .withPosition(Positions.create(0,1))
                 .build()
-        panel!!.addComponent(previousLabel)
-        var dividerStringBuilder: StringBuilder = StringBuilder()
-        for(dividerLength in 0..width-6) {
-            dividerStringBuilder.append("-")
-        }
-        var dividerLabel = Components.label()
-                .withText(dividerStringBuilder.toString())
-                .withPosition(Positions.create(0,-1).relativeToBottomOf(previousLabel))
+        panel!!.addComponent(this.previousLabel!!)
+        dividerLabel = Components.label()
+                .withText(dividerString)
+                .withPosition(Positions.create(0,-1).relativeToBottomOf(previousLabel!!))
                 .build()
-        panel!!.addComponent(dividerLabel)
+        panel!!.addComponent(dividerLabel!!)
         budgetItems?.values?.forEach { budgetItem ->
             when(budgetItem.recurrence){
                 Recurrence.DAILY, Recurrence.WEEKLY, Recurrence.BIWEEKLY, Recurrence.MONTHLY ->
-                    balanceTuple = updateBudgetPanelItems(budgetItem, balanceTuple)
+                    updateBudgetPanelItems(budgetItem)
             }
-
         }
-        var lowerDividerLabel = Components.label()
-                .withText(dividerStringBuilder.toString())
+        additionalBudgetItem?.let { updateBudgetPanelItems(it) }
+        lowerDividerLabel = Components.label()
+                .withText(dividerString)
                 .withPosition(Positions.create(0,-1).relativeToBottomOf(panel!!.children.last()))
                 .build()
-        panel!!.addComponent(lowerDividerLabel)
+        panel!!.addComponent(lowerDividerLabel!!)
+        panel!!.addComponent(createBalanceLabel())
+    }
+
+    fun createBalanceLabel(): Label {
         var balanceStringBuilder = StringBuilder()
         for(balanceStringIndex in balanceStringBuilder.length..(BUDGET_ITME_LENGTH+ MONTHLY_REQUIRED_AMOUNT_LENGTH-1)){
             balanceStringBuilder.append('\t')
@@ -68,15 +76,13 @@ class MonthlyBudgetPanel(var width: Int, var height: Int, var applicationState: 
         balanceStringBuilder.append(" | ")
         balanceStringBuilder.append(String.format("%.2f",balanceTuple.a + balanceTuple.b))
 
-        var bottomLineLabel = Components.label()
+        return Components.label()
                 .withText(balanceStringBuilder.toString())
                 .withPosition(Positions.create(-1,-1).relativeToBottomOf(panel!!.children.last()))
                 .build()
-        panel!!.addComponent(bottomLineLabel!!)
-
     }
 
-    fun updateBudgetPanelItems(budgetItem: BudgetItem, balanceTuple: Tuple2<Double, Double>): Tuple2<Double, Double> {
+    open fun updateBudgetPanelItems(budgetItem: BudgetItem){
         var requiredBalance = balanceTuple.a
         var optionalBalance = balanceTuple.b
         var monthlyAmount = 0.0
@@ -139,7 +145,7 @@ class MonthlyBudgetPanel(var width: Int, var height: Int, var applicationState: 
                 panel!!.addComponent(label!!)
             }
         }
-        return Tuple2(requiredBalance, optionalBalance)
+        balanceTuple = Tuple2(requiredBalance, optionalBalance)
     }
 
     companion object {

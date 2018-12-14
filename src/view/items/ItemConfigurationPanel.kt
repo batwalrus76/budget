@@ -25,7 +25,9 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
 
     var panel: Panel? = null
     var scheduledAmountTextArea: TextArea? = null
+    var scheduledAmountText: String? = scheduledAmount.toString()
     var actualAmountTextArea: TextArea? = null
+    var actualAmountText: String? = actualAmount.toString()
     var dueTextArea: TextArea? = null
 
     fun build() {
@@ -49,7 +51,9 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
                 .withSize(Sizes.create(20,2))
                 .withPosition(Positions.create(1,0).relativeToRightOf(nameLabel))
                 .build()
-        nameTextArea.onKeyStroke { name = nameTextArea.text }
+        nameTextArea.onKeyStroke {
+            name = nameTextArea.text
+        }
         panel!!.addComponent(nameTextArea)
         val dueLabel = Components.label()
                 .wrapWithBox(false)
@@ -112,7 +116,7 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
                 .withPosition(Positions.create(1,0).relativeToRightOf(scheduledAmountLabel))
                 .build()
         scheduledAmountTextArea!!.onKeyStroke {
-            it -> scheduledAmount = scheduledAmountTextArea!!.text.toDoubleOrNull()!!
+            it -> scheduledAmountText = scheduledAmountTextArea!!.text
         }
         panel!!.addComponent(scheduledAmountTextArea!!)
         val actualAmountLabel = Components.label()
@@ -122,7 +126,7 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
                 .withPosition(Positions.create(0,1).relativeToBottomOf(scheduledAmountLabel))
                 .build()
         panel!!.addComponent(actualAmountLabel)
-        val actualAmountTextArea = Components.textArea()
+        actualAmountTextArea = Components.textArea()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
                 .withText(String.format("%.2f",actualAmount))
@@ -130,9 +134,9 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
                 .withPosition(Positions.create(1,0).relativeToRightOf(actualAmountLabel))
                 .build()
         actualAmountTextArea!!.onKeyStroke {
-            it -> actualAmount = actualAmountTextArea!!.text.toDoubleOrNull()!!
+            it -> actualAmountText = actualAmountTextArea!!.text
         }
-        panel!!.addComponent(actualAmountTextArea)
+        panel!!.addComponent(actualAmountTextArea!!)
         val isAutopayLabel: Label = Components.label()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
@@ -178,6 +182,7 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
         }
         recurrenceRadioButtonGroup.onSelection { it ->
             currentRecurrence = Recurrence.valueOf(it.key)
+
         }
         panel!!.addComponent(recurrenceRadioButtonGroup)
 
@@ -226,7 +231,7 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
     }
 
     open fun generateItem(): BudgetItem{
-        return BudgetItem(scheduledAmount, actualAmount, due, currentRecurrence, name, isAutopay, isRequired,
+        return BudgetItem(scheduledAmountText!!.toDouble(), actualAmountText!!.toDouble(), due, currentRecurrence, name, isAutopay, isRequired,
                 targetSavingsAccountName, targetCreditAccountName, ArrayList())
     }
 }
