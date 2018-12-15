@@ -47,7 +47,8 @@ data class Account(val name: String, var balance: Double) : Serializable {
         for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
             formattedNameStringBuilder.append(' ')
         }
-        return "${formattedNameStringBuilder.toString()}\tBalance = $balance"
+        formattedNameStringBuilder.append(String.format("\tBalance = %.2f",balance))
+        return formattedNameStringBuilder.toString()
     }
 
     fun toString(balance: Double): String {
@@ -55,7 +56,8 @@ data class Account(val name: String, var balance: Double) : Serializable {
         for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
             formattedNameStringBuilder.append(' ')
         }
-        return "${formattedNameStringBuilder.toString()}\tBalance = $balance"
+        formattedNameStringBuilder.append(String.format("\tBalance = %.2f",balance))
+        return formattedNameStringBuilder.toString()
     }
 
     companion object {

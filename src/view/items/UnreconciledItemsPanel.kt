@@ -17,7 +17,7 @@ class UnreconciledItemsPanel (width: Int, height: Int, component: Component, uiC
         BaseItemsPanel(width, height, component, uiComponents, applicationState){
 
     var headerLabel: Label = Components.label()
-            .withText("         | Auto | Req |     Due     |         Name         | Xfer |   Amt      ")
+            .withText("    | Auto | Req |     Due     |         Name         | Xfer |   Amt      ")
             .withPosition(Positions.create(0,1))
             .build()
     var dividerLabel: Label = Components.label()

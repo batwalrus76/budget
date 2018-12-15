@@ -36,6 +36,23 @@ class ApplicationStateManager(var applicationState: ApplicationState,
                 applicationState.currentPayPeriodBudgetState = applicationState.futureBudgetStates.removeAt(0)
             }
         }
+        applicationState.budgetItems!!.values.forEach { budgetItem ->
+            if(budgetItem.due.dueDate.isBefore(applicationState.currentPayPeriodBudgetState!!.startDate) &&
+                    !applicationState.pastUnreconciledBudgetItems!!.contains(budgetItem.name)) {
+                var firstDueDateIndex = 0
+                for(dueDateIndex in 0..budgetItem.dueDates.size-1){
+                    val dueDate = budgetItem.dueDates[dueDateIndex].dueDate
+                    if(dueDate.isAfter(applicationState.currentPayPeriodBudgetState!!.startDate)){
+                       break
+                    }
+                    firstDueDateIndex = dueDateIndex
+                }
+                if(firstDueDateIndex > 0){
+                    budgetItem.dueDates = budgetItem.dueDates.subList(firstDueDateIndex, budgetItem.dueDates.size-2)
+                }
+                budgetItem.due = budgetItem.dueDates[0]
+            }
+        }
         augmentApplicationFutureBudgetStates()
     }
 

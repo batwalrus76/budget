@@ -37,6 +37,8 @@ data class BudgetState(var startDate:LocalDate = previousFriday(currentDate()), 
             var mapBudgetItemStringBuilder = StringBuilder()
             mapBudgetItemStringBuilder.append("{\n")
             mapBudgetItems?.forEach { (key, value) -> mapBudgetItemStringBuilder.append(String.format("\"%s\": %s,\n", key, value.serializeBudgetItemToJson())) }
+            mapBudgetItemStringBuilder =
+                    StringBuilder(mapBudgetItemStringBuilder.substring(0, mapBudgetItemStringBuilder.length-2))
             mapBudgetItemStringBuilder.append("}\n")
             return mapBudgetItemStringBuilder.toString()
         }

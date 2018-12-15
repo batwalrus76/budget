@@ -39,6 +39,7 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking Ac
         jsonStringBuilder.append(",\n")
         jsonStringBuilder.append(String.format("\"%s\": [\n", FUTURE_BUDGET_STATES_KEY))
         futureBudgetStates?.forEach {futureBudgetState -> jsonStringBuilder.append(String.format("%s,\n", futureBudgetState.serializeBudgetStateToJson())) }
+        jsonStringBuilder = StringBuilder(jsonStringBuilder.substring(0, jsonStringBuilder.length-2))
         jsonStringBuilder.append("],\n")
         jsonStringBuilder.append(String.format("\"%s\": \n%s,\n",
                 BUDGET_ITEMS_KEY, serializeMapBudgetItemstoJson(budgetItems)))
@@ -50,6 +51,7 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking Ac
         var accountsMapStringBuilder = StringBuilder()
         accountsMapStringBuilder.append("{\n")
         accountsList?.forEach{accountName, account -> accountsMapStringBuilder.append(String.format("\"%s\" : %s,\n", accountName, account.serializeAccountToJson()))}
+        accountsMapStringBuilder = StringBuilder(accountsMapStringBuilder.substring(0,accountsMapStringBuilder.length-2))
         accountsMapStringBuilder.append("}")
         return accountsMapStringBuilder.toString()
     }

@@ -11,7 +11,7 @@ data class AccountItem(var date: LocalDate, var name: String, var amount: Double
         accountItemStringBuilder.append("{\n")
         accountItemStringBuilder.append(String.format("\"%s\": \"%s\",\n", NAME_KEY, name))
         accountItemStringBuilder.append(String.format("\"%s\": \"%s\",\n", DATE_KEY, date.toString()))
-        accountItemStringBuilder.append(String.format("\"%s\": %.2f,\n", AMOUNT_KEY, amount))
+        accountItemStringBuilder.append(String.format("\"%s\": %.2f \n", AMOUNT_KEY, amount))
         accountItemStringBuilder.append("}\n")
         return accountItemStringBuilder.toString()
     }

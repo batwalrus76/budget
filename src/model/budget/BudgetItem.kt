@@ -122,7 +122,7 @@ data class BudgetItem @JvmOverloads constructor(
             dueDatesStringBuilder.append(dateConverter.toJson(dueDate))
             dueDatesStringBuilder.append(',')
         }
-        dueDatesStringBuilder.substring(0,dueDatesStringBuilder.length-1)
+        dueDatesStringBuilder = StringBuilder(dueDatesStringBuilder.substring(0,dueDatesStringBuilder.length-1))
         dueDatesStringBuilder.append("]\n")
         return dueDatesStringBuilder.toString()
     }
@@ -163,28 +163,27 @@ data class BudgetItem @JvmOverloads constructor(
         if (dueDates.isEmpty()) {
             dueDates.add(due)
         }
-        var lastDueDate = dueDates.last()
+        var lastDueDate = dueDates.last().dueDate
+        var amount = dueDates.last().amount
         val oneYearFromToday = todaysDate.plusMonths(12).minusDays(1)
-        while (lastDueDate.dueDate.isBefore(oneYearFromToday)) {
+        while (lastDueDate.isBefore(oneYearFromToday)) {
             when (recurrence) {
                 Recurrence.WEEKLY -> {
-                    lastDueDate.dueDate = lastDueDate.dueDate.plusWeeks(1)
-                    dueDates.add(lastDueDate)
+                    lastDueDate = lastDueDate.plusWeeks(1)
                 }
                 Recurrence.BIWEEKLY -> {
-                    lastDueDate.dueDate = lastDueDate.dueDate.plusWeeks(2)
-                    dueDates.add(lastDueDate)
+                    lastDueDate = lastDueDate.plusWeeks(2)
                 }
                 Recurrence.MONTHLY -> {
-                    lastDueDate.dueDate = lastDueDate.dueDate.plusMonths(1)
-                    dueDates.add(lastDueDate)
+                    lastDueDate = lastDueDate.plusMonths(1)
                 }
                 Recurrence.YEARLY -> {
-                    lastDueDate.dueDate = lastDueDate.dueDate.plusYears(1)
-                    dueDates.add(lastDueDate)
+                    lastDueDate = lastDueDate.plusYears(1)
                 }
-                else -> lastDueDate.dueDate = oneYearFromToday
+                else -> lastDueDate = oneYearFromToday
             }
+            var newDueDate = DueDate(lastDueDate, amount)
+            dueDates.add(newDueDate)
         }
     }
 

@@ -22,11 +22,11 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                                 BaseItemsPanel(width, height, component, uiComponents, applicationState){
 
     var headerLabel: Label = Components.label()
-            .withText("        | Auto | Req |     Due     |         Name         | Xfer |   Amt   |    Balance     ")
+            .withText("         | Auto | Req |     Due     |         Name         | Xfer |   Amt   |    Balance     ")
             .withPosition(Positions.create(0,1))
             .build()
     var dividerLabel: Label = Components.label()
-            .withText("----------------------------------------------------------------------------------------------")
+            .withText(" --------------------------------------------------------------------------------------------")
             .withPosition(Positions.create(0,0).relativeToBottomOf(headerLabel))
             .build()
     var currentBudgetState: BudgetState? = null
