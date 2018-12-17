@@ -2,6 +2,7 @@ package view.input
 
 import model.state.ApplicationState
 import model.budget.BudgetAnalysisState
+import model.core.DueDate
 import model.enums.Recurrence
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
@@ -32,7 +33,7 @@ class AddItemPanel(width: Int, height: Int, var uiComponents: ApplicationUICompo
             .withPosition(Positions.create(0,1))
             .build()
         var itemConfigurationPanel =  ItemConfigurationPanel(name, LocalDate.now(), false, false,
-                scheduledAmount, actualAmount, Recurrence.ONETIME, width-25, height-1,
+                scheduledAmount, actualAmount, Recurrence.ONETIME, width-25, height-12,
                 "null", "null", applicationState)
         itemConfigurationPanel.build()
         panel!!.addComponent(itemConfigurationPanel.panel!!)

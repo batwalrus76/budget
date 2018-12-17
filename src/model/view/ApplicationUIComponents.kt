@@ -27,7 +27,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     var tileGrid = SwingApplications.startTileGrid(
             AppConfigs.newConfig()
                     .withSize(fullScreenSize)
-                    .withDefaultTileset(CP437TilesetResources.rexPaint10x10())
+                    .withDefaultTileset(CP437TilesetResources.rexPaint8x8())
                     .build())
     var screen: Screen? = Screens.createScreenFor(tileGrid)
     var mainControlPanel: MainControlsPanel? = null
@@ -136,7 +136,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     }
 
     companion object {
-        val WIDTH: Int = 166
-        val HEIGHT: Int = 100
+        val WIDTH: Int = 210
+        val HEIGHT: Int = 124
     }
 }

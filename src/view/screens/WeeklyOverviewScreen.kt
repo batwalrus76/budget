@@ -37,15 +37,15 @@ class WeeklyOverviewScreen(var width: Int, var height: Int, var component: Compo
         val fifthScreenWidth: Int = width/5
         val fifthScreenHeight: Int = (height/5)
 
-        inputPanel = InputPanel(width-2, fifthScreenHeight-6, 0,
-                height-(fifthScreenHeight-4),uiComponents, uiComponents.applicationState!!)
+        inputPanel = InputPanel(width-2, fifthScreenHeight, 0,
+                height-(fifthScreenHeight+2),uiComponents, uiComponents.applicationState!!)
         inputPanel!!.build()
 
         budgetStatePanel = BudgetStatePanel(fifthScreenWidth * 3+1,
-                fifthScreenHeight * 2+1, uiComponents, uiComponents!!.applicationState!!)
+                fifthScreenHeight * 2 - 6, uiComponents, uiComponents!!.applicationState!!)
         budgetStatePanel!!.build()
 
-        accountsPanel = AccountsPanel(fifthScreenWidth * 2-2, fifthScreenHeight * 2 + 1,
+        accountsPanel = AccountsPanel(fifthScreenWidth * 2-4, fifthScreenHeight * 2 - 6,
                 budgetStatePanel!!.panel!!, uiComponents, uiComponents.applicationState!!)
         accountsPanel!!.build()
 

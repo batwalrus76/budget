@@ -44,11 +44,11 @@ class AccountsPanel(width: Int,  height: Int, component: Component, uiComponents
                                 dateLabel, uiComponents, applicationState)
         this.checkingAccountPanel!!.build()
         this.savingsAccountsPanel =
-                SavingsAccountPanel(width!!-4, multiAccountSubPanelHeight!!+2,
+                SavingsAccountPanel(width!!-4, multiAccountSubPanelHeight!!+3,
                         checkingAccountPanel!!.panel!!, uiComponents, applicationState!!)
         this.savingsAccountsPanel!!.build()
         this.checkingAccountPanel!!.build()
-        this.creditAccountsPanel = CreditAccountPanel(width!!-4, multiAccountSubPanelHeight!!+2,
+        this.creditAccountsPanel = CreditAccountPanel(width!!-4, multiAccountSubPanelHeight!!+4,
                         savingsAccountsPanel!!.panel!!, uiComponents, applicationState)
         this.creditAccountsPanel!!.build()
         this.panel!!.addComponent(dateLabel)

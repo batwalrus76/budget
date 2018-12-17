@@ -14,6 +14,7 @@ import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
+import view.input.SelectedDueDatePanel
 import view.items.BaseItemsPanel
 import view.items.ItemConfigurationPanel
 
@@ -32,6 +33,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
     var currentBudgetState: BudgetState? = null
     var currentBudgetAnalysisStates: MutableList<BudgetAnalysisState>? = null
     var itemConfigurationPanel: ItemConfigurationPanel? = null
+    var selectedDueDatePanel: SelectedDueDatePanel? = null
 
     override fun build() {
         this.panel = Components.panel()
@@ -105,7 +107,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
         itemConfigurationPanel = budgetItem?.scheduledAmount?.let {
             ItemConfigurationPanel(budgetItem.name, budgetItem.due.dueDate, budgetItem.required,
                     budgetItem.autopay, it, budgetItem.actualAmount, budgetItem.recurrence,
-                    newPanel!!.width-25, newPanel!!.height-1, "null", "null",
+                    newPanel!!.width-25, newPanel!!.height-10, "null", "null",
                     applicationState)
         }
         itemConfigurationPanel!!.build()
@@ -143,6 +145,10 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
             deleteBudgetItem(itemConfigurationPanel!!.name)
         }
         newPanel.addComponent(deleteButton)
+        selectedDueDatePanel = SelectedDueDatePanel(inputPanel!!.width-4, 10, uiComponents,
+                applicationState, itemConfigurationPanel!!.panel!!, budgetItem!!)
+        selectedDueDatePanel!!.build()
+        selectedDueDatePanel!!.panel?.let { newPanel!!.addComponent(it) }
         uiComponents.updateInputScreen(newPanel)
     }
 

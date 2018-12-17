@@ -11,6 +11,7 @@ import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.kotlin.onSelection
+import view.input.SelectedDueDatePanel
 
 class UnreconciledItemsPanel (width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents,
                               applicationState: ApplicationState) :
@@ -24,6 +25,8 @@ class UnreconciledItemsPanel (width: Int, height: Int, component: Component, uiC
             .withText("-------------------------------------------------------------------------------")
             .withPosition(Positions.create(0,0).relativeToBottomOf(headerLabel))
             .build()
+    var itemConfigurationPanel: ItemConfigurationPanel? = null
+    var selectedDueDatePanel: SelectedDueDatePanel? = null
 
     override fun build() {
         this.panel = Components.panel()
@@ -75,10 +78,10 @@ class UnreconciledItemsPanel (width: Int, height: Int, component: Component, uiC
                 .build()
         val budgetItem = applicationState.pastUnreconciledBudgetItems!!.get(selection.key)
 
-        var itemConfigurationPanel = budgetItem?.scheduledAmount?.let {
+        itemConfigurationPanel = budgetItem?.scheduledAmount?.let {
             ItemConfigurationPanel(budgetItem.name, budgetItem.due.dueDate, budgetItem.required,
-                budgetItem.autopay, it, budgetItem.actualAmount, budgetItem.recurrence,
-                    newPanel!!.width-25, newPanel!!.height-1, "null", "null",
+                    budgetItem.autopay, it, budgetItem.actualAmount, budgetItem.recurrence,
+                    newPanel!!.width-25, newPanel!!.height-10, "null", "null",
                     applicationState)
         }
         itemConfigurationPanel!!.build()
@@ -91,7 +94,7 @@ class UnreconciledItemsPanel (width: Int, height: Int, component: Component, uiC
                 .build()
         submitButton.onMouseReleased {
             mouseAction ->
-            var updatedBudgetItem = itemConfigurationPanel.generateItem()
+            var updatedBudgetItem = itemConfigurationPanel!!.generateItem()
             updatedBudgetItem.fillOutDueDates()
             updateBudgetItem(updatedBudgetItem.name, updatedBudgetItem)
         }
@@ -102,7 +105,7 @@ class UnreconciledItemsPanel (width: Int, height: Int, component: Component, uiC
                 .withPosition(Positions.create(0,1).relativeToBottomOf(submitButton))
                 .build()
         reconcileButton.onMouseReleased {
-            reconcileBudgetItem(itemConfigurationPanel.name)
+            reconcileBudgetItem(itemConfigurationPanel!!.name)
         }
         newPanel.addComponent(reconcileButton)
         val deleteButton: Button = Components.button()
@@ -111,9 +114,13 @@ class UnreconciledItemsPanel (width: Int, height: Int, component: Component, uiC
                 .withPosition(Positions.create(0,1).relativeToBottomOf(reconcileButton))
                 .build()
         deleteButton.onMouseReleased {
-            deleteBudgetItem(itemConfigurationPanel.name)
+            deleteBudgetItem(itemConfigurationPanel!!.name)
         }
         newPanel.addComponent(deleteButton)
+        selectedDueDatePanel = SelectedDueDatePanel(inputPanel!!.width-4, 10, uiComponents,
+                applicationState, itemConfigurationPanel!!.panel!!, budgetItem!!)
+        selectedDueDatePanel!!.build()
+        selectedDueDatePanel!!.panel?.let { newPanel!!.addComponent(it) }
         uiComponents.updateInputScreen(newPanel)
     }
 
