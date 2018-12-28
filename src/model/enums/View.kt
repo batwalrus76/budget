@@ -1,5 +1,5 @@
 package model.enums
 
 enum class View {
-    WEEKLY, BUDGET
+    WEEKLY, BUDGET, YEAR
 }

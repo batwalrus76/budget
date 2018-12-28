@@ -187,7 +187,7 @@ data class BudgetItem @JvmOverloads constructor(
         }
     }
 
-    fun validDueDateForBudgetState(budgetState: BudgetState): Boolean{
+    fun validForBudgetState(budgetState: BudgetState): Boolean{
         var isValid = false
         if(dueDates.isEmpty()){
             when(recurrence) {
@@ -206,6 +206,27 @@ data class BudgetItem @JvmOverloads constructor(
             }
         }
         return isValid
+    }
+
+    fun validDueDateForBudgetState(budgetState: BudgetState): DueDate?{
+        var validDueDate:DueDate? = null
+        if(dueDates.isEmpty()){
+            when(recurrence) {
+                Recurrence.DAILY, Recurrence.WEEKLY, Recurrence.BIWEEKLY, Recurrence.MONTHLY ->
+                    fillOutDueDatesRegularRecurrence()
+            }
+        }
+        if(dueDates.isEmpty()){
+            dueDates.add(due)
+        }
+        dueDates.forEach {
+            dueDate ->
+            if (validDueDate == null && dueDate.dueDate.isAfter(budgetState.startDate.minusDays(1)) &&
+                    dueDate.dueDate.isBefore(budgetState.endDate.plusDays(1))) {
+                validDueDate = dueDate
+            }
+        }
+        return validDueDate
     }
 
     companion object {

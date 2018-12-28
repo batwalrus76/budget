@@ -8,6 +8,7 @@ import utils.DateTimeUtils.Companion.nextThursday
 import utils.DateTimeUtils.Companion.previousFriday
 import java.io.Serializable
 import java.time.LocalDate
+import kotlin.math.sign
 
 data class BudgetState(var startDate:LocalDate = previousFriday(currentDate()), var endDate: LocalDate = nextThursday(currentDate())): Serializable {
 
@@ -36,9 +37,11 @@ data class BudgetState(var startDate:LocalDate = previousFriday(currentDate()), 
         fun serializeMapBudgetItemstoJson(mapBudgetItems: MutableMap<String, BudgetItem>?): String {
             var mapBudgetItemStringBuilder = StringBuilder()
             mapBudgetItemStringBuilder.append("{\n")
-            mapBudgetItems?.forEach { (key, value) -> mapBudgetItemStringBuilder.append(String.format("\"%s\": %s,\n", key, value.serializeBudgetItemToJson())) }
-            mapBudgetItemStringBuilder =
-                    StringBuilder(mapBudgetItemStringBuilder.substring(0, mapBudgetItemStringBuilder.length-2))
+            if(mapBudgetItems!!.size > 0) {
+                mapBudgetItems?.forEach { (key, value) -> mapBudgetItemStringBuilder.append(String.format("\"%s\": %s,\n", key, value.serializeBudgetItemToJson())) }
+                mapBudgetItemStringBuilder =
+                        StringBuilder(mapBudgetItemStringBuilder.substring(0, mapBudgetItemStringBuilder.length - 2))
+            }
             mapBudgetItemStringBuilder.append("}\n")
             return mapBudgetItemStringBuilder.toString()
         }

@@ -20,6 +20,7 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
     }
 
     var weeklyViewButton: Button? = null
+    var yearViewButton: Button? = null
     var budgetViewButton: Button? = null
 
     override fun build(){
@@ -37,14 +38,22 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
                 .withPosition(Positions.create(0,1))
                 .build()
         weeklyViewButton!!.onMouseReleased { uIComponents.switchScreen(View.WEEKLY) }
+        this.yearViewButton = Components.button()
+                .withBoxType(BoxType.DOUBLE)
+                .wrapWithBox(false)
+                .withText("Year")
+                .withPosition(Positions.create(1,0).relativeToRightOf(weeklyViewButton!!))
+                .build()
+        yearViewButton!!.onMouseReleased { uIComponents.switchScreen(View.YEAR) }
         this.budgetViewButton = Components.button()
                 .withBoxType(BoxType.DOUBLE)
                 .wrapWithBox(false)
                 .withText("Budget")
-                .withPosition(Positions.create(1,0).relativeToRightOf(weeklyViewButton!!))
+                .withPosition(Positions.create(1,0).relativeToRightOf(yearViewButton!!))
                 .build()
         budgetViewButton!!.onMouseReleased { uIComponents.switchScreen(View.BUDGET) }
         this.panel!!.addComponent(weeklyViewButton!!)
+        this.panel!!.addComponent(yearViewButton!!)
         this.panel!!.addComponent(budgetViewButton!!)
     }
 

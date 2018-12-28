@@ -61,7 +61,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
         var budgetStateCurrentItemMap =
                 applicationStateBudgetAnalysis?.retrieveApplicableBudgetItemsForState(currentBudgetState!!)
         var budgetStateCurrentItemsList = budgetStateCurrentItemMap?.values?.sortedWith(compareBy({ it.due.dueDate}))
-        currentBudgetAnalysisStates = applicationStateBudgetAnalysis?.performAnalysisOnBudgetItems(budgetStateCurrentItemMap)
+        currentBudgetAnalysisStates = applicationStateBudgetAnalysis?.performAnalysisOnBudgetItems(budgetStateCurrentItemMap, currentBudgetState)
         this.panel!!.removeComponent(this!!.radioButtonGroup!!)
         radioButtonGroup = Components.radioButtonGroup()
                 .withPosition(Position.create(0,0).relativeToBottomOf(dividerLabel))

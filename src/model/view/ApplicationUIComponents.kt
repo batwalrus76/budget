@@ -12,6 +12,7 @@ import org.hexworks.zircon.api.screen.Screen
 import view.control.MainControlsPanel
 import view.screens.BudgetScreen
 import view.screens.WeeklyOverviewScreen
+import view.screens.YearPayPeriodBalancesScreen
 import kotlin.math.max
 import kotlin.math.min
 
@@ -19,6 +20,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                               var applicationState: ApplicationState){
 
     var weeklyOverviewScreen: WeeklyOverviewScreen? = null
+    var yearPayPeriodBalancesScreen: YearPayPeriodBalancesScreen? = null
     var budgetViewScreen:BudgetScreen? = null
     var currentView: View = View.WEEKLY
     var currentViewedBudgetState: BudgetState? = null
@@ -47,6 +49,9 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
         budgetViewScreen?.build()
         weeklyOverviewScreen?.build()
         weeklyOverviewScreen?.update()
+        var budgetAnalysis = applicationStateBudgetAnalysis?.performBudgetAnalysis()
+        yearPayPeriodBalancesScreen = YearPayPeriodBalancesScreen(fullScreenSize.width, fullScreenSize.height-4,
+                mainControlPanel?.panel!!,this, budgetAnalysis)
         weeklyOverviewScreen?.panel?.let { screen?.addComponent(it) }
         screen!!.applyColorTheme(ColorThemes.monokaiBlue())
         screen?.display()
@@ -55,30 +60,48 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     fun switchScreen(view: View): Screen? {
         when(view){
             View.WEEKLY -> {
+                tileGrid.clear()
+                screen = Screens.createScreenFor(tileGrid)
+                currentView = View.WEEKLY
                 if(currentView == View.BUDGET){
-                    tileGrid.clear()
-                    screen = Screens.createScreenFor(tileGrid)
-                    currentView = View.WEEKLY
                     budgetViewScreen?.panel?.let { screen?.removeComponent(it) }
-                    weeklyOverviewScreen?.build()
-                    weeklyOverviewScreen?.update()
-                    mainControlPanel?.panel?.let { screen?.addComponent(it) }
-                    weeklyOverviewScreen?.panel?.let { screen?.addComponent(it) }
-                    screen!!.display()
+                } else if(currentView == View.YEAR){
+                    yearPayPeriodBalancesScreen?.panel?.let { screen?.removeComponent(it) }
                 }
+                weeklyOverviewScreen?.build()
+                weeklyOverviewScreen?.update()
+                mainControlPanel?.panel?.let { screen?.addComponent(it) }
+                weeklyOverviewScreen?.panel?.let { screen?.addComponent(it) }
+                screen!!.display()
             }
             View.BUDGET -> {
+                tileGrid.clear()
+                screen = Screens.createScreenFor(tileGrid)
+                currentView = View.BUDGET
                 if(currentView == View.WEEKLY){
-                    tileGrid.clear()
-                    screen = Screens.createScreenFor(tileGrid)
-                    currentView = View.BUDGET
                     weeklyOverviewScreen?.panel?.let { screen?.removeComponent(it) }
-                    budgetViewScreen?.build()
-                    budgetViewScreen?.update()
-                    mainControlPanel?.panel?.let { screen?.addComponent(it) }
-                    budgetViewScreen?.panel?.let { screen?.addComponent(it) }
-                    screen!!.display()
+                } else if(currentView == View.YEAR){
+                    yearPayPeriodBalancesScreen?.panel?.let { screen?.removeComponent(it) }
                 }
+                budgetViewScreen?.build()
+                budgetViewScreen?.update()
+                mainControlPanel?.panel?.let { screen?.addComponent(it) }
+                budgetViewScreen?.panel?.let { screen?.addComponent(it) }
+                screen!!.display()
+            }
+            View.YEAR -> {
+                tileGrid.clear()
+                screen = Screens.createScreenFor(tileGrid)
+                currentView = View.YEAR
+                if(currentView == View.BUDGET){
+                    budgetViewScreen?.panel?.let { screen?.removeComponent(it) }
+                } else if(currentView == View.WEEKLY){
+                    weeklyOverviewScreen?.panel?.let { screen?.removeComponent(it) }
+                }
+                yearPayPeriodBalancesScreen?.update()
+                mainControlPanel?.panel?.let { screen?.addComponent(it) }
+                yearPayPeriodBalancesScreen?.panel?.let { screen?.addComponent(it) }
+                screen!!.display()
             }
         }
         return this.screen
@@ -118,6 +141,9 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
             }
             View.BUDGET -> {
                 budgetViewScreen?.update()
+            }
+            View.YEAR -> {
+                yearPayPeriodBalancesScreen?.update()
             }
         }
         return applicationState?.currentPayPeriodBudgetState

@@ -4,6 +4,7 @@ import model.state.ApplicationState
 import model.budget.BudgetAnalysisState
 import model.budget.BudgetItem
 import model.budget.BudgetState
+import model.core.DueDate
 import utils.DateTimeUtils
 
 class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
@@ -16,7 +17,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
                 applicationState.pastUnreconciledBudgetItems?.let {
                     reconcileApplicationBudgetState(currentBudgetState!!, it) }
         var currentBudgetAnalysisStates =
-                                performAnalysisOnBudgetItems(currentPayPeriodBudgetItems)
+                                performAnalysisOnBudgetItems(currentPayPeriodBudgetItems, currentBudgetState)
         if(currentBudgetAnalysisStates.isNotEmpty()) {
             var lastBudgetAnalysisState = currentBudgetAnalysisStates.last()
             budgetStatesAnalysisStatesMap[currentBudgetState] = currentBudgetAnalysisStates
@@ -44,16 +45,17 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
     fun retrieveApplicableBudgetItemsForState(budgetState: BudgetState): MutableMap<String, BudgetItem> {
         var budgetItems: MutableMap<String, BudgetItem> = HashMap()
         applicationState.budgetItems!!.forEach { name, budgetItem ->
-            if(budgetItem.validDueDateForBudgetState(budgetState!!)){
+            if(budgetItem.validForBudgetState(budgetState!!)){
                 budgetItems[name] = budgetItem
             }
         }
         return budgetItems
     }
 
-    fun performAnalysisOnBudgetItems(budgetItems: MutableMap<String, BudgetItem>?): MutableList<BudgetAnalysisState> {
+    fun performAnalysisOnBudgetItems(budgetItems: MutableMap<String, BudgetItem>?,
+                                     budgetState: BudgetState?): MutableList<BudgetAnalysisState> {
         var budgetAnalysisState = BudgetAnalysisState(applicationState)
-        var budgetAnalysisStates = analyzeBudgetItems(budgetAnalysisState, budgetItems)
+        var budgetAnalysisStates = analyzeBudgetItems(budgetAnalysisState, budgetItems, budgetState)
         return budgetAnalysisStates
     }
 
@@ -61,11 +63,12 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
                                    budgetState: BudgetState?): MutableList<BudgetAnalysisState> {
 
         val budgetItemsMap: MutableMap<String, BudgetItem> = retrieveApplicableBudgetItemsForState(budgetState!!)
-        return analyzeBudgetItems(lastBudgetAnalysisState, budgetItemsMap)
+        return analyzeBudgetItems(lastBudgetAnalysisState, budgetItemsMap, budgetState)
     }
 
     private fun analyzeBudgetItems(lastBudgetAnalysisState: BudgetAnalysisState?,
-                                   budgetItems: MutableMap<String, BudgetItem>?): MutableList<BudgetAnalysisState> {
+                                   budgetItems: MutableMap<String, BudgetItem>?,
+                                    budgetState: BudgetState?): MutableList<BudgetAnalysisState> {
         var budgetAnalysisStates = ArrayList<BudgetAnalysisState>()
         var budgetAnalysisState = lastBudgetAnalysisState?.copy()
         if(lastBudgetAnalysisState == null){
@@ -73,29 +76,31 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         }
         var orderedBudgetItems: List<BudgetItem>? = budgetItems?.values?.sortedWith(kotlin.comparisons.compareBy({ it.due.dueDate }))
         orderedBudgetItems?.forEach { budgetItem ->
-            budgetAnalysisState = budgetAnalysisState?.let { processBudgetItemBudgetAnalysisStateForAnalysis(it, budgetItem) }
+            budgetAnalysisState = budgetAnalysisState?.let { processBudgetItemBudgetAnalysisStateForAnalysis(it, budgetItem, budgetState) }
             budgetAnalysisState?.let { budgetAnalysisStates.add(it) }
         }
         return (budgetAnalysisStates.sortedWith(kotlin.comparisons.compareBy({ it.date }))).toMutableList()
     }
 
     private fun processBudgetItemBudgetAnalysisStateForAnalysis(budgetAnalysisState: BudgetAnalysisState,
-                                                                budgetItem: BudgetItem): BudgetAnalysisState {
+                                                                budgetItem: BudgetItem,
+                                                                budgetState: BudgetState?): BudgetAnalysisState {
         var newBudgetAnalysisState: BudgetAnalysisState = budgetAnalysisState.copy()
         newBudgetAnalysisState.date = budgetItem.due.dueDate
         newBudgetAnalysisState.budgetItem = budgetItem
+        var validDueDate: DueDate? = budgetItem.validDueDateForBudgetState(budgetState!!)
         newBudgetAnalysisState.checkingAccountBalance =
-                newBudgetAnalysisState.checkingAccountBalance?.plus(budgetItem.actualAmount)
+                newBudgetAnalysisState.checkingAccountBalance?.plus(validDueDate!!.amount)
         val transferringSavingsAccountName = budgetItem.transferredToSavingsAccountName
         if(transferringSavingsAccountName != null && !transferringSavingsAccountName.equals("null") &&
                 transferringSavingsAccountName.length>0){
             newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName] =
-                    newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName]!!.minus(budgetItem.actualAmount)
+                    newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName]!!.minus(validDueDate!!.amount)
         }
         val transferredCreditAccountName = budgetItem.transferredToCreditAccountName
         if(transferredCreditAccountName != null && !transferredCreditAccountName.equals("null") && transferredCreditAccountName.length>0){
             newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName] =
-                    newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName]!!.minus(budgetItem.actualAmount)
+                    newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName]!!.minus(validDueDate!!.amount)
         }
         return newBudgetAnalysisState
     }
