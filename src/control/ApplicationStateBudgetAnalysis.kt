@@ -89,18 +89,20 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         newBudgetAnalysisState.date = budgetItem.due.dueDate
         newBudgetAnalysisState.budgetItem = budgetItem
         var validDueDate: DueDate? = budgetItem.validDueDateForBudgetState(budgetState!!)
-        newBudgetAnalysisState.checkingAccountBalance =
-                newBudgetAnalysisState.checkingAccountBalance?.plus(validDueDate!!.amount)
-        val transferringSavingsAccountName = budgetItem.transferredToSavingsAccountName
-        if(transferringSavingsAccountName != null && !transferringSavingsAccountName.equals("null") &&
-                transferringSavingsAccountName.length>0){
-            newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName] =
-                    newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName]!!.minus(validDueDate!!.amount)
-        }
-        val transferredCreditAccountName = budgetItem.transferredToCreditAccountName
-        if(transferredCreditAccountName != null && !transferredCreditAccountName.equals("null") && transferredCreditAccountName.length>0){
-            newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName] =
-                    newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName]!!.minus(validDueDate!!.amount)
+        if (validDueDate != null) {
+            newBudgetAnalysisState.checkingAccountBalance =
+                    newBudgetAnalysisState.checkingAccountBalance?.plus(validDueDate.amount)
+            val transferringSavingsAccountName = budgetItem.transferredToSavingsAccountName
+            if(transferringSavingsAccountName != null && !transferringSavingsAccountName.equals("null") &&
+                    transferringSavingsAccountName.length>0){
+                newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName] =
+                        newBudgetAnalysisState.savingsAccountBalances!![transferringSavingsAccountName]!!.minus(validDueDate!!.amount)
+            }
+            val transferredCreditAccountName = budgetItem.transferredToCreditAccountName
+            if(transferredCreditAccountName != null && !transferredCreditAccountName.equals("null") && transferredCreditAccountName.length>0){
+                newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName] =
+                        newBudgetAnalysisState.creditAccountBalances!![transferredCreditAccountName]!!.minus(validDueDate!!.amount)
+            }
         }
         return newBudgetAnalysisState
     }

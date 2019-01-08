@@ -22,7 +22,7 @@ data class BudgetState(var startDate:LocalDate = previousFriday(currentDate()), 
     }
 
     fun isValidForDueDate(dueDate: LocalDate): Boolean {
-        return (dueDate.isAfter(startDate)&&dueDate.isBefore(endDate))
+        return ((dueDate.isAfter(startDate)||dueDate.isEqual(startDate))&&(dueDate.isBefore(endDate)||dueDate.isEqual(endDate)))
     }
 
     companion object {

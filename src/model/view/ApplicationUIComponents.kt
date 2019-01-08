@@ -2,17 +2,18 @@ package model.view
 
 import control.ApplicationStateBudgetAnalysis
 import control.ApplicationStateManager
+import model.budget.BudgetAnalysisState
 import model.state.ApplicationState
 import model.budget.BudgetState
 import model.enums.View
 import org.hexworks.zircon.api.*
+import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.screen.Screen
 import view.control.MainControlsPanel
-import view.screens.BudgetScreen
-import view.screens.WeeklyOverviewScreen
-import view.screens.YearPayPeriodBalancesScreen
+import view.screens.*
+import java.time.LocalDate
 import kotlin.math.max
 import kotlin.math.min
 
@@ -22,9 +23,14 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     var weeklyOverviewScreen: WeeklyOverviewScreen? = null
     var yearPayPeriodBalancesScreen: YearPayPeriodBalancesScreen? = null
     var budgetViewScreen:BudgetScreen? = null
+    var calendarDayScreen: CalendarDayScreen? = null
+    var calendarWeekScreen: CalendarWeekScreen? = null
+    var calendarMonthScreen: CalendarMonthScreen? = null
+    var calendarYearScreen: CalendarMonthScreen? = null
     var currentView: View = View.WEEKLY
     var currentViewedBudgetState: BudgetState? = null
     var budgetStateIndex = 0
+    var currentLocalDate = LocalDate.now()
     private val fullScreenSize: Size = Size.create(WIDTH, HEIGHT)
     var tileGrid = SwingApplications.startTileGrid(
             AppConfigs.newConfig()
@@ -33,7 +39,8 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                     .build())
     var screen: Screen? = Screens.createScreenFor(tileGrid)
     var mainControlPanel: MainControlsPanel? = null
-
+    var currentMainComponent: Component? = null
+    var budgetAnalysis = applicationStateBudgetAnalysis?.performBudgetAnalysis()
 
 
     fun build() {
@@ -42,16 +49,34 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
         mainControlPanel = MainControlsPanel(fullScreenSize.width, 4, this)
         mainControlPanel?.build()
         mainControlPanel?.panel?.let { screen?.addComponent(it) }
+
         weeklyOverviewScreen = WeeklyOverviewScreen(fullScreenSize.width, fullScreenSize.height-4,
                 mainControlPanel?.panel!!,this)
+
         budgetViewScreen = BudgetScreen(fullScreenSize.width, fullScreenSize.height-4,
                 mainControlPanel?.panel!!, this)
         budgetViewScreen?.build()
+
         weeklyOverviewScreen?.build()
         weeklyOverviewScreen?.update()
-        var budgetAnalysis = applicationStateBudgetAnalysis?.performBudgetAnalysis()
+
         yearPayPeriodBalancesScreen = YearPayPeriodBalancesScreen(fullScreenSize.width, fullScreenSize.height-4,
                 mainControlPanel?.panel!!,this, budgetAnalysis)
+        yearPayPeriodBalancesScreen!!.build()
+
+        calendarDayScreen = CalendarDayScreen(fullScreenSize.width, fullScreenSize.height-4,
+                                mainControlPanel?.panel!!,this)
+        calendarDayScreen!!.build()
+
+        calendarWeekScreen = CalendarWeekScreen(fullScreenSize.width, fullScreenSize.height-4,
+                mainControlPanel?.panel!!,this)
+        calendarWeekScreen!!.build()
+
+        calendarMonthScreen = CalendarMonthScreen(fullScreenSize.width, fullScreenSize.height-4,
+                mainControlPanel?.panel!!,this)
+        calendarMonthScreen!!.build()
+
+        currentMainComponent = weeklyOverviewScreen!!.panel
         weeklyOverviewScreen?.panel?.let { screen?.addComponent(it) }
         screen!!.applyColorTheme(ColorThemes.monokaiBlue())
         screen?.display()
@@ -103,6 +128,40 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                 yearPayPeriodBalancesScreen?.panel?.let { screen?.addComponent(it) }
                 screen!!.display()
             }
+            View.CALENDAR_DAY -> {
+                tileGrid.clear()
+                screen = Screens.createScreenFor(tileGrid)
+                currentView = View.CALENDAR_DAY
+                currentMainComponent?.let{ screen?.removeComponent(it)}
+                var appropriateBudgetAnalysisStates = findBudgetAnalysisStateForLocalDate(currentLocalDate)
+                appropriateBudgetAnalysisStates?.let { calendarDayScreen?.update(currentLocalDate, it) }
+                currentMainComponent = calendarDayScreen?.panel
+                mainControlPanel?.panel?.let { screen?.addComponent(it) }
+                calendarDayScreen?.panel?.let { screen?.addComponent(it) }
+                screen!!.display()
+            }
+            View.CALENDAR_WEEK -> {
+                tileGrid.clear()
+                screen = Screens.createScreenFor(tileGrid)
+                currentView = View.CALENDAR_WEEK
+                currentMainComponent?.let{ screen?.removeComponent(it)}
+                calendarWeekScreen?.update(currentLocalDate)
+                currentMainComponent = calendarWeekScreen?.panel
+                mainControlPanel?.panel?.let { screen?.addComponent(it) }
+                calendarWeekScreen?.panel?.let { screen?.addComponent(it) }
+                screen!!.display()
+            }
+            View.CALENDAR_MONTH -> {
+                tileGrid.clear()
+                screen = Screens.createScreenFor(tileGrid)
+                currentView = View.CALENDAR_MONTH
+                currentMainComponent?.let{ screen?.removeComponent(it)}
+                calendarMonthScreen?.update(currentLocalDate)
+                currentMainComponent = calendarMonthScreen?.panel
+                mainControlPanel?.panel?.let { screen?.addComponent(it) }
+                calendarMonthScreen?.panel?.let { screen?.addComponent(it) }
+                screen!!.display()
+            }
         }
         return this.screen
     }
@@ -145,6 +204,15 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
             View.YEAR -> {
                 yearPayPeriodBalancesScreen?.update()
             }
+            View.CALENDAR_DAY -> {
+                budgetAnalysis[currentViewedBudgetState]?.let { calendarDayScreen?.update(currentLocalDate, it) }
+            }
+            View.CALENDAR_WEEK -> {
+                calendarWeekScreen?.update(currentLocalDate)
+            }
+            View.CALENDAR_MONTH -> {
+                calendarMonthScreen?.update(currentLocalDate)
+            }
         }
         return applicationState?.currentPayPeriodBudgetState
     }
@@ -160,6 +228,20 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     fun display() {
         screen?.display()
     }
+
+    open fun findBudgetAnalysisStateForLocalDate(localDate: LocalDate):  MutableList<BudgetAnalysisState>? {
+        var budgetAnalysisStates = applicationStateBudgetAnalysis?.performBudgetAnalysis()
+        var localDateBudgetState = applicationState.findBudgetStateForLocalDate(localDate)
+        var budgetStateAnalysisStates =  budgetAnalysisStates[localDateBudgetState]
+        var applicableAnalysisStates = ArrayList<BudgetAnalysisState>()
+        budgetStateAnalysisStates?.forEach { budgetAnalysisState ->
+            if(budgetAnalysisState.date!!.equals(localDate)){
+                applicableAnalysisStates.add(budgetAnalysisState)
+            }
+        }
+        return applicableAnalysisStates
+    }
+
 
     companion object {
         val WIDTH: Int = 210

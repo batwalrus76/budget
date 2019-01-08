@@ -39,4 +39,9 @@ data class BudgetAnalysisState(var checkingAccountBalance: Double? = 0.0,
         return BudgetAnalysisState(checkingAccountBalance, savingsAccountBalances, creditAccountBalances, date, budgetItem)
     }
 
+    fun dueDateForLocalDate(localDate: LocalDate): Boolean {
+        var applicableDueDate = budgetItem?.dueDates?.find { it -> localDate.equals(localDate)}
+        return applicableDueDate == null
+    }
+
 }

@@ -10,6 +10,7 @@ import model.budget.BudgetState
 import model.budget.BudgetState.Companion.parseBudgetItemsMapFromJsonObject
 import java.io.File
 import java.io.StringReader
+import java.time.LocalDate
 import kotlin.Charsets
 
 data class ApplicationState(var checkingAccount: Account? = Account("Checking Account", 0.0),
@@ -70,6 +71,21 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking Ac
 
     fun deleteCreditAccount(creditAccount: Account){
         this.creditAccounts?.remove(creditAccount.name)
+    }
+
+    fun findBudgetStateForLocalDate(localDate: LocalDate): BudgetState? {
+        var appropriateBudgetState: BudgetState? = null
+        if(currentPayPeriodBudgetState!!.isValidForDueDate(localDate)){
+            appropriateBudgetState = currentPayPeriodBudgetState
+        } else {
+            futureBudgetStates.forEach { budgetState ->
+                if(appropriateBudgetState == null && budgetState.isValidForDueDate(localDate)){
+                    appropriateBudgetState = budgetState
+                    return appropriateBudgetState
+                }
+            }
+        }
+        return appropriateBudgetState
     }
 
     companion object {
