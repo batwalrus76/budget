@@ -87,15 +87,15 @@ data class BudgetItem @JvmOverloads constructor(
         for (nameLength in formattedNameStringBuilder.length..NAME_LENGTH){
             formattedNameStringBuilder.append(' ')
         }
-        var scheduledAmountStringBuilder = StringBuilder(""+scheduledAmount)
-        for (nameLength in scheduledAmountStringBuilder.length..AMOUNT_LENGTH){
-            scheduledAmountStringBuilder.append(' ')
+        var amountStringBuilder = StringBuilder(""+date?.amount)
+        for (nameLength in amountStringBuilder.length..AMOUNT_LENGTH){
+            amountStringBuilder.append(' ')
         }
         var transferString = "[x]"
         if(transferredToCreditAccountName.equals("null") && transferredToSavingsAccountName.equals("null")){
             transferString = "[ ]"
         }
-        return "| ${autopayString}  | ${requiredString}\t| ${date?.dueDate}\t | ${formattedNameStringBuilder.substring(0, NAME_LENGTH)} | ${transferString}  | ${scheduledAmountStringBuilder} "
+        return "| ${autopayString}  | ${requiredString}\t| ${date?.dueDate}\t | ${formattedNameStringBuilder.substring(0, NAME_LENGTH)} | ${transferString}  | ${amountStringBuilder} "
     }
 
     fun serializeBudgetItemToJson(): String {

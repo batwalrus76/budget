@@ -26,7 +26,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     var calendarDayScreen: CalendarDayScreen? = null
     var calendarWeekScreen: CalendarWeekScreen? = null
     var calendarMonthScreen: CalendarMonthScreen? = null
-    var calendarYearScreen: CalendarMonthScreen? = null
+    var calendarYearScreen: CalendarYearScreen? = null
     var currentView: View = View.WEEKLY
     var currentViewedBudgetState: BudgetState? = null
     var budgetStateIndex = 0
@@ -76,6 +76,10 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                 mainControlPanel?.panel!!,this)
         calendarMonthScreen!!.build()
 
+        calendarYearScreen = CalendarYearScreen(fullScreenSize.width, fullScreenSize.height-4,
+                mainControlPanel?.panel!!,this)
+        calendarYearScreen!!.build()
+
         currentMainComponent = weeklyOverviewScreen!!.panel
         weeklyOverviewScreen?.panel?.let { screen?.addComponent(it) }
         screen!!.applyColorTheme(ColorThemes.monokaiBlue())
@@ -88,13 +92,10 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                 tileGrid.clear()
                 screen = Screens.createScreenFor(tileGrid)
                 currentView = View.WEEKLY
-                if(currentView == View.BUDGET){
-                    budgetViewScreen?.panel?.let { screen?.removeComponent(it) }
-                } else if(currentView == View.YEAR){
-                    yearPayPeriodBalancesScreen?.panel?.let { screen?.removeComponent(it) }
-                }
+                currentMainComponent?.let{ screen?.removeComponent(it)}
                 weeklyOverviewScreen?.build()
                 weeklyOverviewScreen?.update()
+                currentMainComponent = weeklyOverviewScreen?.panel
                 mainControlPanel?.panel?.let { screen?.addComponent(it) }
                 weeklyOverviewScreen?.panel?.let { screen?.addComponent(it) }
                 screen!!.display()
@@ -103,13 +104,10 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                 tileGrid.clear()
                 screen = Screens.createScreenFor(tileGrid)
                 currentView = View.BUDGET
-                if(currentView == View.WEEKLY){
-                    weeklyOverviewScreen?.panel?.let { screen?.removeComponent(it) }
-                } else if(currentView == View.YEAR){
-                    yearPayPeriodBalancesScreen?.panel?.let { screen?.removeComponent(it) }
-                }
+                currentMainComponent?.let{ screen?.removeComponent(it)}
                 budgetViewScreen?.build()
                 budgetViewScreen?.update()
+                currentMainComponent = budgetViewScreen?.panel
                 mainControlPanel?.panel?.let { screen?.addComponent(it) }
                 budgetViewScreen?.panel?.let { screen?.addComponent(it) }
                 screen!!.display()
@@ -118,12 +116,9 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                 tileGrid.clear()
                 screen = Screens.createScreenFor(tileGrid)
                 currentView = View.YEAR
-                if(currentView == View.BUDGET){
-                    budgetViewScreen?.panel?.let { screen?.removeComponent(it) }
-                } else if(currentView == View.WEEKLY){
-                    weeklyOverviewScreen?.panel?.let { screen?.removeComponent(it) }
-                }
+                currentMainComponent?.let{ screen?.removeComponent(it)}
                 yearPayPeriodBalancesScreen?.update()
+                currentMainComponent = yearPayPeriodBalancesScreen?.panel
                 mainControlPanel?.panel?.let { screen?.addComponent(it) }
                 yearPayPeriodBalancesScreen?.panel?.let { screen?.addComponent(it) }
                 screen!!.display()
@@ -160,6 +155,17 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                 currentMainComponent = calendarMonthScreen?.panel
                 mainControlPanel?.panel?.let { screen?.addComponent(it) }
                 calendarMonthScreen?.panel?.let { screen?.addComponent(it) }
+                screen!!.display()
+            }
+            View.CALENDAR_YEAR -> {
+                tileGrid.clear()
+                screen = Screens.createScreenFor(tileGrid)
+                currentView = View.CALENDAR_YEAR
+                currentMainComponent?.let{ screen?.removeComponent(it)}
+                calendarYearScreen?.update(currentLocalDate)
+                currentMainComponent = calendarYearScreen?.panel
+                mainControlPanel?.panel?.let { screen?.addComponent(it) }
+                calendarYearScreen?.panel?.let { screen?.addComponent(it) }
                 screen!!.display()
             }
         }
@@ -212,6 +218,9 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
             }
             View.CALENDAR_MONTH -> {
                 calendarMonthScreen?.update(currentLocalDate)
+            }
+            View.CALENDAR_YEAR -> {
+                calendarYearScreen?.update(currentLocalDate)
             }
         }
         return applicationState?.currentPayPeriodBudgetState

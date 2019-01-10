@@ -61,7 +61,7 @@ class WeeklyOverviewScreen(var width: Int, var height: Int, var component: Compo
 
     fun update(): BudgetState {
         currentViewedBudgetState = uiComponents.currentViewedBudgetState
-        budgetAnalysis = uiComponents.applicationStateBudgetAnalysis?.performBudgetAnalysis()
+        //budgetAnalysis = uiComponents.applicationStateBudgetAnalysis?.performBudgetAnalysis()
         val currentBudgetAnalysisStates = budgetAnalysis?.get(currentViewedBudgetState)
         budgetStatePanel?.update(currentBudgetAnalysisStates)
         if(currentBudgetAnalysisStates != null && currentBudgetAnalysisStates!!.isNotEmpty()) {

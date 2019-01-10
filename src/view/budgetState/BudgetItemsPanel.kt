@@ -60,8 +60,11 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
         var applicationStateBudgetAnalysis =  uiComponents.applicationStateBudgetAnalysis
         var budgetStateCurrentItemMap =
                 applicationStateBudgetAnalysis?.retrieveApplicableBudgetItemsForState(currentBudgetState!!)
-        var budgetStateCurrentItemsList = budgetStateCurrentItemMap?.values?.sortedWith(compareBy({ it.due.dueDate}))
-        currentBudgetAnalysisStates = applicationStateBudgetAnalysis?.performAnalysisOnBudgetItems(budgetStateCurrentItemMap, currentBudgetState)
+        var budgetStateCurrentItemsList = budgetStateCurrentItemMap?.values?.sortedWith(compareBy { budgetItem ->
+            budgetItem.validDueDateForBudgetState(currentBudgetState!!)!!.dueDate
+        }
+        )
+        currentBudgetAnalysisStates = uiComponents.applicationStateBudgetAnalysis?.performBudgetAnalysis().get(currentBudgetState)
         this.panel!!.removeComponent(this!!.radioButtonGroup!!)
         radioButtonGroup = Components.radioButtonGroup()
                 .withPosition(Position.create(0,0).relativeToBottomOf(dividerLabel))
@@ -76,9 +79,11 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
             currentBudgetAnalysisStates?.forEach { associatedBudgetAnalysisState ->
                 if(associatedBudgetAnalysisState.budgetItem?.name.equals(u.name)){
                     budgetItemCheckingAccountBalance = associatedBudgetAnalysisState.checkingAccountBalance
-                    var budgetItemText = "    "+u.toNarrowString(associatedBudgetAnalysisState.date) +
+                    val budgetItem = associatedBudgetAnalysisState.budgetItem
+                    var dueDate = budgetItem!!.validDueDateForBudgetState(currentBudgetState!!)
+                    var budgetItemText = "    "+u.toNarrowString(dueDate) +
                             String.format("|    %.2f   ", budgetItemCheckingAccountBalance)
-                    associatedBudgetAnalysisState.budgetItem?.name?.let { radioButtonGroup!!.addOption(it,budgetItemText) }
+                    budgetItem?.name?.let { radioButtonGroup!!.addOption(it,budgetItemText) }
                 }
             }
         }

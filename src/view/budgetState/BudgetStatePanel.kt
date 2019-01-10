@@ -89,15 +89,15 @@ class BudgetStatePanel(var width: Int, var height: Int, var uiComponents: Applic
 
     fun update(currentBudgetAnalysisStates: MutableList<BudgetAnalysisState>?) {
         var budgetState: BudgetState = uiComponents.currentViewedBudgetState!!
+        this!!.startDateLabel?.let { panel!!.removeComponent(it) }
+        this!!.endDateLabel?.let { panel!!.removeComponent(it) }
         this.startDate = budgetState.startDate!!
         this.endDate = budgetState.endDate!!
-        this!!.startDateLabel?.let { panel!!.removeComponent(it) }
         this.startDateLabel = Components.label()
                 .withText("Start Date: ${startDate.format(DateTimeFormatter.ISO_DATE)}")
                 .withPosition(Position.offset1x1())
                 .build()
         panel?.addComponent(startDateLabel!!)
-        this!!.endDateLabel?.let { panel!!.removeComponent(it) }
         this.endDateLabel = Components.label()
                 .withText("End Date: ${endDate.format(DateTimeFormatter.ISO_DATE)}")
                 .withPosition(Position.create(0,-1).relativeToRightOf(startDateLabel!!))

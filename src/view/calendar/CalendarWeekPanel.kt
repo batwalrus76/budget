@@ -10,7 +10,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 class CalendarWeekPanel(var width: Int, var height: Int, var uiComponents: ApplicationUIComponents,
-                        var position: Position = Positions.create(0,0),
+                        var position: Position = Positions.create(0,0), var showDayOfWeekLabel:Boolean = true,
                         var selectedLocalDate:LocalDate = LocalDate.now()) {
 
     var panel: Panel? = Components.panel()
@@ -24,26 +24,31 @@ class CalendarWeekPanel(var width: Int, var height: Int, var uiComponents: Appli
 
     var fridayDayPosition = Positions.create(0,0)
     var fridayDayPanel = CalendarDayPanel(seventhWidth, height, uiComponents, true,
-            fridayDayPosition, true, currentWeekLocalStartDate).build()
-    var saturdayDayPosition = Positions.create(0,0).relativeToRightOf(fridayDayPanel.panel!!)
-    var saturdayDayPanel = CalendarDayPanel(seventhWidth, height, uiComponents,
-                true, saturdayDayPosition, true, currentWeekLocalStartDate.plusDays(1L)).build()
-    var mondayDayPosition =Positions.create(0,0).relativeToRightOf(saturdayDayPanel.panel!!)
+            fridayDayPosition, showDayOfWeekLabel, currentWeekLocalStartDate).build()
+    var saturdaySundayDayPosition = Positions.create(0,0).relativeToRightOf(fridayDayPanel.panel!!)
+    var saturdaySundayDayPanel = CalendarDayPanel(seventhWidth, height, uiComponents,
+                true, saturdaySundayDayPosition, showDayOfWeekLabel,
+            currentWeekLocalStartDate.plusDays(1L),"Sat/Sun").build()
+    var mondayDayPosition =Positions.create(0,0).relativeToRightOf(saturdaySundayDayPanel.panel!!)
     var mondayDayPanel = CalendarDayPanel(seventhWidth, height, uiComponents, true,
-            mondayDayPosition, true, currentWeekLocalStartDate.plusDays(3L)).build()
+            mondayDayPosition, showDayOfWeekLabel,
+            currentWeekLocalStartDate.plusDays(3L)).build()
     var tuesdayDayPosition = Positions.create(0,0).relativeToRightOf(mondayDayPanel.panel!!)
     var tuesdayDayPanel = CalendarDayPanel(seventhWidth, height, uiComponents, true,
-            tuesdayDayPosition, true, currentWeekLocalStartDate.plusDays(4L)).build()
+            tuesdayDayPosition, showDayOfWeekLabel,
+            currentWeekLocalStartDate.plusDays(4L)).build()
     var wednesdayDayPosition = Positions.create(0,0).relativeToRightOf(tuesdayDayPanel.panel!!)
     var wednesdayDayPanel = CalendarDayPanel(seventhWidth, height, uiComponents, true,
-            wednesdayDayPosition, true, currentWeekLocalStartDate.plusDays(5L)).build()
+            wednesdayDayPosition, showDayOfWeekLabel,
+            currentWeekLocalStartDate.plusDays(5L)).build()
     var thursdayDayPosition = Positions.create(0,0).relativeToRightOf(wednesdayDayPanel.panel!!)
     var thursdayDayPanel = CalendarDayPanel(seventhWidth, height, uiComponents, true,
-            thursdayDayPosition, true, currentWeekLocalStartDate.plusDays(6L)).build()
+            thursdayDayPosition, showDayOfWeekLabel,
+            currentWeekLocalStartDate.plusDays(6L)).build()
 
     fun build():CalendarWeekPanel {
         panel?.addComponent(fridayDayPanel.panel!!)
-        panel?.addComponent(saturdayDayPanel.panel!!)
+        panel?.addComponent(saturdaySundayDayPanel.panel!!)
         panel?.addComponent(mondayDayPanel.panel!!)
         panel?.addComponent(tuesdayDayPanel.panel!!)
         panel?.addComponent(wednesdayDayPanel.panel!!)
@@ -52,13 +57,19 @@ class CalendarWeekPanel(var width: Int, var height: Int, var uiComponents: Appli
     }
 
     fun update(selectedDate: LocalDate){
+        if(showDayOfWeekLabel){
+            showDayOfWeekLabel = true
+        }
         selectedLocalDate = selectedDate
         currentWeekLocalStartDate = determineCurrentWeekLocalStartDate(selectedLocalDate)
         uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate)?.let {
             fridayDayPanel.update(currentWeekLocalStartDate, it)
         }
-        uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(1L))?.let {
-            saturdayDayPanel?.update(currentWeekLocalStartDate.plusDays(1L), it)
+        var weekendBudgetAnalysisStates =
+                uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(1L))
+        weekendBudgetAnalysisStates!!.addAll(uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(2L))!!)
+        weekendBudgetAnalysisStates.let {
+            saturdaySundayDayPanel?.update(currentWeekLocalStartDate.plusDays(1L), it)
         }
         uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(3L))?.let {
             mondayDayPanel?.update(currentWeekLocalStartDate.plusDays(3L), it)
@@ -99,6 +110,7 @@ class CalendarWeekPanel(var width: Int, var height: Int, var uiComponents: Appli
             }
             return currentWeekLocalStartDate
         }
+
     }
 
 }
