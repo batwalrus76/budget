@@ -60,7 +60,7 @@ class CalendarWeekPanel(var width: Int, var height: Int, var uiComponents: Appli
         if(showDayOfWeekLabel){
             showDayOfWeekLabel = true
         }
-        selectedLocalDate = selectedDate
+        selectedLocalDate = LocalDate.of(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth)
         currentWeekLocalStartDate = determineCurrentWeekLocalStartDate(selectedLocalDate)
         uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate)?.let {
             fridayDayPanel.update(currentWeekLocalStartDate, it)

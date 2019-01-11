@@ -34,7 +34,7 @@ class CalendarDayScreen(var width: Int, var height: Int, var component: Componen
 
     fun update(localDate: LocalDate, budgetAnalysisStates: MutableList<BudgetAnalysisState>){
         var appropriateBudgetAnalysisStates = budgetAnalysisStates.filter {
-            it.dueDateForLocalDate(localDate)
+            it.date!!.equals(localDate)
         }
         calendarDayPanel.update(localDate, appropriateBudgetAnalysisStates.toMutableList())
     }

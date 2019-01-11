@@ -6,6 +6,7 @@ import model.budget.BudgetItem
 import model.budget.BudgetState
 import model.core.DueDate
 import utils.DateTimeUtils
+import java.time.LocalDate
 
 class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
 
@@ -18,15 +19,25 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
                     reconcileApplicationBudgetState(currentBudgetState!!, it) }
         var currentBudgetAnalysisStates =
                                 performAnalysisOnBudgetItems(currentPayPeriodBudgetItems, currentBudgetState)
+        var lastBudgetAnalysisState = BudgetAnalysisState()
         if(currentBudgetAnalysisStates.isNotEmpty()) {
-            var lastBudgetAnalysisState = currentBudgetAnalysisStates.last()
-            budgetStatesAnalysisStatesMap[currentBudgetState] = currentBudgetAnalysisStates
-            applicationState.futureBudgetStates?.let {
-                it.forEach { budgetState ->
-                    var budgetStateAnalysisStates = analyzeBudgetState(lastBudgetAnalysisState, budgetState)
-                    budgetStatesAnalysisStatesMap[budgetState] = budgetStateAnalysisStates
-                    lastBudgetAnalysisState = budgetStateAnalysisStates.last()
-                }
+            lastBudgetAnalysisState = currentBudgetAnalysisStates.last()
+        } else {
+            lastBudgetAnalysisState.checkingAccountBalance = applicationState.checkingAccount?.balance
+            lastBudgetAnalysisState.date = LocalDate.now()
+            applicationState.creditAccounts?.map {
+                lastBudgetAnalysisState.creditAccountBalances?.put(it.key, it.value.balance)
+            }
+            applicationState.savingsAccounts?.map {
+                lastBudgetAnalysisState.savingsAccountBalances?.put(it.key, it.value.balance)
+            }
+        }
+        budgetStatesAnalysisStatesMap[currentBudgetState] = currentBudgetAnalysisStates
+        applicationState.futureBudgetStates?.let {
+            it.forEach { budgetState ->
+                var budgetStateAnalysisStates = analyzeBudgetState(lastBudgetAnalysisState, budgetState)
+                budgetStatesAnalysisStatesMap[budgetState] = budgetStateAnalysisStates
+                lastBudgetAnalysisState = budgetStateAnalysisStates.last()
             }
         }
         return budgetStatesAnalysisStatesMap
@@ -86,9 +97,9 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
                                                                 budgetItem: BudgetItem,
                                                                 budgetState: BudgetState?): BudgetAnalysisState {
         var newBudgetAnalysisState: BudgetAnalysisState = budgetAnalysisState.copy()
-        newBudgetAnalysisState.date = budgetItem.due.dueDate
         newBudgetAnalysisState.budgetItem = budgetItem
         var validDueDate: DueDate? = budgetItem.validDueDateForBudgetState(budgetState!!)
+        newBudgetAnalysisState.date = validDueDate?.dueDate
         if (validDueDate != null) {
             newBudgetAnalysisState.checkingAccountBalance =
                     newBudgetAnalysisState.checkingAccountBalance?.plus(validDueDate.amount)

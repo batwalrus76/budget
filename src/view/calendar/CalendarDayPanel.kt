@@ -1,15 +1,20 @@
 package view.calendar
 
 import model.budget.BudgetAnalysisState
+import model.enums.View
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
+import org.hexworks.zircon.api.component.Button
 import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.component.RadioButtonGroup
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
+import org.hexworks.zircon.api.input.MouseAction
+import org.hexworks.zircon.api.kotlin.onMouseReleased
+import org.hexworks.zircon.api.util.Consumer
 import java.time.LocalDate
 
 class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: ApplicationUIComponents,
@@ -17,13 +22,7 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
                        var currentLocalDate:LocalDate = LocalDate.now(), var title:String = currentLocalDate.dayOfWeek.toString()) {
 
     var panel: Panel? = null
-    var dateLabel = Components.label()
-            .withText(currentLocalDate.dayOfMonth.toString())
-            .withSize(dateLabelSize)
-            .withPosition(dateLabelPosition)
-            .withBoxType(BoxType.BASIC)
-            .build()
-    var dateLabelPanel: Panel? = null
+    var dateLabelButton: Button? = null
     var budgetAnalysisStatesPanel: Panel? = null
     var dayOfWeekLabel: Label? = null
     var headerLabel: Label? = null
@@ -32,31 +31,30 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
     var balanceLabel: Label? = null
 
     fun update(localDate: LocalDate, budgetAnalysisStates: MutableList<BudgetAnalysisState>){
-        if(localDate != null && budgetAnalysisStates != null && budgetAnalysisStates.size > 0){
-            currentLocalDate = localDate
-            dateLabelPanel?.removeComponent(dateLabel!!)
-            dateLabel = Components.label()
+        if(localDate != null && budgetAnalysisStates != null){
+            currentLocalDate = LocalDate.of(localDate.year, localDate.month, localDate.dayOfMonth)
+            this.dateLabelButton?.let { panel?.removeComponent(it) }
+            dateLabelButton = Components.button()
                     .withText(currentLocalDate.dayOfMonth.toString())
-                    .withSize(dateLabelSize)
-                    .withPosition(dateLabelPosition)
                     .withBoxType(BoxType.BASIC)
                     .build()
-            dateLabelPanel?.addComponent(dateLabel!!)
+            dateLabelButton!!.onMouseReleased {
+                uiComponents.updateDate(currentLocalDate, View.CALENDAR_DAY)
+            }
+            this.dateLabelButton?.let { panel?.addComponent(it) }
             if(showDayOfWeekLabel) {
                 dayOfWeekLabel = Components.label()
                         .withText(title)
-                        .withSize(Sizes.create(width - (dateLabel.width + 5), DAY_LABEL_HEIGHT))
-                        .withPosition(Positions.create(1, 0).relativeToRightOf(dateLabel))
-                        .withBoxType(BoxType.BASIC)
+                        .withPosition(Positions.create(1, -1).relativeToRightOf(dateLabelButton!!))
                         .build()
             }
             var availableLines = height - (DAY_LABEL_HEIGHT + 2)
-            if(availableLines > 4) {
+            if( budgetAnalysisStates.size > 0 && availableLines > 4) {
                 if(budgetAnalysisStatesPanel == null) {
                     budgetAnalysisStatesPanel = Components.panel()
                             .withSize(Sizes.create(width - 3, availableLines - 2))
                             .wrapWithShadow(false) // shadow can be added
-                            .withPosition(Positions.create(0, 0).relativeToBottomOf(dateLabelPanel!!))
+                            .withPosition(Positions.create(0, 0).relativeToBottomOf(dateLabelButton!!))
                             .build()
                     budgetAnalysisStatesPanel?.let { panel!!.addComponent(it) }
                 }
@@ -121,23 +119,17 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
                 .wrapWithShadow(false) // shadow can be added
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
                 .withPosition(position).build()
-        var dateLabelPanelBuilder = Components.panel()
-                .withSize(Sizes.create(2, 1))
-                .wrapWithShadow(false) // shadow can be added
-                .withPosition(dateLabelPanelPosition)
-        if(height > DAY_LABEL_HEIGHT+2 && width > DAY_LABEL_WIDTH+2){
-            dateLabelPanelBuilder.withSize(Sizes.create(4, 3))
-            dateLabelPanelBuilder.wrapWithBox(true) // panels can be wrapped in a box
-        }
-        dateLabelPanel = dateLabelPanelBuilder.build()
-        dateLabelPanel!!.addComponent(dateLabel)
-        panel!!.addComponent(dateLabelPanel!!)
+        this.dateLabelButton?.let { panel?.removeComponent(it) }
+        dateLabelButton = Components.button()
+                .withText(currentLocalDate.dayOfMonth.toString())
+                .withBoxType(BoxType.BASIC)
+                .build()
+        this.dateLabelButton?.let { panel?.addComponent(it) }
         if(showDayOfWeekLabel) {
+            this.dayOfWeekLabel?.let { panel?.removeComponent(it) }
             dayOfWeekLabel = Components.label()
                     .withText(title)
-                    .withSize(Sizes.create(width - (dateLabel.width + 5), DAY_LABEL_HEIGHT))
-                    .withPosition(Positions.create(1, 0).relativeToRightOf(dateLabel))
-                    .withBoxType(BoxType.BASIC)
+                    .withPosition(Positions.create(1, -1).relativeToRightOf(dateLabelButton!!))
                     .build()
             panel!!.addComponent(dayOfWeekLabel!!)
         }
@@ -146,7 +138,7 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
             budgetAnalysisStatesPanel = Components.panel()
                     .withSize(Sizes.create(width - 3, availableLines - 3))
                     .wrapWithShadow(false) // shadow can be added
-                    .withPosition(Positions.create(0, 0).relativeToBottomOf(dateLabelPanel!!))
+                    .withPosition(Positions.create(0, 0).relativeToBottomOf(dateLabelButton!!))
                     .build()
             budgetAnalysisStatesPanel?.let { panel!!.addComponent(it) }
         }
@@ -171,9 +163,6 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
     companion object {
         val DAY_LABEL_WIDTH = 2
         val DAY_LABEL_HEIGHT = 1
-        val dateLabelSize = Sizes.create(DAY_LABEL_WIDTH, DAY_LABEL_HEIGHT)
-        val dateLabelPosition = Positions.create(0,0)
-        val dateLabelPanelPosition = Positions.create(0,0)
         var headerString = "         Name      | Amount   | Balance "
         var dividerString = "    ---------------|----------|--------"
         var bottomDividerString = "    -----------------------------------"

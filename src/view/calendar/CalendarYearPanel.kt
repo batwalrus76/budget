@@ -52,7 +52,7 @@ class CalendarYearPanel (var width: Int, var height: Int, var uiComponents: Appl
             }
             buildPanelComponents()
         }
-        selectedLocalDate = selectedDate
+        selectedLocalDate = LocalDate.of(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth)
     }
 
     fun build():CalendarYearPanel{

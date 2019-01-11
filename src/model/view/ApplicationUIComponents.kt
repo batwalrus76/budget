@@ -198,6 +198,11 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
         screen?.clear()
     }
 
+    fun updateDate(newLocalDate: LocalDate, newView: View=currentView){
+        this.currentLocalDate = newLocalDate
+        switchScreen(newView)
+    }
+
     fun update(): BudgetState? {
         ApplicationStateManager.serializeToDefaultJsonFileLocation(applicationState)
         when(currentView) {
