@@ -125,6 +125,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 .build()
         submitButton.onMouseReleased {
             mouseAction ->
+            processBudgetItemFields()
             var updatedBudgetItem = itemConfigurationPanel!!.generateItem()
             updatedBudgetItem.fillOutDueDates()
             updateBudgetItem(updatedBudgetItem.name, updatedBudgetItem)
@@ -138,6 +139,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 .withPosition(Positions.create(0,1).relativeToBottomOf(submitButton))
                 .build()
         reconcileButton.onMouseReleased {
+            processBudgetItemFields()
             reconcileBudgetItem(itemConfigurationPanel!!.name)
         }
         newPanel.addComponent(reconcileButton)
@@ -147,6 +149,7 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 .withPosition(Positions.create(0,1).relativeToBottomOf(reconcileButton))
                 .build()
         deleteButton.onMouseReleased {
+            processBudgetItemFields()
             deleteBudgetItem(itemConfigurationPanel!!.name)
         }
         newPanel.addComponent(deleteButton)
@@ -155,6 +158,11 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
         selectedDueDatePanel!!.build()
         selectedDueDatePanel!!.panel?.let { newPanel!!.addComponent(it) }
         uiComponents.updateInputScreen(newPanel)
+    }
+
+
+    fun processBudgetItemFields(){
+
     }
 
     private fun reconcileBudgetItem(name: String) {

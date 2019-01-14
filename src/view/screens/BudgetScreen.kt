@@ -9,23 +9,20 @@ import view.budget.AddHypotheticalItemPanel
 import view.budget.MonthlyBudgetPanel
 import view.budget.YearlyBudgetPanel
 
-class BudgetScreen(var width: Int, var height: Int, var component: Component, var uiComponents: ApplicationUIComponents){
+class BudgetScreen(width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
+    BaseScreen(width, height, uiComponents){
 
-    var panel: Panel? = Components.panel()
-            .wrapWithBox(false) // panels can be wrapped in a box
-            .wrapWithShadow(false) // shadow can be added
-            .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
-            .withPosition(Positions.create(0,0).relativeToBottomOf(component))
-            .build()
     var monthlyBudgetPanel: MonthlyBudgetPanel? = null
     var yearlyBudgetPanel: YearlyBudgetPanel? = null
     var addHypotheticalItemPanel: AddHypotheticalItemPanel? = null
 
-    fun update(): BudgetState {
-        return uiComponents.currentViewedBudgetState!!
-    }
-
-    fun build() {
+    override fun build() {
+        panel = Components.panel()
+                .wrapWithBox(false) // panels can be wrapped in a box
+                .wrapWithShadow(false) // shadow can be added
+                .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
+                .withPosition(Positions.create(0,0).relativeToBottomOf(component))
+                .build()
         panel!!.children.forEach { child -> panel!!.removeComponent(child) }
         monthlyBudgetPanel = MonthlyBudgetPanel(width, (2*height/5+1), uiComponents.applicationState!!)
         monthlyBudgetPanel!!.build()

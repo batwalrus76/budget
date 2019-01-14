@@ -31,7 +31,13 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
     var balanceLabel: Label? = null
 
     fun update(localDate: LocalDate, budgetAnalysisStates: MutableList<BudgetAnalysisState>){
-        if(localDate != null && budgetAnalysisStates != null){
+        panel = Components.panel()
+                .wrapWithBox(displayBox) // panels can be wrapped in a box
+                .wrapWithShadow(false) // shadow can be added
+                .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
+                .withPosition(position)
+                .build()
+        if(localDate != null && budgetAnalysisStates != null) {
             currentLocalDate = LocalDate.of(localDate.year, localDate.month, localDate.dayOfMonth)
             this.dateLabelButton?.let { panel?.removeComponent(it) }
             dateLabelButton = Components.button()
@@ -42,15 +48,15 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
                 uiComponents.updateDate(currentLocalDate, View.CALENDAR_DAY)
             }
             this.dateLabelButton?.let { panel?.addComponent(it) }
-            if(showDayOfWeekLabel) {
+            if (showDayOfWeekLabel) {
                 dayOfWeekLabel = Components.label()
                         .withText(title)
                         .withPosition(Positions.create(1, -1).relativeToRightOf(dateLabelButton!!))
                         .build()
             }
             var availableLines = height - (DAY_LABEL_HEIGHT + 2)
-            if( budgetAnalysisStates.size > 0 && availableLines > 4) {
-                if(budgetAnalysisStatesPanel == null) {
+            if (budgetAnalysisStates.size > 0 && availableLines > 4) {
+                if (budgetAnalysisStatesPanel == null) {
                     budgetAnalysisStatesPanel = Components.panel()
                             .withSize(Sizes.create(width - 3, availableLines - 2))
                             .wrapWithShadow(false) // shadow can be added
@@ -64,19 +70,23 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
                 var budgetAnalysisStatesRadioButtonGroup =
                         createBudgetAnalysisStatesRadioButtonGroup(budgetAnalysisStates, availableLines)
                 budgetAnalysisStatesRadioButtonGroup?.let { budgetAnalysisStatesPanel!!.addComponent(it) }
-                budgetAnalysisStatesRadioButtonGroup?.let{bottomDividerLabel = Components.label()
-                        .withText(bottomDividerString.substring(0,Math.min(dividerString.length, width-3)))
-                        .withSize(Sizes.create(width-3, 1))
-                        .withPosition(Positions.create(0, 0).relativeToBottomOf(it))
-                        .build()}
+                budgetAnalysisStatesRadioButtonGroup?.let {
+                    bottomDividerLabel = Components.label()
+                            .withText(bottomDividerString.substring(0, Math.min(dividerString.length, width - 3)))
+                            .withSize(Sizes.create(width - 3, 1))
+                            .withPosition(Positions.create(0, 0).relativeToBottomOf(it))
+                            .build()
+                }
                 budgetAnalysisStatesPanel!!.addComponent(bottomDividerLabel!!)
-                var balanceString = String.format("%.2f",budgetAnalysisStates.last().checkingAccountBalance)
-                var balancePadding = "                            ".substring(0, 27-balanceString.length)
-                bottomDividerLabel?.let{balanceLabel = Components.label()
-                        .withText(balancePadding+balanceString)
-                        .withSize(Sizes.create(width-7, 1))
-                        .withPosition(Positions.create(4, 0).relativeToBottomOf(it))
-                        .build()}
+                var balanceString = String.format("%.2f", budgetAnalysisStates.last().checkingAccountBalance)
+                var balancePadding = "                            ".substring(0, 27 - balanceString.length)
+                bottomDividerLabel?.let {
+                    balanceLabel = Components.label()
+                            .withText(balancePadding + balanceString)
+                            .withSize(Sizes.create(width - 7, 1))
+                            .withPosition(Positions.create(4, 0).relativeToBottomOf(it))
+                            .build()
+                }
                 budgetAnalysisStatesPanel!!.addComponent(balanceLabel!!)
             }
         }
@@ -134,7 +144,7 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
             panel!!.addComponent(dayOfWeekLabel!!)
         }
         var availableLines = height - (DAY_LABEL_HEIGHT + 2)
-        if(availableLines > 0) {
+        if(availableLines > 3) {
             budgetAnalysisStatesPanel = Components.panel()
                     .withSize(Sizes.create(width - 3, availableLines - 3))
                     .wrapWithShadow(false) // shadow can be added

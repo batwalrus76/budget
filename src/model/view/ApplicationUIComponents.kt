@@ -9,9 +9,11 @@ import model.enums.View
 import org.hexworks.zircon.api.*
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Panel
+import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.screen.Screen
 import view.control.MainControlsPanel
+import view.control.SupplementaryControlPanel
 import view.screens.*
 import java.time.LocalDate
 import kotlin.math.max
@@ -27,6 +29,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     var calendarWeekScreen: CalendarWeekScreen? = null
     var calendarMonthScreen: CalendarMonthScreen? = null
     var calendarYearScreen: CalendarYearScreen? = null
+    var currentScreen: BaseScreen? = null
     var currentView: View = View.WEEKLY
     var currentViewedBudgetState: BudgetState? = null
     var budgetStateIndex = 0
@@ -39,16 +42,23 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                     .build())
     var screen: Screen? = Screens.createScreenFor(tileGrid)
     var mainControlPanel: MainControlsPanel? = null
+    var supplementaryControlPanel: SupplementaryControlPanel? = null
     var currentMainComponent: Component? = null
     var budgetAnalysis = applicationStateBudgetAnalysis?.performBudgetAnalysis()
-
+    var supplementaryControlPanelPosition: Position? = null
 
     fun build() {
         currentViewedBudgetState = applicationState!!.currentPayPeriodBudgetState
 
-        mainControlPanel = MainControlsPanel(fullScreenSize.width, 4, this)
+        mainControlPanel = MainControlsPanel(fullScreenSize.width/2, 3, this)
         mainControlPanel?.build()
         mainControlPanel?.panel?.let { screen?.addComponent(it) }
+
+        supplementaryControlPanelPosition = Positions.create(0,0).relativeToRightOf(mainControlPanel!!.panel!!)
+        supplementaryControlPanel = SupplementaryControlPanel(fullScreenSize.width/2, 3,
+                this, supplementaryControlPanelPosition!!)
+        supplementaryControlPanel!!.build()
+        supplementaryControlPanel?.panel?.let { screen?.addComponent(it) }
 
         weeklyOverviewScreen = WeeklyOverviewScreen(fullScreenSize.width, fullScreenSize.height-4,
                 mainControlPanel?.panel!!,this)
@@ -68,7 +78,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                                 mainControlPanel?.panel!!,this)
         calendarDayScreen!!.build()
 
-        calendarWeekScreen = CalendarWeekScreen(fullScreenSize.width, fullScreenSize.height-4,
+        calendarWeekScreen = CalendarWeekScreen(fullScreenSize.width-1, fullScreenSize.height-4,
                 mainControlPanel?.panel!!,this)
         calendarWeekScreen!!.build()
 
@@ -87,89 +97,44 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     }
 
     fun switchScreen(view: View): Screen? {
+        currentView = view
+        baseUIRefresh()
         when(view){
             View.WEEKLY -> {
-                tileGrid.clear()
-                screen = Screens.createScreenFor(tileGrid)
-                currentView = View.WEEKLY
-                currentMainComponent?.let{ screen?.removeComponent(it)}
-                weeklyOverviewScreen?.build()
-                weeklyOverviewScreen?.update()
-                currentMainComponent = weeklyOverviewScreen?.panel
-                mainControlPanel?.panel?.let { screen?.addComponent(it) }
-                weeklyOverviewScreen?.panel?.let { screen?.addComponent(it) }
-                screen!!.display()
+                currentScreen = weeklyOverviewScreen
             }
             View.BUDGET -> {
-                tileGrid.clear()
-                screen = Screens.createScreenFor(tileGrid)
-                currentView = View.BUDGET
-                currentMainComponent?.let{ screen?.removeComponent(it)}
-                budgetViewScreen?.build()
-                budgetViewScreen?.update()
-                currentMainComponent = budgetViewScreen?.panel
-                mainControlPanel?.panel?.let { screen?.addComponent(it) }
-                budgetViewScreen?.panel?.let { screen?.addComponent(it) }
-                screen!!.display()
+                currentScreen = budgetViewScreen
             }
             View.YEAR -> {
-                tileGrid.clear()
-                screen = Screens.createScreenFor(tileGrid)
-                currentView = View.YEAR
-                currentMainComponent?.let{ screen?.removeComponent(it)}
-                yearPayPeriodBalancesScreen?.update()
-                currentMainComponent = yearPayPeriodBalancesScreen?.panel
-                mainControlPanel?.panel?.let { screen?.addComponent(it) }
-                yearPayPeriodBalancesScreen?.panel?.let { screen?.addComponent(it) }
-                screen!!.display()
+                currentScreen = yearPayPeriodBalancesScreen
             }
             View.CALENDAR_DAY -> {
-                tileGrid.clear()
-                screen = Screens.createScreenFor(tileGrid)
-                currentView = View.CALENDAR_DAY
-                currentMainComponent?.let{ screen?.removeComponent(it)}
-                var appropriateBudgetAnalysisStates = findBudgetAnalysisStateForLocalDate(currentLocalDate)
-                appropriateBudgetAnalysisStates?.let { calendarDayScreen?.update(currentLocalDate, it) }
-                currentMainComponent = calendarDayScreen?.panel
-                mainControlPanel?.panel?.let { screen?.addComponent(it) }
-                calendarDayScreen?.panel?.let { screen?.addComponent(it) }
-                screen!!.display()
+                currentScreen = calendarDayScreen
             }
             View.CALENDAR_WEEK -> {
-                tileGrid.clear()
-                screen = Screens.createScreenFor(tileGrid)
-                currentView = View.CALENDAR_WEEK
-                currentMainComponent?.let{ screen?.removeComponent(it)}
-                calendarWeekScreen?.update(currentLocalDate)
-                currentMainComponent = calendarWeekScreen?.panel
-                mainControlPanel?.panel?.let { screen?.addComponent(it) }
-                calendarWeekScreen?.panel?.let { screen?.addComponent(it) }
-                screen!!.display()
+                currentScreen = calendarWeekScreen
             }
             View.CALENDAR_MONTH -> {
-                tileGrid.clear()
-                screen = Screens.createScreenFor(tileGrid)
-                currentView = View.CALENDAR_MONTH
-                currentMainComponent?.let{ screen?.removeComponent(it)}
-                calendarMonthScreen?.update(currentLocalDate)
-                currentMainComponent = calendarMonthScreen?.panel
-                mainControlPanel?.panel?.let { screen?.addComponent(it) }
-                calendarMonthScreen?.panel?.let { screen?.addComponent(it) }
-                screen!!.display()
+                currentScreen = calendarMonthScreen
             }
             View.CALENDAR_YEAR -> {
-                tileGrid.clear()
-                screen = Screens.createScreenFor(tileGrid)
-                currentView = View.CALENDAR_YEAR
-                currentMainComponent?.let{ screen?.removeComponent(it)}
-                calendarYearScreen?.update(currentLocalDate)
-                currentMainComponent = calendarYearScreen?.panel
-                mainControlPanel?.panel?.let { screen?.addComponent(it) }
-                calendarYearScreen?.panel?.let { screen?.addComponent(it) }
-                screen!!.display()
+                currentScreen = calendarYearScreen
             }
         }
+        currentScreen?.update()
+        currentMainComponent = currentScreen?.panel
+        currentMainComponent?.let { screen?.addComponent(it) }
+        screen!!.display()
         return this.screen
+    }
+
+    fun baseUIRefresh(){
+        tileGrid.clear()
+        screen = Screens.createScreenFor(tileGrid)
+        currentMainComponent?.let{ screen?.removeComponent(it)}
+        mainControlPanel?.panel?.let { screen?.addComponent(it) }
+        supplementaryControlPanel?.panel?.let { screen?.addComponent(it) }
     }
 
     fun prevBudgetState() {
@@ -198,7 +163,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
         screen?.clear()
     }
 
-    fun updateDate(newLocalDate: LocalDate, newView: View=currentView){
+    open fun updateDate(newLocalDate: LocalDate, newView: View=currentView){
         this.currentLocalDate = newLocalDate
         switchScreen(newView)
     }

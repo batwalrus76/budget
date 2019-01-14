@@ -13,15 +13,9 @@ import view.budgetState.BudgetStatePanel
 import view.input.InputPanel
 import view.items.ItemsPanel
 
-class WeeklyOverviewScreen(var width: Int, var height: Int, var component: Component, var uiComponents: ApplicationUIComponents){
+class WeeklyOverviewScreen(width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
+    BaseScreen(width, height, uiComponents){
 
-    var panel: Panel? = Components.panel()
-            .wrapWithBox(true) // panels can be wrapped in a box
-            .withTitle(TITLE) // if a panel is wrapped in a box a title can be displayed
-            .wrapWithShadow(false) // shadow can be added
-            .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
-            .withPosition(Positions.create(0,0).relativeToBottomOf(component))
-            .build()
     var budgetStatePanel: BudgetStatePanel? = null
     var accountsPanel: AccountsPanel? = null
     var itemsPanel: ItemsPanel? = null
@@ -29,7 +23,14 @@ class WeeklyOverviewScreen(var width: Int, var height: Int, var component: Compo
     var inputPanel:InputPanel? = null
     private var budgetAnalysis: MutableMap<BudgetState?, MutableList<BudgetAnalysisState>>? = null
 
-    fun build() {
+    override fun build() {
+        panel = Components.panel()
+                .wrapWithBox(true) // panels can be wrapped in a box
+                .withTitle(TITLE) // if a panel is wrapped in a box a title can be displayed
+                .wrapWithShadow(false) // shadow can be added
+                .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
+                .withPosition(Positions.create(0,0).relativeToBottomOf(component))
+                .build()
         budgetAnalysis = uiComponents.applicationStateBudgetAnalysis?.performBudgetAnalysis()
         panel!!.children.forEach { child -> panel!!.removeComponent(child) }
         currentViewedBudgetState = uiComponents.applicationState!!.currentPayPeriodBudgetState
@@ -59,7 +60,7 @@ class WeeklyOverviewScreen(var width: Int, var height: Int, var component: Compo
         panel!!.addComponent(inputPanel!!.panel!!)
     }
 
-    fun update(): BudgetState {
+    override fun update(): BudgetState {
         currentViewedBudgetState = uiComponents.currentViewedBudgetState
         //budgetAnalysis = uiComponents.applicationStateBudgetAnalysis?.performBudgetAnalysis()
         val currentBudgetAnalysisStates = budgetAnalysis?.get(currentViewedBudgetState)

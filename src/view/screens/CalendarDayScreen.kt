@@ -17,16 +17,9 @@ import org.hexworks.zircon.api.graphics.BoxType
 import view.calendar.CalendarDayPanel
 import java.time.LocalDate
 
-class CalendarDayScreen(var width: Int, var height: Int, var component: Component,
-                        var uiComponents: ApplicationUIComponents) {
+class CalendarDayScreen(width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
+    BaseScreen(width, height, uiComponents){
 
-    var panel: Panel = Components.panel()
-            .wrapWithBox(true) // panels can be wrapped in a box
-            .wrapWithShadow(false) // shadow can be added
-            .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
-            .withPosition(Positions.create(0,0).relativeToBottomOf(component))
-            .withTitle(TITLE)
-            .build()
     var position = Positions.create(0,0)
     var calendarDayPanel: CalendarDayPanel = CalendarDayPanel(((width/3)*2)-2, height-2,
             uiComponents, true, position)
@@ -39,9 +32,32 @@ class CalendarDayScreen(var width: Int, var height: Int, var component: Componen
         calendarDayPanel.update(localDate, appropriateBudgetAnalysisStates.toMutableList())
     }
 
-    fun build() {
+    override fun update(): BudgetState {
+        var appropriateBudgetAnalysisStates =
+                uiComponents.findBudgetAnalysisStateForLocalDate(uiComponents.currentLocalDate)
+        panel = Components.panel()
+                .wrapWithBox(true) // panels can be wrapped in a box
+                .wrapWithShadow(false) // shadow can be added
+                .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
+                .withPosition(Positions.create(0,0).relativeToBottomOf(component))
+                .withTitle(String.format("%s - %s",TITLE,uiComponents.currentLocalDate))
+                .build()
         calendarDayPanel.build()
-        calendarDayPanel.panel?.let { panel.addComponent(it) }
+        calendarDayPanel.panel?.let { panel!!.addComponent(it) }
+        appropriateBudgetAnalysisStates?.let { update(uiComponents.currentLocalDate, it) }
+        return super.update()
+    }
+
+    override fun build() {
+        panel = Components.panel()
+                .wrapWithBox(true) // panels can be wrapped in a box
+                .wrapWithShadow(false) // shadow can be added
+                .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
+                .withPosition(Positions.create(0,0).relativeToBottomOf(component))
+                .withTitle(String.format("%s - %s",TITLE,uiComponents.currentLocalDate))
+                .build()
+        calendarDayPanel.build()
+        calendarDayPanel.panel?.let { panel!!.addComponent(it) }
     }
 
     companion object {

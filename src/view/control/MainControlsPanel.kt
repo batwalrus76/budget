@@ -30,7 +30,6 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
     override fun build(){
         this.panel = Components.panel()
                 .wrapWithBox(true) // panels can be wrapped in a box
-                .withTitle(BudgetStatePanel.TITLE) // if a panel is wrapped in a box a title can be displayed
                 .wrapWithShadow(false) // shadow can be added
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(0,0))
@@ -39,7 +38,7 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
                 .withBoxType(BoxType.DOUBLE)
                 .wrapWithBox(false)
                 .withText("Weekly")
-                .withPosition(Positions.create(0,1))
+                .withPosition(Positions.create(0,0))
                 .build()
         weeklyViewButton!!.onMouseReleased { uIComponents.switchScreen(View.WEEKLY) }
         this.yearViewButton = Components.button()

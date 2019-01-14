@@ -65,6 +65,7 @@ class CalendarYearPanel (var width: Int, var height: Int, var uiComponents: Appl
     }
 
     fun buildPanelComponents() {
+        panel!!.children.forEach { panel!!.removeComponent(it) }
         panel!!.addComponent(yearLabel!!)
 
         //First Row of Months

@@ -111,7 +111,6 @@ class SelectedDueDatePanel(width: Int, height: Int, var uiComponents: Applicatio
                 .withPosition(Positions.create(1,-1).relativeToRightOf(dueDateLabel!!))
                 .build()
         dueDateTextArea!!.onKeyStroke {
-            dueDateText = dueDateTextArea!!.text
         }
         panel!!.addComponent(dueDateTextArea!!)
         dueDateAmountText = currentDueDate.amount.toString()
@@ -127,9 +126,6 @@ class SelectedDueDatePanel(width: Int, height: Int, var uiComponents: Applicatio
                 .withSize(Sizes.create(20,1))
                 .withPosition(Positions.create(0,-1).relativeToRightOf(dueDateAmountLabel!!))
                 .build()
-        dueDateAmountTextArea!!.onKeyStroke {
-            dueDateAmountText = dueDateAmountTextArea!!.text
-        }
         panel!!.addComponent(dueDateAmountTextArea!!)
         this.updateDueDateButton = Components.button()
                 .withBoxType(BoxType.DOUBLE)
@@ -138,8 +134,7 @@ class SelectedDueDatePanel(width: Int, height: Int, var uiComponents: Applicatio
                 .withPosition(Positions.create(1,-1).relativeToRightOf(dueDateAmountTextArea!!))
                 .build()
         this.updateDueDateButton!!.onMouseReleased {
-            currentDueDate.dueDate = dateStringParser(dueDateText)
-            currentDueDate.amount = dueDateAmountText.toDouble()
+            processDueDateFields()
             uiComponents.update()
             uiComponents.clearInputScreen()
         }
@@ -151,6 +146,7 @@ class SelectedDueDatePanel(width: Int, height: Int, var uiComponents: Applicatio
                 .withPosition(Positions.create(-1,0).relativeToBottomOf(updateDueDateButton!!))
                 .build()
         this.resetDueDateButton!!.onMouseReleased {
+            processDueDateFields()
             dueDateText = currentDueDate.dueDate.toString()
             dueDateAmountText = currentDueDate.amount.toString()
             uiComponents.update()
@@ -164,10 +160,18 @@ class SelectedDueDatePanel(width: Int, height: Int, var uiComponents: Applicatio
                 .withPosition(Positions.create(-1,0).relativeToBottomOf(resetDueDateButton!!))
                 .build()
         this.cancelDueDateButton!!.onMouseReleased {
+            processDueDateFields()
             uiComponents.update()
             uiComponents.clearInputScreen()
         }
         panel!!.addComponent(this.cancelDueDateButton!!)
 
+    }
+
+    fun processDueDateFields(){
+        dueDateText = dueDateTextArea!!.text
+        dueDateAmountText = dueDateAmountTextArea!!.text
+        currentDueDate.dueDate = dateStringParser(dueDateText)
+        currentDueDate.amount = dueDateAmountText.toDouble()
     }
 }

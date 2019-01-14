@@ -13,11 +13,7 @@ class CalendarWeekPanel(var width: Int, var height: Int, var uiComponents: Appli
                         var position: Position = Positions.create(0,0), var showDayOfWeekLabel:Boolean = true,
                         var selectedLocalDate:LocalDate = LocalDate.now()) {
 
-    var panel: Panel? = Components.panel()
-                            .wrapWithBox(false)
-                            .wrapWithShadow(false)
-                            .withSize(Sizes.create(this.width, this.height))
-                            .withPosition(position).build()
+    var panel: Panel? = null
 
     var seventhWidth = (width/6)
     var currentWeekLocalStartDate = determineCurrentWeekLocalStartDate(selectedLocalDate)
@@ -47,6 +43,11 @@ class CalendarWeekPanel(var width: Int, var height: Int, var uiComponents: Appli
             currentWeekLocalStartDate.plusDays(6L)).build()
 
     fun build():CalendarWeekPanel {
+        panel = Components.panel()
+                .wrapWithBox(false)
+                .wrapWithShadow(false)
+                .withSize(Sizes.create(this.width, this.height))
+                .withPosition(position).build()
         panel?.addComponent(fridayDayPanel.panel!!)
         panel?.addComponent(saturdaySundayDayPanel.panel!!)
         panel?.addComponent(mondayDayPanel.panel!!)
