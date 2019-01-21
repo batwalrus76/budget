@@ -12,7 +12,7 @@ import java.time.LocalDate
 class CalendarWeekScreen(width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
         BaseScreen(width, height, uiComponents){
 
-    var calendarWeekPanel = CalendarWeekPanel(width-3, height-3, uiComponents).build()
+    var calendarWeekPanel = CalendarWeekPanel(width-3, height-3, uiComponents)
 
     fun update(selectedDate: LocalDate){
         val startOfWeekDate = CalendarWeekPanel.determineCurrentWeekLocalStartDate(selectedDate)
@@ -26,7 +26,6 @@ class CalendarWeekScreen(width: Int, height: Int, var component: Component, uiCo
                 .withTitle(titleWithDate)
                 .build()
         calendarWeekPanel.panel?.let { panel!!.removeComponent(it) }
-        calendarWeekPanel.build()
         calendarWeekPanel.update(selectedDate)
         calendarWeekPanel.panel?.let { panel?.addComponent(it) }
     }

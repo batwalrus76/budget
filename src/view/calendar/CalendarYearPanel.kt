@@ -71,75 +71,75 @@ class CalendarYearPanel (var width: Int, var height: Int, var uiComponents: Appl
         //First Row of Months
         var januaryPosition = Positions.create(0,0).relativeToBottomOf(yearLabel!!)
         januaryMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                januaryPosition).build()
+                true, januaryPosition).build()
         januaryMonthPanel!!.update(currentYearLocalStartDate)
         januaryMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var februaryPosition = Positions.create(0,0).relativeToRightOf(januaryMonthPanel!!.panel!!)
         februaryMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                februaryPosition).build()
+                true, februaryPosition).build()
         februaryMonthPanel!!.update(currentYearLocalStartDate.plusMonths(1L))
         februaryMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var marchPosition = Positions.create(0,0).relativeToRightOf(februaryMonthPanel!!.panel!!)
         marchMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                marchPosition).build()
+                true, marchPosition).build()
         marchMonthPanel!!.update(currentYearLocalStartDate.plusMonths(2L))
         marchMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var aprilPosition = Positions.create(0,0).relativeToRightOf(marchMonthPanel!!.panel!!)
         aprilMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                aprilPosition).build()
+                true, aprilPosition).build()
         aprilMonthPanel!!.update(currentYearLocalStartDate.plusMonths(3L))
         aprilMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         //Second Row of Months
         var mayPosition = Positions.create(0,0).relativeToBottomOf(januaryMonthPanel!!.panel!!)
         mayMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                mayPosition).build()
+                true, mayPosition).build()
         mayMonthPanel!!.update(currentYearLocalStartDate.plusMonths(4L))
         mayMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var junePosition = Positions.create(0,0).relativeToRightOf(mayMonthPanel!!.panel!!)
         juneMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                junePosition).build()
+                true, junePosition).build()
         juneMonthPanel!!.update(currentYearLocalStartDate.plusMonths(5L))
         juneMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var julyPosition = Positions.create(0,0).relativeToRightOf(juneMonthPanel!!.panel!!)
         julyMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                julyPosition).build()
+                true, julyPosition).build()
         julyMonthPanel!!.update(currentYearLocalStartDate.plusMonths(6L))
         julyMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var augustPosition = Positions.create(0,0).relativeToRightOf(julyMonthPanel!!.panel!!)
         augustMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                augustPosition).build()
+                true, augustPosition).build()
         augustMonthPanel!!.update(currentYearLocalStartDate.plusMonths(7L))
         augustMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         //Third Row of Months
         var septemberPosition = Positions.create(0,0).relativeToBottomOf(mayMonthPanel!!.panel!!)
         septemberMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                septemberPosition).build()
+                true, septemberPosition).build()
         septemberMonthPanel!!.update(currentYearLocalStartDate.plusMonths(4L))
         septemberMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var octoberPosition = Positions.create(0,0).relativeToRightOf(septemberMonthPanel!!.panel!!)
         octoberMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                octoberPosition).build()
+                true, octoberPosition).build()
         octoberMonthPanel!!.update(currentYearLocalStartDate.plusMonths(5L))
         octoberMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var novemberPosition = Positions.create(0,0).relativeToRightOf(octoberMonthPanel!!.panel!!)
         novemberMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                novemberPosition).build()
+                true, novemberPosition).build()
         novemberMonthPanel!!.update(currentYearLocalStartDate.plusMonths(6L))
         novemberMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var decemberPosition = Positions.create(0,0).relativeToRightOf(novemberMonthPanel!!.panel!!)
         decemberMonthPanel = CalendarMonthPanel(calendarMonthWidth, calendarMonthHeight, uiComponents, false,
-                decemberPosition).build()
+                true, decemberPosition).build()
         decemberMonthPanel!!.update(currentYearLocalStartDate.plusMonths(7L))
         decemberMonthPanel!!.panel?.let { panel!!.addComponent(it) }
     }

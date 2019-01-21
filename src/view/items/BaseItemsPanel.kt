@@ -4,6 +4,7 @@ import model.account.AccountItem
 import model.state.ApplicationState
 import model.budget.BudgetItem
 import model.core.DueDate
+import model.enums.Recurrence
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes
@@ -41,6 +42,8 @@ abstract class BaseItemsPanel (var width: Int, var height: Int, val component: C
             reconciledBudgetItem.dueDates = newReconciledBudgetItemDueDates
             if(reconciledBudgetItem.dueDates.size > 0){
                 reconciledBudgetItem.due = reconciledBudgetItem.dueDates.first()
+            } else if(reconciledBudgetItem.recurrence==Recurrence.ONETIME){
+                applicationState.budgetItems?.remove(reconciledBudgetItem.name)
             }
         }
         budgetItemChange()

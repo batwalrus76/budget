@@ -58,13 +58,13 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
     fun update(budgetState: BudgetState) {
         currentBudgetState = budgetState
         var applicationStateBudgetAnalysis =  uiComponents.applicationStateBudgetAnalysis
+        currentBudgetAnalysisStates = applicationStateBudgetAnalysis?.performBudgetAnalysis().get(currentBudgetState)
         var budgetStateCurrentItemMap =
                 applicationStateBudgetAnalysis?.retrieveApplicableBudgetItemsForState(currentBudgetState!!)
         var budgetStateCurrentItemsList = budgetStateCurrentItemMap?.values?.sortedWith(compareBy { budgetItem ->
             budgetItem.validDueDateForBudgetState(currentBudgetState!!)!!.dueDate
         }
         )
-        currentBudgetAnalysisStates = uiComponents.applicationStateBudgetAnalysis?.performBudgetAnalysis().get(currentBudgetState)
         this.panel!!.removeComponent(this!!.radioButtonGroup!!)
         radioButtonGroup = Components.radioButtonGroup()
                 .withPosition(Position.create(0,0).relativeToBottomOf(dividerLabel))
@@ -179,7 +179,6 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
             update(currentBudgetState!!)
             super.reconcileBudgetItem(reconciledBudgetItem)
         }
-        update()
     }
 
     private fun deleteBudgetItem(name: String) {
@@ -193,8 +192,6 @@ class BudgetItemsPanel(width: Int, height: Int, component: Component, uiComponen
                 budgetItem.dueDates.remove(dueDate)
                 break
             }
-        }
-        budgetItem?.dueDates?.forEach { dueDate ->
         }
         if(currentBudgetState?.isValidForDueDate(budgetItem!!.due.dueDate)!! && budgetItem?.dueDates?.size == 0) {
             uiComponents.applicationState.budgetItems?.remove(budgetItem.name)

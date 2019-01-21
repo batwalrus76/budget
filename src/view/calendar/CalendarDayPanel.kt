@@ -39,7 +39,6 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
                 .build()
         if(localDate != null && budgetAnalysisStates != null) {
             currentLocalDate = LocalDate.of(localDate.year, localDate.month, localDate.dayOfMonth)
-            this.dateLabelButton?.let { panel?.removeComponent(it) }
             dateLabelButton = Components.button()
                     .withText(currentLocalDate.dayOfMonth.toString())
                     .withBoxType(BoxType.BASIC)
@@ -49,22 +48,21 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
             }
             this.dateLabelButton?.let { panel?.addComponent(it) }
             if (showDayOfWeekLabel) {
+                title = currentLocalDate.dayOfWeek.toString()
                 dayOfWeekLabel = Components.label()
                         .withText(title)
                         .withPosition(Positions.create(1, -1).relativeToRightOf(dateLabelButton!!))
                         .build()
+                this.dayOfWeekLabel?.let{ panel?.addComponent(it)}
             }
-            var availableLines = height - (DAY_LABEL_HEIGHT + 2)
+            var availableLines = height - 3
             if (budgetAnalysisStates.size > 0 && availableLines > 4) {
-                if (budgetAnalysisStatesPanel == null) {
-                    budgetAnalysisStatesPanel = Components.panel()
-                            .withSize(Sizes.create(width - 3, availableLines - 2))
-                            .wrapWithShadow(false) // shadow can be added
-                            .withPosition(Positions.create(0, 0).relativeToBottomOf(dateLabelButton!!))
-                            .build()
-                    budgetAnalysisStatesPanel?.let { panel!!.addComponent(it) }
-                }
-                budgetAnalysisStatesPanel!!.children.forEach { child -> budgetAnalysisStatesPanel!!.removeComponent(child) }
+                budgetAnalysisStatesPanel = Components.panel()
+                        .withSize(Sizes.create(width - 3, availableLines - 3))
+                        .wrapWithShadow(false) // shadow can be added
+                        .withPosition(Positions.create(0, 0).relativeToBottomOf(dateLabelButton!!))
+                        .build()
+                budgetAnalysisStatesPanel?.let { panel!!.addComponent(it) }
                 addHeaderLabelsToPanel()
                 availableLines = availableLines - 4
                 var budgetAnalysisStatesRadioButtonGroup =
@@ -142,15 +140,6 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
                     .withPosition(Positions.create(1, -1).relativeToRightOf(dateLabelButton!!))
                     .build()
             panel!!.addComponent(dayOfWeekLabel!!)
-        }
-        var availableLines = height - (DAY_LABEL_HEIGHT + 2)
-        if(availableLines > 3) {
-            budgetAnalysisStatesPanel = Components.panel()
-                    .withSize(Sizes.create(width - 3, availableLines - 3))
-                    .wrapWithShadow(false) // shadow can be added
-                    .withPosition(Positions.create(0, 0).relativeToBottomOf(dateLabelButton!!))
-                    .build()
-            budgetAnalysisStatesPanel?.let { panel!!.addComponent(it) }
         }
         return this
     }

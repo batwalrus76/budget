@@ -122,6 +122,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                 currentScreen = calendarYearScreen
             }
         }
+        currentViewedBudgetState = applicationState.findBudgetStateForLocalDate(currentLocalDate)
         currentScreen?.update()
         currentMainComponent = currentScreen?.panel
         currentMainComponent?.let { screen?.addComponent(it) }
@@ -155,7 +156,8 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                 currentViewedBudgetState = applicationState?.futureBudgetStates?.get(budgetStateIndex-1)
             }
         }
-        currentViewedBudgetState = currentViewedBudgetState
+        currentLocalDate = currentViewedBudgetState?.startDate
+        supplementaryControlPanel?.updateCurrentDateLabel()
         update()
     }
 

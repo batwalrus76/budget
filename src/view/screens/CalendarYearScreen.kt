@@ -19,6 +19,11 @@ class CalendarYearScreen (width: Int, height: Int, var component: Component, uiC
         calendarYearPanel.update(selectedDate)
     }
 
+    override fun update(): BudgetState {
+        update(uiComponents.currentLocalDate)
+        return super.update()
+    }
+
     override fun build() {
         panel = Components.panel()
                 .wrapWithBox(true) // panels can be wrapped in a box

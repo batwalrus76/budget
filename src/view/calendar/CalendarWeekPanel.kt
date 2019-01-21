@@ -42,48 +42,50 @@ class CalendarWeekPanel(var width: Int, var height: Int, var uiComponents: Appli
             thursdayDayPosition, showDayOfWeekLabel,
             currentWeekLocalStartDate.plusDays(6L)).build()
 
-    fun build():CalendarWeekPanel {
+    fun build() {
         panel = Components.panel()
                 .wrapWithBox(false)
                 .wrapWithShadow(false)
                 .withSize(Sizes.create(this.width, this.height))
                 .withPosition(position).build()
+    }
+
+    fun update(selectedDate: LocalDate){
+        build()
+        selectedLocalDate = LocalDate.of(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth)
+        currentWeekLocalStartDate = determineCurrentWeekLocalStartDate(selectedLocalDate)
+        var dayBudgetAnalysisStates = uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate)
+        dayBudgetAnalysisStates?.let {
+            fridayDayPanel.update(currentWeekLocalStartDate, it)
+        }
+        dayBudgetAnalysisStates =
+                uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(1L))
+        dayBudgetAnalysisStates!!.addAll(uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(2L))!!)
+        dayBudgetAnalysisStates?.let {
+            saturdaySundayDayPanel?.update(currentWeekLocalStartDate.plusDays(1L), it)
+        }
+        dayBudgetAnalysisStates = uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(3L))
+        dayBudgetAnalysisStates?.let {
+            mondayDayPanel?.update(currentWeekLocalStartDate.plusDays(3L), it)
+        }
+        dayBudgetAnalysisStates = uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(4L))
+        dayBudgetAnalysisStates?.let {
+            tuesdayDayPanel?.update(currentWeekLocalStartDate.plusDays(4L), it)
+        }
+        dayBudgetAnalysisStates = uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(5L))
+        dayBudgetAnalysisStates?.let {
+            wednesdayDayPanel?.update(currentWeekLocalStartDate.plusDays(5L), it)
+        }
+        dayBudgetAnalysisStates = uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(6L))
+        dayBudgetAnalysisStates?.let {
+            thursdayDayPanel?.update(currentWeekLocalStartDate.plusDays(6L), it)
+        }
         panel?.addComponent(fridayDayPanel.panel!!)
         panel?.addComponent(saturdaySundayDayPanel.panel!!)
         panel?.addComponent(mondayDayPanel.panel!!)
         panel?.addComponent(tuesdayDayPanel.panel!!)
         panel?.addComponent(wednesdayDayPanel.panel!!)
         panel?.addComponent(thursdayDayPanel.panel!!)
-        return this
-    }
-
-    fun update(selectedDate: LocalDate){
-        if(showDayOfWeekLabel){
-            showDayOfWeekLabel = true
-        }
-        selectedLocalDate = LocalDate.of(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth)
-        currentWeekLocalStartDate = determineCurrentWeekLocalStartDate(selectedLocalDate)
-        uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate)?.let {
-            fridayDayPanel.update(currentWeekLocalStartDate, it)
-        }
-        var weekendBudgetAnalysisStates =
-                uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(1L))
-        weekendBudgetAnalysisStates!!.addAll(uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(2L))!!)
-        weekendBudgetAnalysisStates.let {
-            saturdaySundayDayPanel?.update(currentWeekLocalStartDate.plusDays(1L), it)
-        }
-        uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(3L))?.let {
-            mondayDayPanel?.update(currentWeekLocalStartDate.plusDays(3L), it)
-        }
-        uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(4L))?.let {
-            tuesdayDayPanel?.update(currentWeekLocalStartDate.plusDays(4L), it)
-        }
-        uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(5L))?.let {
-            wednesdayDayPanel?.update(currentWeekLocalStartDate.plusDays(5L), it)
-        }
-        uiComponents.findBudgetAnalysisStateForLocalDate(currentWeekLocalStartDate.plusDays(6L))?.let {
-            thursdayDayPanel?.update(currentWeekLocalStartDate.plusDays(6L), it)
-        }
     }
 
     companion object {

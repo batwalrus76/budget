@@ -78,14 +78,18 @@ class SupplementaryControlPanel(width: Int, height: Int, var uIComponents: Appli
         panel!!.addComponent(currentDateLabel)
     }
 
-    fun updateCurrentDate(newLocalDate: LocalDate){
-        uIComponents.updateDate(newLocalDate)
+    fun updateCurrentDateLabel(){
         panel?.removeComponent(currentDateLabel)
         currentDateLabel = Components.label()
                 .withText(String.format("Current Date: %s", uIComponents.currentLocalDate.toString()))
                 .withPosition(Positions.create(1,-1).relativeToRightOf(nextMonthButton))
                 .build()
         panel?.addComponent(currentDateLabel)
+    }
+
+    fun updateCurrentDate(newLocalDate: LocalDate){
+        uIComponents.updateDate(newLocalDate)
+        updateCurrentDateLabel()
     }
 
     override fun update(budgetAnalysisState: BudgetAnalysisState) {

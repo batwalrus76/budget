@@ -19,9 +19,9 @@ object GUIApp {
         applicationUIComponents.build()
         var workingBudgetState: BudgetState? = applicationState.currentPayPeriodBudgetState
         applicationUIComponents.weeklyOverviewScreen?.currentBalances()
+        applicationUIComponents.clear()
+        workingBudgetState = applicationUIComponents.update()
         while (workingBudgetState != null) {
-            applicationUIComponents.clear()
-            workingBudgetState = applicationUIComponents.update()
             applicationUIComponents.display()
             Thread.sleep(120_000)
         }

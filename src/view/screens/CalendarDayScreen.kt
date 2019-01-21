@@ -29,7 +29,9 @@ class CalendarDayScreen(width: Int, height: Int, var component: Component, uiCom
         var appropriateBudgetAnalysisStates = budgetAnalysisStates.filter {
             it.date!!.equals(localDate)
         }
+        calendarDayPanel.panel?.let { panel?.removeComponent(it) }
         calendarDayPanel.update(localDate, appropriateBudgetAnalysisStates.toMutableList())
+        calendarDayPanel.panel?.let { panel?.addComponent(it) }
     }
 
     override fun update(): BudgetState {

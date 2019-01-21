@@ -12,10 +12,16 @@ import java.time.LocalDate
 class CalendarMonthScreen (width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
     BaseScreen(width, height, uiComponents){
 
-    var calendarMonthPanel:CalendarMonthPanel = CalendarMonthPanel(width-4, height-4, uiComponents)
+    var calendarMonthPanel:CalendarMonthPanel = CalendarMonthPanel(width-4, height-4, uiComponents,
+            false, true)
 
     fun update(selectedDate: LocalDate){
         calendarMonthPanel.update(selectedDate)
+    }
+
+    override fun update(): BudgetState {
+        update(uiComponents.currentLocalDate)
+        return super.update()
     }
 
     override fun build() {
