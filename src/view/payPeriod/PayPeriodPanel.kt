@@ -27,9 +27,9 @@ class PayPeriodPanel(var width: Int, var height: Int, val component: Component,
 
     var radioButtonGroup: RadioButtonGroup? = null
 
-    var headerString = "       Number |       Start  Date      |         End Date       | Final Balance "
+    var headerString = "       Number |    Start  Date   |     End Date     | Final Balance | Net Balance   |"
     var headerLabel: Label? = null
-    var dividerString = "-------------|------------------------|------------------------|---------------"
+    var dividerString = "-------------|------------------|------------------|---------------|---------------|"
     var dividerLabel: Label? = null
 
     var lastBalance = 0.0
@@ -94,9 +94,12 @@ class PayPeriodPanel(var width: Int, var height: Int, val component: Component,
         var balancesStringBuilder = StringBuilder()
         balancesStringBuilder.append(String.format("   %02d   ", payPeriodIndex))
         balancesStringBuilder.append("|")
-        balancesStringBuilder.append(String.format("       %s       |", budgetState.startDate))
-        balancesStringBuilder.append(String.format("       %s       |", budgetState.endDate))
-        balancesStringBuilder.append(String.format(" %.2f \n", lastBudgetState?.checkingAccountBalance!!-lastBalance))
+        balancesStringBuilder.append(String.format("    %s    |", budgetState.startDate))
+        balancesStringBuilder.append(String.format("    %s    |", budgetState.endDate))
+        val finalBalance = String.format("          %.2f |", lastBudgetState?.checkingAccountBalance!!-lastBalance)
+        balancesStringBuilder.append(finalBalance.substring(finalBalance.length-16))
+        val endBalance = String.format("          %.2f |", lastBudgetState?.checkingAccountBalance!!)
+        balancesStringBuilder.append(endBalance.substring(endBalance.length-16))
         lastBalance = lastBudgetState?.checkingAccountBalance!!
         radioButtonGroup!!.addOption(payPeriodIndex.toString(),balancesStringBuilder.toString())
     }
