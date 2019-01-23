@@ -1,4 +1,4 @@
-package view.screens
+package view.screens.calendar
 
 import model.budget.BudgetState
 import model.view.ApplicationUIComponents
@@ -7,6 +7,7 @@ import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
 import view.calendar.CalendarWeekPanel
+import view.screens.BaseScreen
 import java.time.LocalDate
 
 class CalendarWeekScreen(width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
@@ -16,7 +17,7 @@ class CalendarWeekScreen(width: Int, height: Int, var component: Component, uiCo
 
     fun update(selectedDate: LocalDate){
         val startOfWeekDate = CalendarWeekPanel.determineCurrentWeekLocalStartDate(selectedDate)
-        val titleWithDate = String.format("%s - %s to %s",TITLE, startOfWeekDate.toString(),
+        val titleWithDate = String.format("%s - %s to %s", TITLE, startOfWeekDate.toString(),
                 startOfWeekDate.plusDays(6L).toString())
         panel = Components.panel()
                 .wrapWithBox(true) // panels can be wrapped in a box
@@ -37,7 +38,7 @@ class CalendarWeekScreen(width: Int, height: Int, var component: Component, uiCo
 
     override fun build() {
         val startOfWeekDate = CalendarWeekPanel.determineCurrentWeekLocalStartDate(uiComponents.currentLocalDate)
-        val titleWithDate = String.format("%s - %s to %s",TITLE, startOfWeekDate.toString(),
+        val titleWithDate = String.format("%s - %s to %s", TITLE, startOfWeekDate.toString(),
                 startOfWeekDate.plusDays(6L).toString())
         panel = Components.panel()
                 .wrapWithBox(true) // panels can be wrapped in a box

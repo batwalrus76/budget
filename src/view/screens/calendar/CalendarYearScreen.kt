@@ -1,4 +1,4 @@
-package view.screens
+package view.screens.calendar
 
 import model.budget.BudgetState
 import model.view.ApplicationUIComponents
@@ -6,17 +6,17 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
-import view.calendar.CalendarMonthPanel
+import view.calendar.CalendarYearPanel
+import view.screens.BaseScreen
 import java.time.LocalDate
 
-class CalendarMonthScreen (width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
+class CalendarYearScreen (width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
     BaseScreen(width, height, uiComponents){
 
-    var calendarMonthPanel:CalendarMonthPanel = CalendarMonthPanel(width-4, height-4, uiComponents,
-            false, true)
+    var calendarYearPanel: CalendarYearPanel = CalendarYearPanel(width-3, height-3, uiComponents)
 
     fun update(selectedDate: LocalDate){
-        calendarMonthPanel.update(selectedDate)
+        calendarYearPanel.update(selectedDate)
     }
 
     override fun update(): BudgetState {
@@ -25,18 +25,19 @@ class CalendarMonthScreen (width: Int, height: Int, var component: Component, ui
     }
 
     override fun build() {
-        panel= Components.panel()
+        panel = Components.panel()
                 .wrapWithBox(true) // panels can be wrapped in a box
                 .wrapWithShadow(false) // shadow can be added
                 .withTitle(TITLE)
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(0,0).relativeToBottomOf(component))
                 .build()
-        calendarMonthPanel.build()
-        calendarMonthPanel.panel?.let { panel?.addComponent(it) }
+        calendarYearPanel.build()
+        calendarYearPanel.panel?.let { panel?.addComponent(it) }
     }
 
+
     companion object {
-        val TITLE: String = "Calendar Month View"
+        val TITLE: String = "Calendar Year View"
     }
 }

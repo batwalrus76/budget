@@ -1,4 +1,4 @@
-package view.screens
+package view.screens.calendar
 
 import model.budget.BudgetAnalysisState
 import model.budget.BudgetState
@@ -6,15 +6,9 @@ import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
-import org.hexworks.zircon.api.builder.component.LabelBuilder
-import org.hexworks.zircon.api.builder.component.RadioButtonGroupBuilder
 import org.hexworks.zircon.api.component.Component
-import org.hexworks.zircon.api.component.Label
-import org.hexworks.zircon.api.component.Panel
-import org.hexworks.zircon.api.component.RadioButtonGroup
-import org.hexworks.zircon.api.data.Position
-import org.hexworks.zircon.api.graphics.BoxType
 import view.calendar.CalendarDayPanel
+import view.screens.BaseScreen
 import java.time.LocalDate
 
 class CalendarDayScreen(width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
@@ -42,7 +36,7 @@ class CalendarDayScreen(width: Int, height: Int, var component: Component, uiCom
                 .wrapWithShadow(false) // shadow can be added
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(0,0).relativeToBottomOf(component))
-                .withTitle(String.format("%s - %s",TITLE,uiComponents.currentLocalDate))
+                .withTitle(String.format("%s - %s", TITLE,uiComponents.currentLocalDate))
                 .build()
         calendarDayPanel.build()
         calendarDayPanel.panel?.let { panel!!.addComponent(it) }
@@ -56,7 +50,7 @@ class CalendarDayScreen(width: Int, height: Int, var component: Component, uiCom
                 .wrapWithShadow(false) // shadow can be added
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(0,0).relativeToBottomOf(component))
-                .withTitle(String.format("%s - %s",TITLE,uiComponents.currentLocalDate))
+                .withTitle(String.format("%s - %s", TITLE,uiComponents.currentLocalDate))
                 .build()
         calendarDayPanel.build()
         calendarDayPanel.panel?.let { panel!!.addComponent(it) }

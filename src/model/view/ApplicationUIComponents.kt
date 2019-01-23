@@ -15,6 +15,10 @@ import org.hexworks.zircon.api.screen.Screen
 import view.control.MainControlsPanel
 import view.control.SupplementaryControlPanel
 import view.screens.*
+import view.screens.calendar.CalendarDayScreen
+import view.screens.calendar.CalendarMonthScreen
+import view.screens.calendar.CalendarWeekScreen
+import view.screens.calendar.CalendarYearScreen
 import java.time.LocalDate
 import kotlin.math.max
 import kotlin.math.min
@@ -74,20 +78,20 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
                 mainControlPanel?.panel!!,this, budgetAnalysis)
         yearPayPeriodBalancesScreen!!.build()
 
-        calendarDayScreen = CalendarDayScreen(fullScreenSize.width, fullScreenSize.height-4,
-                                mainControlPanel?.panel!!,this)
+        calendarDayScreen = CalendarDayScreen(fullScreenSize.width, fullScreenSize.height - 4,
+                mainControlPanel?.panel!!, this)
         calendarDayScreen!!.build()
 
-        calendarWeekScreen = CalendarWeekScreen(fullScreenSize.width-1, fullScreenSize.height-4,
-                mainControlPanel?.panel!!,this)
+        calendarWeekScreen = CalendarWeekScreen(fullScreenSize.width - 1, fullScreenSize.height - 4,
+                mainControlPanel?.panel!!, this)
         calendarWeekScreen!!.build()
 
-        calendarMonthScreen = CalendarMonthScreen(fullScreenSize.width, fullScreenSize.height-4,
-                mainControlPanel?.panel!!,this)
+        calendarMonthScreen = CalendarMonthScreen(fullScreenSize.width, fullScreenSize.height - 4,
+                mainControlPanel?.panel!!, this)
         calendarMonthScreen!!.build()
 
-        calendarYearScreen = CalendarYearScreen(fullScreenSize.width, fullScreenSize.height-4,
-                mainControlPanel?.panel!!,this)
+        calendarYearScreen = CalendarYearScreen(fullScreenSize.width, fullScreenSize.height - 4,
+                mainControlPanel?.panel!!, this)
         calendarYearScreen!!.build()
 
         currentMainComponent = weeklyOverviewScreen!!.panel
