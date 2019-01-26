@@ -85,12 +85,12 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         if(lastBudgetAnalysisState == null){
             budgetAnalysisState = BudgetAnalysisState(applicationState)
         }
-        var orderedBudgetItems: List<BudgetItem>? = budgetItems?.values?.sortedWith(kotlin.comparisons.compareBy({ it.validDueDateForBudgetState(budgetState!!)!!.dueDate }))
+        var orderedBudgetItems: List<BudgetItem>? = budgetItems?.values?.sortedWith(kotlin.comparisons.compareBy({ it.due.dueDate }))
         orderedBudgetItems?.forEach { budgetItem ->
             budgetAnalysisState = budgetAnalysisState?.let { processBudgetItemBudgetAnalysisStateForAnalysis(it, budgetItem, budgetState) }
             budgetAnalysisState?.let { budgetAnalysisStates.add(it) }
         }
-        return budgetAnalysisStates
+        return (budgetAnalysisStates.sortedWith(kotlin.comparisons.compareBy({ it.date }))).toMutableList()
     }
 
     private fun processBudgetItemBudgetAnalysisStateForAnalysis(budgetAnalysisState: BudgetAnalysisState,

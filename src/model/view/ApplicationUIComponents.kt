@@ -220,7 +220,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
         var budgetStateAnalysisStates =  budgetAnalysisStates[localDateBudgetState]
         var applicableAnalysisStates = ArrayList<BudgetAnalysisState>()
         budgetStateAnalysisStates?.forEach { budgetAnalysisState ->
-            if(budgetAnalysisState.date!!.equals(localDate)){
+            if(budgetAnalysisState != null && budgetAnalysisState.date != null && budgetAnalysisState.date!!.equals(localDate)){
                 applicableAnalysisStates.add(budgetAnalysisState)
             }
         }

@@ -12,9 +12,7 @@ import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.component.RadioButtonGroup
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
-import org.hexworks.zircon.api.input.MouseAction
 import org.hexworks.zircon.api.kotlin.onMouseReleased
-import org.hexworks.zircon.api.util.Consumer
 import java.time.LocalDate
 
 class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: ApplicationUIComponents,

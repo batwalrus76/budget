@@ -23,8 +23,8 @@ class CalendarWeekPanel(var width: Int, var height: Int, var uiComponents: Appli
             fridayDayPosition, showDayOfWeekLabel, currentWeekLocalStartDate).build()
     var saturdaySundayDayPosition = Positions.create(0,0).relativeToRightOf(fridayDayPanel.panel!!)
     var saturdaySundayDayPanel = CalendarDayPanel(seventhWidth, height, uiComponents,
-                true, saturdaySundayDayPosition, showDayOfWeekLabel,
-            currentWeekLocalStartDate.plusDays(1L),"Sat/Sun").build()
+            true, saturdaySundayDayPosition, showDayOfWeekLabel,
+            currentWeekLocalStartDate.plusDays(1L), "Sat/Sun").build()
     var mondayDayPosition =Positions.create(0,0).relativeToRightOf(saturdaySundayDayPanel.panel!!)
     var mondayDayPanel = CalendarDayPanel(seventhWidth, height, uiComponents, true,
             mondayDayPosition, showDayOfWeekLabel,

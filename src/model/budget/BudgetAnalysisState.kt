@@ -34,8 +34,11 @@ data class BudgetAnalysisState(var checkingAccountBalance: Double? = 0.0,
         var savingsAccountBalances: MutableMap<String, Double>? = HashMap()
         this.savingsAccountBalances?.forEach { key, value -> savingsAccountBalances!![key] = (0.0).plus(value)}
         var creditAccountBalances: MutableMap<String, Double>? = HashMap()
-        this.creditAccountBalances?.forEach { key, value -> creditAccountBalances!![key] = (0.0).plus(value)}
-        var date = LocalDate.of(this.date!!.year, this.date!!.month, this.date!!.dayOfMonth)
+        this.creditAccountBalances?.forEach { key, value -> creditAccountBalances!![key] = (0.0).plus(value) }
+        var date = LocalDate.now()
+        if(this.date != null) {
+            date = LocalDate.of(this.date!!.year, this.date!!.month, this.date!!.dayOfMonth)
+        }
         return BudgetAnalysisState(checkingAccountBalance, savingsAccountBalances, creditAccountBalances, date, budgetItem)
     }
 
