@@ -18,9 +18,9 @@ class YearPayPeriodBalancesScreen(width: Int, height: Int, var component: Compon
 
     var payPeriodIndex = 0
     var payPeriodPanel: PayPeriodPanel =
-            PayPeriodPanel((width / 2) - 2, height - 3, component, uiComponents, budgetAnalysis, payPeriodIndex, this)
+            PayPeriodPanel((width / 2)+1, height-1, component, uiComponents, budgetAnalysis, payPeriodIndex, this)
     var payPeriodItemsPanel: PayPeriodItemsPanel =
-            PayPeriodItemsPanel((width / 2) - 2, height - 3, payPeriodPanel!!.panel!!, uiComponents, budgetAnalysis)
+            PayPeriodItemsPanel((width / 2)+1, height-1, payPeriodPanel!!.panel!!, uiComponents, budgetAnalysis)
 
     fun updatePayPeriodIndex(index: Int){
         payPeriodIndex = index

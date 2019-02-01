@@ -46,7 +46,7 @@ class WeeklyOverviewScreen(width: Int, height: Int, var component: Component, ui
                 fifthScreenHeight * 2 - 6, uiComponents, uiComponents!!.applicationState!!)
         budgetStatePanel!!.build()
 
-        accountsPanel = AccountsPanel(fifthScreenWidth * 2-4, fifthScreenHeight * 2 - 6,
+        accountsPanel = AccountsPanel((fifthScreenWidth * 2) + 1, fifthScreenHeight * 2 - 6,
                 budgetStatePanel!!.panel!!, uiComponents, uiComponents.applicationState!!)
         accountsPanel!!.build()
 

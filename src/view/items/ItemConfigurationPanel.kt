@@ -1,5 +1,6 @@
 package view.items
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import model.state.ApplicationState
 import model.budget.BudgetItem
 import model.core.DueDate
@@ -26,7 +27,9 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
                             var scheduledAmount: Double, var actualAmount: Double, var currentRecurrence: Recurrence,
                             var width: Int, var height: Int, var targetSavingsAccountName: String,
                              var targetCreditAccountName: String, var applicationState: ApplicationState,
-                             var useHorizontalLayout: Boolean = true, var position: Position = Positions.create(0,0)) {
+                             var useHorizontalLayout: Boolean = true,
+                             var position: Position = Positions.create(0,0),
+                                var wrapWithBox: Boolean = false) {
 
     var panel: Panel? = null
     var scheduledAmountText: String? = scheduledAmount.toString()
@@ -52,13 +55,14 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
 
     fun build() {
         panel = Components.panel()
-                .wrapWithBox(false)
+                .wrapWithBox(wrapWithBox)
                 .wrapWithShadow(false)
                 .withSize(Sizes.create(width,height))
                 .withPosition(position)
                 .build()
         processPanelComponents()
         updatePanelWithComponents()
+        addComponentBehaviours()
     }
 
     private fun updatePanelWithComponents(){
@@ -70,17 +74,17 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
         dueTextArea?.let { panel!!.addComponent(it)}
         isRequiredLabel?.let { panel!!.addComponent(it)}
         isRequiredButtonGroup?.let { panel!!.addComponent(it)}
+        isAutopayLabel?.let { panel!!.addComponent(it)}
+        isAutopayButtonGroup?.let { panel!!.addComponent(it)}
         scheduledAmountLabel?.let { panel!!.addComponent(it)}
         scheduledAmountTextArea?.let { panel!!.addComponent(it)}
         actualAmountLabel?.let { panel!!.addComponent(it)}
         actualAmountTextArea?.let { panel!!.addComponent(it)}
-//        isAutopayLabel?.let { panel!!.addComponent(it)}
-//        isAutopayButtonGroup?.let { panel!!.addComponent(it)}
-//        recurrenceLabel?.let { panel!!.addComponent(it)}
-//        recurrenceRadioButtonGroup?.let { panel!!.addComponent(it)}
-//        transferLabel?.let { panel!!.addComponent(it)}
-//        transferSavingsAccountButtonGroup?.let { panel!!.addComponent(it)}
-//        transferCreditAccountButtonGroup?.let { panel!!.addComponent(it)}
+        recurrenceLabel?.let { panel!!.addComponent(it)}
+        recurrenceRadioButtonGroup?.let { panel!!.addComponent(it)}
+        transferLabel?.let { panel!!.addComponent(it)}
+        transferSavingsAccountButtonGroup?.let { panel!!.addComponent(it)}
+        transferCreditAccountButtonGroup?.let { panel!!.addComponent(it)}
     }
 
     private fun addComponentBehaviours(){
@@ -268,8 +272,14 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
         isRequiredButtonGroup = isRequiredButtonGroupBuilder
                 .withPosition(Position.create(0,0).relativeToRightOf(isRequiredLabel!!))
                 .build()
+        isAutopayLabel = isAutopayLabelBuilder
+                .withPosition(Positions.create(0,1).relativeToBottomOf(isRequiredLabel!!))
+                .build()
+        isAutopayButtonGroup = isAutopayButtonGroupBuilder
+                .withPosition(Position.create(0,0).relativeToRightOf(isAutopayLabel!!))
+                .build()
         scheduledAmountLabel = scheduledAmountLabelBuilder
-                .withPosition(Positions.create(0,20).relativeToBottomOf(isRequiredButtonGroup!!))
+                .withPosition(Positions.create(0,1).relativeToBottomOf(isAutopayLabel!!))
                 .build()
         scheduledAmountTextArea = scheduledAmountTextAreaBuilder
                 .withPosition(Positions.create(1,0).relativeToRightOf(scheduledAmountLabel!!))
@@ -280,26 +290,20 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
         actualAmountTextArea = actualAmountTextAreaBuilder
                 .withPosition(Positions.create(1,0).relativeToRightOf(actualAmountLabel!!))
                 .build()
-        isAutopayLabel = isAutopayLabelBuilder
-                .withPosition(Positions.create(0,0).relativeToBottomOf(actualAmountLabel!!))
-                .build()
-        isAutopayButtonGroup = isAutopayButtonGroupBuilder
-                .withPosition(Position.create(0,0).relativeToRightOf(isAutopayLabel!!))
-                .build()
         recurrenceLabel = recurrenceLabelBuilder
-                .withPosition(Positions.create(1,0).relativeToBottomOf(isAutopayLabel!!))
+                .withPosition(Positions.create(0,1).relativeToBottomOf(actualAmountLabel!!))
                 .build()
         recurrenceRadioButtonGroup = recurrenceRadioButtonGroupBuilder
                 .withPosition(Positions.create(1,0).relativeToRightOf(recurrenceLabel!!))
                 .build()
         transferLabel = transferLabelBuilder
-                .withPosition(Positions.create(1,0).relativeToBottomOf(recurrenceLabel!!))
+                .withPosition(Positions.create(0,8).relativeToBottomOf(recurrenceLabel!!))
                 .build()
         transferSavingsAccountButtonGroup = transferSavingsAccountButtonGroupBuilder
-                .withPosition(Positions.create(0,0).relativeToBottomOf(transferLabel!!))
+                .withPosition(Positions.create(0,1).relativeToBottomOf(transferLabel!!))
                 .build()
         transferCreditAccountButtonGroup = transferCreditAccountButtonGroupBuilder
-                .withPosition(Positions.create(0,0).relativeToBottomOf(transferSavingsAccountButtonGroup!!))
+                .withPosition(Positions.create(0,1).relativeToBottomOf(transferSavingsAccountButtonGroup!!))
                 .build()
     }
 
@@ -332,6 +336,12 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
         isRequiredButtonGroup = isRequiredButtonGroupBuilder
                 .withPosition(Position.create(0,0).relativeToRightOf(isRequiredLabel!!))
                 .build()
+        isAutopayLabel = isAutopayLabelBuilder
+                .withPosition(Positions.create(1,0).relativeToRightOf(isRequiredButtonGroup!!))
+                .build()
+        isAutopayButtonGroup = isAutopayButtonGroupBuilder
+                .withPosition(Position.create(1,0).relativeToRightOf(isAutopayLabel!!))
+                .build()
         scheduledAmountLabel = scheduledAmountLabelBuilder
                 .withPosition(Positions.create(1,0).relativeToRightOf(nameTextArea!!))
                 .build()
@@ -343,12 +353,6 @@ class ItemConfigurationPanel(var name: String, var due: LocalDate, var isRequire
                 .build()
         actualAmountTextArea = actualAmountTextAreaBuilder
                 .withPosition(Positions.create(1,0).relativeToRightOf(actualAmountLabel!!))
-                .build()
-        isAutopayLabel = isAutopayLabelBuilder
-                .withPosition(Positions.create(0,0).relativeToRightOf(isRequiredButtonGroup!!))
-                .build()
-        isAutopayButtonGroup = isAutopayButtonGroupBuilder
-                .withPosition(Position.create(0,0).relativeToRightOf(isAutopayLabel!!))
                 .build()
         recurrenceLabel = recurrenceLabelBuilder
                 .withPosition(Positions.create(1,0).relativeToRightOf(scheduledAmountTextArea!!))

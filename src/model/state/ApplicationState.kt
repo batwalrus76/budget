@@ -104,7 +104,7 @@ data class ApplicationState(var checkingAccount: Account? = Account("Checking Ac
         }
 
         fun parseApplicationState(sourceString: String): ApplicationState {
-            val parser: Parser = Parser.default()
+            val parser: Parser = Parser()
             val applicationStateObj: JsonObject = parser.parse(StringReader(sourceString)) as JsonObject
             val checkingAccountObj: JsonObject = applicationStateObj.obj(CHECKING_ACCOUNT_KEY)!!
             var checkingAccount: Account = Account.parseAccountFromJsonObject(checkingAccountObj)

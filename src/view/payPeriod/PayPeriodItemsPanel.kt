@@ -23,7 +23,7 @@ class PayPeriodItemsPanel(var width: Int, var height: Int, val component: Compon
             .wrapWithShadow(false) // shadow can be added
             .withTitle(TITLE)
             .withSize(Sizes.create(this.width - 2, this.height - 2)) // the size must be smaller than the parent's size
-            .withPosition(Positions.create(0, 0).relativeToRightOf(component))
+            .withPosition(Positions.create(1, 0).relativeToRightOf(component))
             .build()
 
 

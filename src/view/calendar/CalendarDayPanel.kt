@@ -73,7 +73,7 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
                             .withPosition(Positions.create(0, 0).relativeToBottomOf(it))
                             .build()
                 }
-                budgetAnalysisStatesPanel!!.addComponent(bottomDividerLabel!!)
+                bottomDividerLabel?.let { budgetAnalysisStatesPanel!!.addComponent(it) }
                 var balanceString = String.format("%.2f", budgetAnalysisStates.last().checkingAccountBalance)
                 var balancePadding = "                            ".substring(0, 27 - balanceString.length)
                 bottomDividerLabel?.let {
@@ -83,7 +83,7 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
                             .withPosition(Positions.create(4, 0).relativeToBottomOf(it))
                             .build()
                 }
-                budgetAnalysisStatesPanel!!.addComponent(balanceLabel!!)
+                balanceLabel?.let { budgetAnalysisStatesPanel!!.addComponent(it) }
             }
         }
     }
@@ -92,9 +92,14 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
                                                    availableLines: Int): RadioButtonGroup? {
         var budgetAnalysisStatesRadioButtonGroup: RadioButtonGroup? = null
         if(budgetAnalysisStates != null && budgetAnalysisStates.size > 0 &&
-                    budgetAnalysisStatesPanel != null && availableLines > 0){
+                    budgetAnalysisStatesPanel != null && availableLines > 2){
+            var budgetAnalysisStatesRadioButtonGroupPositon = Position.create(0,0)
+            if(this.dividerLabel != null) {
+                budgetAnalysisStatesRadioButtonGroupPositon =
+                        budgetAnalysisStatesRadioButtonGroupPositon.relativeToBottomOf(this!!.dividerLabel!!)
+            }
             budgetAnalysisStatesRadioButtonGroup = Components.radioButtonGroup()
-                    .withPosition(Position.create(0,0).relativeToBottomOf(this!!.dividerLabel!!))
+                    .withPosition(budgetAnalysisStatesRadioButtonGroupPositon)
                     .withSize(Sizes.create(this.width-3, availableLines-3))
                     .build()
             var currentAvailableLines = availableLines-3
@@ -143,18 +148,24 @@ class CalendarDayPanel(var width: Int, var height: Int, var uiComponents: Applic
     }
 
     fun addHeaderLabelsToPanel(){
-        headerLabel = Components.label()
-                .withText(headerString.substring(0,Math.min(headerString.length, width-3)))
-                .withSize(Sizes.create(width-3, 1))
-                .withPosition(Positions.create(0, 0))
-                .build()
-        budgetAnalysisStatesPanel!!.addComponent(headerLabel!!)
-        dividerLabel = Components.label()
-                .withText(dividerString.substring(0,Math.min(dividerString.length, width-3)))
-                .withSize(Sizes.create(width-3, 1))
-                .withPosition(Positions.create(0, 0).relativeToBottomOf(headerLabel!!))
-                .build()
-        budgetAnalysisStatesPanel!!.addComponent(dividerLabel!!)
+        val headerStringText = headerString.substring(0,Math.min(headerString.length, width-3))
+        if(headerStringText.length > 9) {
+            headerLabel = Components.label()
+                    .withText(headerStringText)
+                    .withSize(Sizes.create(width - 3, 1))
+                    .withPosition(Positions.create(0, 0))
+                    .build()
+            budgetAnalysisStatesPanel!!.addComponent(headerLabel!!)
+        }
+        val dividerStringLabel = dividerString.substring(0,Math.min(dividerString.length, width-3))
+        if(dividerStringLabel.length > 9) {
+            dividerLabel = Components.label()
+                    .withText(dividerStringLabel)
+                    .withSize(Sizes.create(width - 3, 1))
+                    .withPosition(Positions.create(0, 0).relativeToBottomOf(headerLabel!!))
+                    .build()
+            budgetAnalysisStatesPanel!!.addComponent(dividerLabel!!)
+        }
     }
 
     companion object {

@@ -17,7 +17,7 @@ class CalendarDayScreen(width: Int, height: Int, var component: Component, uiCom
     BaseScreen(width, height, uiComponents){
 
     var position = Positions.create(0,0)
-    var calendarDayPanel: CalendarDayPanel = CalendarDayPanel(((width / 3) * 2) - 2, height - 2,
+    var calendarDayPanel: CalendarDayPanel = CalendarDayPanel(((width / 3) * 2) - 4, height - 2,
             uiComponents, true, position)
     var itemConfigurationPanel: ItemConfigurationPanel? = null
 
@@ -44,33 +44,17 @@ class CalendarDayScreen(width: Int, height: Int, var component: Component, uiCom
                 .withTitle(String.format("%s - %s", TITLE,uiComponents.currentLocalDate))
                 .build()
         calendarDayPanel.build()
-        calendarDayPanel.panel?.let { panel!!.addComponent(it) }
         itemConfigurationPanel = ItemConfigurationPanel("PLACEHOLDER", LocalDate.now(), false, false,
-                0.0, 0.0, Recurrence.ONETIME, (width/3)-10, height-10,
-                "null", "null", uiComponents.applicationState, false,
-                Positions.create(0,0).relativeToRightOf(calendarDayPanel.panel!!))
+                0.0, 0.0, Recurrence.ONETIME, (width/3)+1, height-3,
+                "null", "null", uiComponents.applicationState,
+                false, Positions.create(0,0).relativeToRightOf(calendarDayPanel.panel!!),
+                true)
         itemConfigurationPanel!!.build()
-        itemConfigurationPanel!!.panel?.let { panel!!.addComponent(it) }
         appropriateBudgetAnalysisStates?.let { update(uiComponents.currentLocalDate, it) }
         return super.update()
     }
 
     override fun build() {
-        panel = Components.panel()
-                .wrapWithBox(true) // panels can be wrapped in a box
-                .wrapWithShadow(false) // shadow can be added
-                .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
-                .withPosition(Positions.create(0,0).relativeToBottomOf(component))
-                .withTitle(String.format("%s - %s", TITLE,uiComponents.currentLocalDate))
-                .build()
-        calendarDayPanel.build()
-        calendarDayPanel.panel?.let { panel!!.addComponent(it) }
-        itemConfigurationPanel = ItemConfigurationPanel("PLACEHOLDER", LocalDate.now(), false, false,
-                0.0, 0.0, Recurrence.ONETIME, (width/3)-10, height-10,
-                "null", "null", uiComponents.applicationState, false,
-                Positions.create(0,0).relativeToRightOf(calendarDayPanel.panel!!))
-        itemConfigurationPanel!!.build()
-        itemConfigurationPanel!!.panel?.let { panel!!.addComponent(it) }
     }
 
     companion object {

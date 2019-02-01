@@ -54,43 +54,43 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
     fun build() {
         currentViewedBudgetState = applicationState!!.currentPayPeriodBudgetState
 
-        mainControlPanel = MainControlsPanel(fullScreenSize.width/2, 3, this)
+        mainControlPanel = MainControlsPanel(fullScreenSize.width/2, 5, this)
         mainControlPanel?.build()
         mainControlPanel?.panel?.let { screen?.addComponent(it) }
 
         supplementaryControlPanelPosition = Positions.create(0,0).relativeToRightOf(mainControlPanel!!.panel!!)
-        supplementaryControlPanel = SupplementaryControlPanel(fullScreenSize.width/2, 3,
+        supplementaryControlPanel = SupplementaryControlPanel(fullScreenSize.width/2+1, 5,
                 this, supplementaryControlPanelPosition!!)
         supplementaryControlPanel!!.build()
         supplementaryControlPanel?.panel?.let { screen?.addComponent(it) }
 
-        weeklyOverviewScreen = WeeklyOverviewScreen(fullScreenSize.width, fullScreenSize.height-4,
+        weeklyOverviewScreen = WeeklyOverviewScreen(fullScreenSize.width, fullScreenSize.height-6,
                 mainControlPanel?.panel!!,this)
 
-        budgetViewScreen = BudgetScreen(fullScreenSize.width, fullScreenSize.height-4,
+        budgetViewScreen = BudgetScreen(fullScreenSize.width, fullScreenSize.height-6,
                 mainControlPanel?.panel!!, this)
         budgetViewScreen?.build()
 
         weeklyOverviewScreen?.build()
         weeklyOverviewScreen?.update()
 
-        yearPayPeriodBalancesScreen = YearPayPeriodBalancesScreen(fullScreenSize.width, fullScreenSize.height-4,
+        yearPayPeriodBalancesScreen = YearPayPeriodBalancesScreen(fullScreenSize.width, fullScreenSize.height-6,
                 mainControlPanel?.panel!!,this, budgetAnalysis)
         yearPayPeriodBalancesScreen!!.build()
 
-        calendarDayScreen = CalendarDayScreen(fullScreenSize.width, fullScreenSize.height - 4,
+        calendarDayScreen = CalendarDayScreen(fullScreenSize.width, fullScreenSize.height - 6,
                 mainControlPanel?.panel!!, this)
         calendarDayScreen!!.build()
 
-        calendarWeekScreen = CalendarWeekScreen(fullScreenSize.width - 1, fullScreenSize.height - 4,
+        calendarWeekScreen = CalendarWeekScreen(fullScreenSize.width - 1, fullScreenSize.height - 6,
                 mainControlPanel?.panel!!, this)
         calendarWeekScreen!!.build()
 
-        calendarMonthScreen = CalendarMonthScreen(fullScreenSize.width, fullScreenSize.height - 4,
+        calendarMonthScreen = CalendarMonthScreen(fullScreenSize.width, fullScreenSize.height - 6,
                 mainControlPanel?.panel!!, this)
         calendarMonthScreen!!.build()
 
-        calendarYearScreen = CalendarYearScreen(fullScreenSize.width, fullScreenSize.height - 4,
+        calendarYearScreen = CalendarYearScreen(fullScreenSize.width, fullScreenSize.height - 6,
                 mainControlPanel?.panel!!, this)
         calendarYearScreen!!.build()
 
@@ -229,7 +229,7 @@ class ApplicationUIComponents(var applicationStateBudgetAnalysis: ApplicationSta
 
 
     companion object {
-        val WIDTH: Int = 210
-        val HEIGHT: Int = 124
+        val WIDTH: Int = 239
+        val HEIGHT: Int = 146
     }
 }

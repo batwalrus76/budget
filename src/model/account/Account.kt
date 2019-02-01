@@ -78,7 +78,10 @@ data class Account(val name: String, var balance: Double) : Serializable {
             var reconciledItems: MutableList<AccountItem> = ArrayList()
             val reconciledItemsAray: JsonArray<JsonObject>? = accountObj.array(RECONCILED_ITEMS_KEY)
             reconciledItemsAray?.forEach{ jsonObject -> reconciledItems.add(parseAccountItemFromJsonObject(jsonObject))}
-            val notes:String = accountObj.string(NOTES_KEY)!!
+            var notes = ""
+            if(accountObj.string(NOTES_KEY) != null) {
+               notes = accountObj.string(NOTES_KEY)!!
+            }
             var account = Account(name, balance)
             account.items = items
             account.reconciledItems = reconciledItems
