@@ -24,7 +24,7 @@ class BudgetScreen(width: Int, height: Int, var component: Component, uiComponen
                 .withPosition(Positions.create(0,0).relativeToBottomOf(component))
                 .build()
         panel!!.children.forEach { child -> panel!!.removeComponent(child) }
-        monthlyBudgetPanel = MonthlyBudgetPanel(width, (2*height/5+1), uiComponents.applicationState!!)
+        monthlyBudgetPanel = MonthlyBudgetPanel(width, (2*height/5+2), uiComponents.applicationState!!)
         monthlyBudgetPanel!!.build()
         monthlyBudgetPanel!!.panel?.let { panel?.addComponent(it) }
         yearlyBudgetPanel = YearlyBudgetPanel(width, (2*height/5+4), monthlyBudgetPanel!!.panel!!, uiComponents.applicationState!!)

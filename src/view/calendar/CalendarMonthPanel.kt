@@ -32,7 +32,7 @@ class CalendarMonthPanel(var width: Int, var height: Int, var uiComponents: Appl
 
     var monthButton: Button? = null
 
-    var calendarHeight = (height/4)
+    var calendarHeight = (height/4)-2
     var currentMonthLocalStartDate = selectedLocalDate.minusDays((selectedLocalDate.dayOfMonth-1).toLong())
 
 
@@ -58,6 +58,7 @@ class CalendarMonthPanel(var width: Int, var height: Int, var uiComponents: Appl
     var fifthWeekPanel:CalendarWeekPanel? = null
 
     fun update(selectedDate: LocalDate = LocalDate.now()){
+        buildPanelComponents()
         if(!selectedDate.equals(selectedLocalDate)) {
             selectedLocalDate = LocalDate.of(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth)
             currentMonth = selectedLocalDate.month
@@ -67,7 +68,6 @@ class CalendarMonthPanel(var width: Int, var height: Int, var uiComponents: Appl
     }
 
     fun build():CalendarMonthPanel{
-        buildPanelComponents()
         return this
     }
 
@@ -95,27 +95,27 @@ class CalendarMonthPanel(var width: Int, var height: Int, var uiComponents: Appl
         var firstWeekNumber = firstWeekOfMonthStartDate.get(weekFields.weekOfWeekBasedYear())
         firstWeekofMonthButton = Components.button()
                 .withText(firstWeekNumber.toString())
-                .withPosition(Positions.create(0,0).relativeToBottomOf(monthButton!!))
+                .withPosition(Positions.create(-1,0).relativeToBottomOf(monthButton!!))
                 .build()
         firstWeekofMonthButton!!.onMouseReleased { uiComponents.updateDate(firstWeekOfMonthStartDate, View.CALENDAR_WEEK) }
         panel!!.addComponent(firstWeekofMonthButton!!)
 
-        var firstWeekPosition = Positions.create(1 ,-2).relativeToRightOf(firstWeekofMonthButton!!)
+        var firstWeekPosition = Positions.create(0 ,-1).relativeToRightOf(firstWeekofMonthButton!!)
         firstWeekPanel =
-                CalendarWeekPanel(width-10, calendarHeight, uiComponents, firstWeekPosition, showDayOfWeekLabel,
+                CalendarWeekPanel(width-7, calendarHeight, uiComponents, firstWeekPosition, showDayOfWeekLabel,
                         firstWeekOfMonthStartDate)
         firstWeekPanel!!.update(firstWeekOfMonthStartDate)
         firstWeekPanel!!.panel?.let { panel!!.addComponent(it) }
 
         var secondWeekPosition = Positions.create(-1,0).relativeToBottomOf(firstWeekPanel!!.panel!!)
         secondWeekPanel =
-                CalendarWeekPanel(width-10, calendarHeight, uiComponents, secondWeekPosition, showDayOfWeekLabel,
+                CalendarWeekPanel(width-7, calendarHeight, uiComponents, secondWeekPosition, showDayOfWeekLabel,
                         secondWeekOfMonthStartDate!!)
         secondWeekPanel!!.update(secondWeekOfMonthStartDate!!)
         secondWeekPanel!!.panel?.let { panel!!.addComponent(it) }
 
 
-        var secondWeekButtonPosition = Positions.create(0,calendarHeight-1).relativeToBottomOf(firstWeekofMonthButton!!)
+        var secondWeekButtonPosition = Positions.create(-1,calendarHeight-1).relativeToBottomOf(firstWeekofMonthButton!!)
         var secondWeekNumber = secondWeekOfMonthStartDate!!.get(weekFields.weekOfWeekBasedYear())
         secondWeekofMonthButton = Components.button()
                 .withText(secondWeekNumber.toString())
@@ -128,7 +128,7 @@ class CalendarMonthPanel(var width: Int, var height: Int, var uiComponents: Appl
 
         var thirdWeekPosition = Positions.create(-1,0).relativeToBottomOf(secondWeekPanel!!.panel!!)
         thirdWeekPanel =
-                CalendarWeekPanel(width-10, calendarHeight, uiComponents, thirdWeekPosition, showDayOfWeekLabel,
+                CalendarWeekPanel(width-7, calendarHeight, uiComponents, thirdWeekPosition, showDayOfWeekLabel,
                         thirdWeekOfMonthStartDate!!)
         thirdWeekPanel!!.update(thirdWeekOfMonthStartDate!!)
         thirdWeekPanel!!.panel?.let { panel!!.addComponent(it) }
@@ -146,7 +146,7 @@ class CalendarMonthPanel(var width: Int, var height: Int, var uiComponents: Appl
 
         var fourthWeekPosition = Positions.create(-1,0).relativeToBottomOf(thirdWeekPanel!!.panel!!)
         fourthWeekPanel =
-                CalendarWeekPanel(width-10, calendarHeight, uiComponents, fourthWeekPosition, showDayOfWeekLabel,
+                CalendarWeekPanel(width-7, calendarHeight, uiComponents, fourthWeekPosition, showDayOfWeekLabel,
                         fourthWeekOfMonthStartDate!!)
         fourthWeekPanel!!.update(fourthWeekOfMonthStartDate!!)
         fourthWeekPanel!!.panel?.let { panel!!.addComponent(it) }
@@ -165,7 +165,7 @@ class CalendarMonthPanel(var width: Int, var height: Int, var uiComponents: Appl
         if(fifthWeekOfMonthStartDate!!.month.equals(currentMonth)){
             var fifthWeekPosition = Positions.create(-1,0).relativeToBottomOf(fourthWeekPanel!!.panel!!)
             fifthWeekPanel =
-                    CalendarWeekPanel(width-10, calendarHeight, uiComponents, fifthWeekPosition, showDayOfWeekLabel,
+                    CalendarWeekPanel(width-7, calendarHeight, uiComponents, fifthWeekPosition, showDayOfWeekLabel,
                             fifthWeekOfMonthStartDate!!)
             fifthWeekPanel!!.update(fifthWeekOfMonthStartDate!!)
             fifthWeekPanel!!.panel?.let { panel!!.addComponent(it) }

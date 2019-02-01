@@ -7,6 +7,7 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Button
+import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 import view.BudgetPanel
@@ -19,6 +20,7 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
 
     }
 
+    var budgetingLabel: Label? = null
     var weeklyViewButton: Button? = null
     var yearViewButton: Button? = null
     var budgetViewButton: Button? = null
@@ -26,6 +28,7 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
     var calendarWeekButton: Button? = null
     var calendarMonthButton: Button? = null
     var calendarYearButton: Button? = null
+    var taskingLabel: Label? = null
 
     override fun build(){
         this.panel = Components.panel()
@@ -34,11 +37,15 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(0,0))
                 .build()
+        this.budgetingLabel = Components.label()
+                .withText("Budgeting: ")
+                .withPosition(Positions.create(0,0))
+                .build()
         this.weeklyViewButton = Components.button()
                 .withBoxType(BoxType.DOUBLE)
                 .wrapWithBox(false)
                 .withText("Weekly")
-                .withPosition(Positions.create(0,0))
+                .withPosition(Positions.create(0,0).relativeToRightOf(budgetingLabel!!))
                 .build()
         weeklyViewButton!!.onMouseReleased { uIComponents.switchScreen(View.WEEKLY) }
         this.yearViewButton = Components.button()
@@ -83,6 +90,12 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
                 .withPosition(Positions.create(1,0).relativeToRightOf(calendarMonthButton!!))
                 .build()
         calendarYearButton!!.onMouseReleased { uIComponents.switchScreen(View.CALENDAR_YEAR) }
+
+        this.taskingLabel = Components.label()
+                .withText("Tasking: ")
+                .withPosition(Positions.create(0,1).relativeToBottomOf(budgetingLabel!!))
+                .build()
+        this.panel!!.addComponent(budgetingLabel!!)
         this.panel!!.addComponent(weeklyViewButton!!)
         this.panel!!.addComponent(yearViewButton!!)
         this.panel!!.addComponent(budgetViewButton!!)
@@ -90,6 +103,7 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
         this.panel!!.addComponent(calendarWeekButton!!)
         this.panel!!.addComponent(calendarMonthButton!!)
         this.panel!!.addComponent(calendarYearButton!!)
+        this.panel!!.addComponent(taskingLabel!!)
     }
 
     companion object {

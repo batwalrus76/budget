@@ -40,7 +40,7 @@ class AccountsPanel(width: Int,  height: Int, component: Component, uiComponents
                 .withSize(Sizes.create(this.width!!, this.height!!)) // the size must be smaller than the parent's size
                 .withPosition(ZERO_OFFSET.relativeToRightOf(component!!))
                 .build() // position is always relative to the parent
-        this.checkingAccountPanel = CheckingAccountPanel(width!!-4, individualSubPanelHeight!!+1,
+        this.checkingAccountPanel = CheckingAccountPanel(width!!-4, individualSubPanelHeight!!,
                                 dateLabel, uiComponents, applicationState)
         this.checkingAccountPanel!!.build()
         this.savingsAccountsPanel =
@@ -48,7 +48,7 @@ class AccountsPanel(width: Int,  height: Int, component: Component, uiComponents
                         checkingAccountPanel!!.panel!!, uiComponents, applicationState!!)
         this.savingsAccountsPanel!!.build()
         this.checkingAccountPanel!!.build()
-        this.creditAccountsPanel = CreditAccountPanel(width!!-4, multiAccountSubPanelHeight!!+4,
+        this.creditAccountsPanel = CreditAccountPanel(width!!-4, multiAccountSubPanelHeight!!,
                         savingsAccountsPanel!!.panel!!, uiComponents, applicationState)
         this.creditAccountsPanel!!.build()
         this.panel!!.addComponent(dateLabel)

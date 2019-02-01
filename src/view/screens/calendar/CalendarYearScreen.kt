@@ -20,6 +20,12 @@ class CalendarYearScreen (width: Int, height: Int, var component: Component, uiC
     }
 
     override fun update(): BudgetState {
+        if(panel!!.children.contains(calendarYearPanel.panel as Component)) {
+            calendarYearPanel.panel?.let { panel?.removeComponent(it) }
+        } else {
+            calendarYearPanel.build()
+        }
+        calendarYearPanel.panel?.let { panel?.addComponent(it) }
         update(uiComponents.currentLocalDate)
         return super.update()
     }
@@ -32,8 +38,6 @@ class CalendarYearScreen (width: Int, height: Int, var component: Component, uiC
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(0,0).relativeToBottomOf(component))
                 .build()
-        calendarYearPanel.build()
-        calendarYearPanel.panel?.let { panel?.addComponent(it) }
     }
 
 
