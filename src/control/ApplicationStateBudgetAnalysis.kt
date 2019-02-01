@@ -90,7 +90,7 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
             budgetAnalysisState = budgetAnalysisState?.let { processBudgetItemBudgetAnalysisStateForAnalysis(it, budgetItem, budgetState) }
             budgetAnalysisState?.let { budgetAnalysisStates.add(it) }
         }
-        return (budgetAnalysisStates.sortedWith(kotlin.comparisons.compareBy({ it.date }))).toMutableList()
+        return budgetAnalysisStates
     }
 
     private fun processBudgetItemBudgetAnalysisStateForAnalysis(budgetAnalysisState: BudgetAnalysisState,
