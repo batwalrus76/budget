@@ -1,12 +1,12 @@
 package view.screens.calendar
 
-import model.budget.BudgetState
+import model.financial.budget.BudgetState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
-import view.calendar.CalendarMonthPanel
+import view.temporal.calendar.CalendarMonthPanel
 import view.screens.BaseScreen
 import java.time.LocalDate
 
@@ -14,13 +14,13 @@ class CalendarMonthScreen (width: Int, height: Int, var component: Component, ui
     BaseScreen(width, height, uiComponents){
 
     var calendarMonthPanel:CalendarMonthPanel = CalendarMonthPanel(width-4, height-4, uiComponents,
-            false, true)
+            false, showDayOfWeekLabel = true)
 
     fun update(selectedDate: LocalDate){
         calendarMonthPanel.update(selectedDate)
     }
 
-    override fun update(): BudgetState {
+    override fun update(): BudgetState? {
         update(uiComponents.currentLocalDate)
         return super.update()
     }

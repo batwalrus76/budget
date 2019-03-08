@@ -1,7 +1,7 @@
 import control.ApplicationStateBudgetAnalysis
 import control.ApplicationStateManager
-import model.state.ApplicationState
-import model.budget.BudgetState
+import model.representation.state.ApplicationState
+import model.financial.budget.BudgetState
 import model.view.ApplicationUIComponents
 import kotlin.system.exitProcess
 

@@ -1,14 +1,14 @@
 package view.screens.calendar
 
-import model.budget.BudgetState
-import model.enums.Recurrence
+import model.financial.budget.BudgetState
+import model.enums.budget.Recurrence
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
-import view.calendar.CalendarWeekPanel
-import view.items.ItemConfigurationPanel
+import view.temporal.calendar.CalendarWeekPanel
+import view.financial.items.ItemConfigurationPanel
 import view.screens.BaseScreen
 import java.time.LocalDate
 
@@ -30,7 +30,7 @@ class CalendarWeekScreen(width: Int, height: Int, var component: Component, uiCo
         itemConfigurationPanel!!.panel?.let { panel?.addComponent(it) }
     }
 
-    override fun update():BudgetState{
+    override fun update():BudgetState? {
         update(uiComponents.currentLocalDate)
         return super.update()
     }

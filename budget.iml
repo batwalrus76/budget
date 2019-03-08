@@ -73,5 +73,12 @@
     <orderEntry type="library" exported="" name="kdoc-0.11.91-sources" level="project" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" name="klaxon-5.0.4" level="project" />
+    <orderEntry type="library" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" name="com.google.apis:google-api-services-drive:v3-rev136-1.25.0" level="project" />
+    <orderEntry type="library" name="ical4j-3.0.6" level="project" />
+    <orderEntry type="library" name="cache-api-1.1.0" level="project" />
+    <orderEntry type="library" name="cache-api-1.1.01" level="project" />
+    <orderEntry type="library" name="lang3-3.1.0" level="project" />
+    <orderEntry type="library" name="javax.mail-api-1.6.2" level="project" />
   </component>
 </module>

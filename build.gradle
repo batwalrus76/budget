@@ -25,6 +25,8 @@ dependencies {
     testCompile 'junit:junit:4.11'
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     implementation 'com.beust:klaxon:5.0.1'
+    compile 'khttp:khttp:0.1.0'
+    compile 'com.google.api-client:google-api-client:1.25.0'
 }
 
 jar {

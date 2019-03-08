@@ -1,10 +1,10 @@
 package control
 
-import model.state.ApplicationState
-import model.budget.BudgetAnalysisState
-import model.budget.BudgetItem
-import model.budget.BudgetState
-import model.core.DueDate
+import model.representation.state.ApplicationState
+import model.financial.budget.BudgetAnalysisState
+import model.financial.budget.BudgetItem
+import model.financial.budget.BudgetState
+import model.financial.core.DueDate
 import utils.DateTimeUtils
 import java.time.LocalDate
 

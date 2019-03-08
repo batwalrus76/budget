@@ -1,8 +1,8 @@
 package control
 
-import model.state.ApplicationState
-import model.budget.BudgetItem
-import model.budget.BudgetState
+import model.representation.state.ApplicationState
+import model.financial.budget.BudgetItem
+import model.financial.budget.BudgetState
 import utils.DateTimeUtils
 import java.io.File
 

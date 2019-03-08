@@ -1,25 +1,26 @@
 package view.screens.calendar
 
-import model.budget.BudgetState
+import model.financial.budget.BudgetState
 import model.view.ApplicationUIComponents
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
-import view.calendar.CalendarYearPanel
+import view.temporal.calendar.CalendarYearPanel
 import view.screens.BaseScreen
 import java.time.LocalDate
 
 class CalendarYearScreen (width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
     BaseScreen(width, height, uiComponents){
 
-    var calendarYearPanel: CalendarYearPanel = CalendarYearPanel(width-3, height-3, uiComponents)
+    var calendarYearPanel: CalendarYearPanel = CalendarYearPanel(width-3, height-3, uiComponents,
+            true, Positions.create(0,0))
 
     fun update(selectedDate: LocalDate){
         calendarYearPanel.update(selectedDate)
     }
 
-    override fun update(): BudgetState {
+    override fun update(): BudgetState? {
         if(panel!!.children.contains(calendarYearPanel.panel as Component)) {
             calendarYearPanel.panel?.let { panel?.removeComponent(it) }
         } else {
