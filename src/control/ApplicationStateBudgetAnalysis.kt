@@ -85,7 +85,19 @@ class ApplicationStateBudgetAnalysis(var applicationState: ApplicationState) {
         if(lastBudgetAnalysisState == null){
             budgetAnalysisState = BudgetAnalysisState(applicationState)
         }
-        var orderedBudgetItems: List<BudgetItem>? = budgetItems?.values?.sortedWith(kotlin.comparisons.compareBy({ it.due.dueDate }))
+        var orderedBudgetItems: MutableList<BudgetItem> = ArrayList()
+        for ( dayOffSet:Long in 0L..6L){
+            var currentDayOfPeriod = budgetState!!.startDate.plusDays(dayOffSet)
+            budgetItems!!.values.forEach { budgetItem ->
+                budgetItem.dueDates.forEach { dueDate -> run {
+                        if(dueDate.dueDate.equals(currentDayOfPeriod)){
+                            orderedBudgetItems.add(budgetItem)
+                        }
+                    }
+                }
+            }
+        }
+        //var orderedBudgetItems: List<BudgetItem>? = budgetItems?.values?.sortedWith(kotlin.comparisons.compareBy({ it.due.dueDate }))
         orderedBudgetItems?.forEach { budgetItem ->
             budgetAnalysisState = budgetAnalysisState?.let { processBudgetItemBudgetAnalysisStateForAnalysis(it, budgetItem, budgetState) }
             budgetAnalysisState?.let { budgetAnalysisStates.add(it) }
