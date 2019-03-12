@@ -233,9 +233,9 @@ class MainControlsPanel(width: Int, height: Int, var uIComponents: ApplicationUI
         val TITLE:String = "View"
     }
 
-    override fun update(vararg args: Any) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+//    override fun update(vararg args: Any) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//    }
 
     override fun update(budgetAnalysisState: BudgetAnalysisState) {
 

@@ -13,13 +13,19 @@ import org.hexworks.zircon.api.component.RadioButtonGroup
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
+import org.hexworks.zircon.api.kotlin.onSelection
+import view.financial.items.ItemConfigurationPanel
+import view.screens.BaseScreen
+import view.screens.calendar.BaseCalendarScreen
 import java.time.LocalDate
 
 class CalendarDayPanel(width: Int, height: Int, uiComponents: ApplicationUIComponents,
                        displayBox: Boolean = false, position: Position, showDayOfWeekLabel:Boolean = true,
                        selectedLocalDate:LocalDate = LocalDate.now(),
-                       var title:String = selectedLocalDate.dayOfWeek.toString()):
-                    BaseCalendarPanel(width, height, uiComponents, displayBox, position, showDayOfWeekLabel){
+                       var title:String = selectedLocalDate.dayOfWeek.toString(),
+                       baseScreen: BaseScreen):
+                    BaseCalendarPanel(width, height, uiComponents, displayBox, position, showDayOfWeekLabel,
+                            selectedLocalDate, baseScreen){
 
     var dateLabelButton: Button? = null
     var budgetAnalysisStatesPanel: Panel? = null
@@ -28,8 +34,10 @@ class CalendarDayPanel(width: Int, height: Int, uiComponents: ApplicationUICompo
     var dividerLabel: Label? = null
     var bottomDividerLabel: Label? = null
     var balanceLabel: Label? = null
+    var budgetAnalysisStates: MutableList<BudgetAnalysisState>? = null
 
     open fun update(localDate: LocalDate, budgetAnalysisStates: MutableList<BudgetAnalysisState>){
+        this.budgetAnalysisStates = budgetAnalysisStates
         panel = Components.panel()
                 .wrapWithBox(displayBox) // panels can be wrapped in a box
                 .wrapWithShadow(false) // shadow can be added
@@ -103,6 +111,10 @@ class CalendarDayPanel(width: Int, height: Int, uiComponents: ApplicationUICompo
                     .withPosition(budgetAnalysisStatesRadioButtonGroupPositon)
                     .withSize(Sizes.create(this.width-3, availableLines-3))
                     .build()
+
+            budgetAnalysisStatesRadioButtonGroup!!.onSelection { it ->
+                updateitemConfigurationPanel(it)
+            }
             var currentAvailableLines = availableLines-3
             budgetAnalysisStates.forEach { budgetAnalysisState ->
                 if(currentAvailableLines <= 1){
@@ -123,6 +135,20 @@ class CalendarDayPanel(width: Int, height: Int, uiComponents: ApplicationUICompo
             }
         }
         return budgetAnalysisStatesRadioButtonGroup
+    }
+
+
+    private fun updateitemConfigurationPanel(selection: RadioButtonGroup.Selection) {
+        if(baseScreen != null && baseScreen is BaseCalendarScreen){
+            var baseCalendarScreen = baseScreen as BaseCalendarScreen
+
+            val budgetItem = this.budgetAnalysisStates?.find { it.budgetItem!!.name == selection.key }?.budgetItem
+            baseCalendarScreen.itemConfigurationPanel = budgetItem?.scheduledAmount?.let {
+                baseCalendarScreen.buildItemConfigurationPanel(budgetItem.name, budgetItem.due.dueDate,
+                        budgetItem.required, budgetItem.autopay, it,  budgetItem.actualAmount, budgetItem.recurrence)
+            }
+            baseCalendarScreen.itemConfigurationPanel?.build()
+        }
     }
 
     override fun build() {

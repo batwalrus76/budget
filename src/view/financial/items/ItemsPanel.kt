@@ -38,9 +38,9 @@ class ItemsPanel (var width: Int, var height: Int, var component: Component, var
         this.panel!!.addComponent(futureItemPanel!!.panel!!)
     }
 
-    override fun update(vararg args: Any) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+//    override fun update(vararg args: Any) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//    }
 
     fun update() {
         this.unreconciledItemsPanel!!.update()

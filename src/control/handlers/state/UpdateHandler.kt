@@ -2,5 +2,5 @@ package control.handlers.state
 
 interface UpdateHandler {
 
-    open fun update(vararg args: Any)
+//    open fun update(vararg args: Any)
 }

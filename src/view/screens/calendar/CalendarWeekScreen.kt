@@ -9,30 +9,24 @@ import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
 import view.temporal.calendar.CalendarWeekPanel
 import view.financial.items.ItemConfigurationPanel
-import view.screens.BaseScreen
 import java.time.LocalDate
 
-class CalendarWeekScreen(width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
-        BaseScreen(width, height, uiComponents){
+class CalendarWeekScreen(width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents):
+        BaseCalendarScreen(width, height, component, uiComponents, width/5){
 
-    var calendarWeekPanel = CalendarWeekPanel(((4*width)/5)-2, height-3, uiComponents)
-    var itemConfigurationPanel: ItemConfigurationPanel? = null
+    var calendarWeekPanel = CalendarWeekPanel(((4*width)/5)-2, height-3, uiComponents, baseScreen = this)
 
-    fun update(selectedDate: LocalDate){
+    fun update(selectedDate: LocalDate): BudgetState? {
         if(panel!!.children.contains(calendarWeekPanel.panel as Component)) {
             calendarWeekPanel.panel?.let { panel!!.removeComponent(it) }
         }
         calendarWeekPanel.update(selectedDate)
         calendarWeekPanel.panel?.let { panel?.addComponent(it) }
-        if(panel!!.children.contains(itemConfigurationPanel!!.panel as Component)) {
-            itemConfigurationPanel!!.panel?.let { panel?.removeComponent(it) }
-        }
-        itemConfigurationPanel!!.panel?.let { panel?.addComponent(it) }
+        return super.update(selectedDate, null)
     }
 
     override fun update():BudgetState? {
-        update(uiComponents.currentLocalDate)
-        return super.update()
+        return update(uiComponents.currentLocalDate)
     }
 
     override fun build() {
@@ -47,12 +41,6 @@ class CalendarWeekScreen(width: Int, height: Int, var component: Component, uiCo
                 .withTitle(titleWithDate)
                 .build()
         calendarWeekPanel.build()
-        itemConfigurationPanel = ItemConfigurationPanel("PLACEHOLDER", LocalDate.now(), false, false,
-                0.0, 0.0, Recurrence.ONETIME, (width/5), height-3,
-                "null", "null", uiComponents.applicationState,
-                false, Positions.create(0,0).relativeToRightOf(calendarWeekPanel.panel!!),
-                true)
-        itemConfigurationPanel!!.build()
     }
 
     companion object {

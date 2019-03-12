@@ -6,10 +6,10 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Component
-import view.screens.BaseScreen
+import view.screens.calendar.BaseCalendarScreen
 
-abstract class BaseMixedScreen (width: Int, height: Int, uiComponents: ApplicationUIComponents, var component: Component):
-        BaseScreen(width, height, uiComponents){
+abstract class BaseMixedScreen (width: Int, height: Int, uiComponents: ApplicationUIComponents, component: Component):
+        BaseCalendarScreen(width, height, component, uiComponents){
 
     override fun build() {
         panel = Components.panel()

@@ -13,8 +13,8 @@ import java.time.LocalDate
 class CalendarMonthScreen (width: Int, height: Int, var component: Component, uiComponents: ApplicationUIComponents):
     BaseScreen(width, height, uiComponents){
 
-    var calendarMonthPanel:CalendarMonthPanel = CalendarMonthPanel(width-4, height-4, uiComponents,
-            false, showDayOfWeekLabel = true)
+    private var calendarMonthPanel:CalendarMonthPanel = CalendarMonthPanel(width-4, height-4, uiComponents,
+            false, showDayOfWeekLabel = true, baseScreen = this)
 
     fun update(selectedDate: LocalDate){
         calendarMonthPanel.update(selectedDate)
@@ -33,8 +33,7 @@ class CalendarMonthScreen (width: Int, height: Int, var component: Component, ui
                 .withSize(Sizes.create(this.width, this.height)) // the size must be smaller than the parent's size
                 .withPosition(Positions.create(0,0).relativeToBottomOf(component))
                 .build()
-        calendarMonthPanel.build()
-        calendarMonthPanel.panel?.let { panel?.addComponent(it) }
+        calendarMonthPanel.panel.let { panel?.addComponent(it) }
     }
 
     companion object {

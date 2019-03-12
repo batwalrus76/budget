@@ -14,7 +14,7 @@ class CalendarYearScreen (width: Int, height: Int, var component: Component, uiC
     BaseScreen(width, height, uiComponents){
 
     var calendarYearPanel: CalendarYearPanel = CalendarYearPanel(width-3, height-3, uiComponents,
-            true, Positions.create(0,0))
+            true, Positions.create(0,0), baseScreen = this)
 
     fun update(selectedDate: LocalDate){
         calendarYearPanel.update(selectedDate)

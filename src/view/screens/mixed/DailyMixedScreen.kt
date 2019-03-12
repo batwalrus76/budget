@@ -90,7 +90,7 @@ class DailyMixedScreen(width: Int, height: Int, component: Component, uiComponen
                 }
         calendarPanelPosition = Positions.create(-1,-1).relativeToBottomOf(dayTaskView!!.panel)
         calendarDayPanel = CalendarDayPanel(subPanelWidth, calendarHeight/2,
-                uiComponents, true, calendarPanelPosition!!)
+                uiComponents, true, calendarPanelPosition!!, baseScreen = this)
         date?.let {
             if (appropriateBudgetAnalysisStates != null) {
                 calendarDayPanel!!.update(it, appropriateBudgetAnalysisStates.toMutableList())

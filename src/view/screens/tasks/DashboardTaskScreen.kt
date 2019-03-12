@@ -12,9 +12,9 @@ import java.time.LocalDate
 class DashboardTaskScreen(width: Int, height: Int, component: Component, uiComponents: ApplicationUIComponents):
         BaseTaskScreen(width, height, uiComponents, component){
 
-    var projectsTaskView: ProjectsTaskView? = null
-    var calendarMonthPanel: CalendarMonthPanel? = null
-    var dayTaskView: DayTaskView? = null
+    private var projectsTaskView: ProjectsTaskView? = null
+    private var calendarMonthPanel: CalendarMonthPanel? = null
+    private var dayTaskView: DayTaskView? = null
 
     override fun update(): BudgetState? {
         calendarMonthPanel?.panel?.let { panel!!.removeComponent(it) }
@@ -23,8 +23,7 @@ class DashboardTaskScreen(width: Int, height: Int, component: Component, uiCompo
         var results =  super.update()
 
         calendarMonthPanel = CalendarMonthPanel(tasksConfigurationPanelWidth, taskConfigurationPanelHeight*2, uiComponents,
-                false, true,Positions.create(0,0).relativeToBottomOf(super.taskConfigurationPanel!!.panel!!))
-        calendarMonthPanel!!.build()
+                false, Positions.create(0,0).relativeToBottomOf(super.taskConfigurationPanel!!.panel!!), baseScreen = this)
         calendarMonthPanel!!.update(uiComponents.currentLocalDate)
         calendarMonthPanel!!.panel?.let { panel!!.addComponent(it) }
 

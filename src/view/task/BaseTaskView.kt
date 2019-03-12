@@ -78,10 +78,10 @@ abstract class BaseTaskView(var width: Int, var height: Int, val position: Posit
             nullTasksLabel!!.let { panel.addComponent(it) }
         }
     }
-
-    override fun update(vararg args: Any) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+//
+//    override fun update(vararg args: Any) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//    }
 
     companion object {
         val HEADER_TEXT = "      ID    Age(days)    P     Project     Due         Urg       Description"

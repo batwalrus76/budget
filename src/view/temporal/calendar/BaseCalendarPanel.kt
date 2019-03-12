@@ -6,22 +6,24 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.Panel
 import org.hexworks.zircon.api.data.Position
+import view.screens.BaseScreen
 import java.time.LocalDate
 
 abstract class BaseCalendarPanel(var width: Int, var height: Int, var uiComponents: ApplicationUIComponents,
                                  var displayBox: Boolean = false,
                                  var position: Position, var showDayOfWeekLabel:Boolean = true,
-                                 var selectedLocalDate:LocalDate = LocalDate.now()): CalendarViewHandler {
+                                 var selectedLocalDate:LocalDate = LocalDate.now(),
+                                 val baseScreen: BaseScreen): CalendarViewHandler {
 
-    var panel: Panel? = null
+    var panel = Components.panel()
+            .wrapWithBox(displayBox)
+            .wrapWithShadow(false)
+            .withSize(Sizes.create(this.width, this.height))
+            .withPosition(position)
+            .build()
 
     open fun build(){
-        panel = Components.panel()
-                .wrapWithBox(displayBox)
-                .wrapWithShadow(false)
-                .withSize(Sizes.create(this.width, this.height))
-                .withPosition(position)
-                .build()
+
     }
 
     override fun handleDay(date: LocalDate) {
